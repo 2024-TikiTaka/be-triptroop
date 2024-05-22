@@ -1,9 +1,9 @@
 package com.tikitaka.triptroop.common.exception.handler;
 
-import com.tikitaka.triptroop.common.exception.ServerInternalException;
-import com.tikitaka.triptroop.common.exception.dto.response.ErrorResponse;
 import com.tikitaka.triptroop.common.exception.ConflictException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.ServerInternalException;
+import com.tikitaka.triptroop.common.exception.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ExceptionHandlingController {
+public class GeneralExceptionHandler {
 
     /* Not Found Exception */
     @ExceptionHandler(NotFoundException.class)
@@ -50,12 +50,4 @@ public class ExceptionHandlingController {
 
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
-
-
-
-
-
-
-
-
 }
