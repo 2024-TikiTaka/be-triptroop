@@ -6,5 +6,5 @@ public enum ScheduleType { //<- Type 명을 어떤 타입인지 알 수 있게 �
 
     /* 들어갈 타입을 대문자로 적어주세요.( ex) DELETED ) */
 
-
+PUBLIC,PRIVATE
 }
