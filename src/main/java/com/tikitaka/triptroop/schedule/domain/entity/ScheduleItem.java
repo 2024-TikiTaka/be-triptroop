@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
-import com.tikitaka.triptroop.schedule.domain.type.ScheduleType;
+import com.tikitaka.triptroop.common.domain.type.DeleteStatus;
+import com.tikitaka.triptroop.common.domain.type.VisibleStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,5 +26,18 @@ public class ScheduleItem { // <- Entity 를 본인의 엔티티 명으로 바�
     @ManyToOne
     @JoinColumn(name = "scheduleId")
     private Schedule schedule;
+    private Long placeId;
+    private LocalDateTime planDate;
+    private String kind;
+    private Long cost;
+    @Enumerated(EnumType.STRING)
+    private VisibleStatus status = VisibleStatus.PUBLIC;
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus isDeleted = DeleteStatus.USABLE;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
+    private LocalDateTime deletedAt;
 
 }
