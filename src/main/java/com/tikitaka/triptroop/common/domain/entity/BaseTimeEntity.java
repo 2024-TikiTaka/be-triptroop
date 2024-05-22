@@ -1,9 +1,6 @@
 package com.tikitaka.triptroop.common.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.type.StatusType;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,17 +13,13 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public abstract class BaseEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class BaseTimeEntity {
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
-
-
-    @Enumerated(value = EnumType.STRING)
-    private StatusType status = StatusType.USABLE;
 }
