@@ -1,7 +1,7 @@
 package com.tikitaka.triptroop.user.domain.entity;
 
+import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.user.domain.type.Gender;
-import com.tikitaka.triptroop.user.domain.type.MatchStatus;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
 import com.tikitaka.triptroop.user.domain.type.UserStatus;
 import jakarta.persistence.*;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,8 @@ public class User {
 
     private LocalDate birth;
 
-    private UserRole role;
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role = UserRole.USER;
 
     private Gender gender;
 
@@ -40,19 +41,10 @@ public class User {
 
     private int godo;
 
-    private String sns_provider;
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus status = UserStatus.ACTIVE;
 
-    private String refresh_token;
+    private boolean isMatched = true;
 
-    private LocalDateTime expired_at;
-
-    private MatchStatus isMatched;
-
-    private UserStatus status;
-
-    private LocalDateTime created_at;
-
-    private LocalDateTime modified_at;
-
-    private LocalDateTime deleted_at;
+    private LocalDateTime deletedAt;
 }
