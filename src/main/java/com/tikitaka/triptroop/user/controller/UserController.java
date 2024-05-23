@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop._example.controller;
+package com.tikitaka.triptroop.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -6,13 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/example") // <- "" 안에 매핑할 주소를 적어주세요. ( ex) /schedule/post )
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-public class ExampleController {
+public class UserController {
 
-    /* 내용을 작성해주세요. */
-    @RequestMapping("/hello")
+    @RequestMapping()
     public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello");
+        return ResponseEntity.ok("Hello, User!");
     }
 }
