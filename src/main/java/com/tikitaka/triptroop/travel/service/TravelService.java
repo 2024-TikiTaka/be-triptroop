@@ -2,7 +2,7 @@ package com.tikitaka.triptroop.travel.service;
 
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
-import com.tikitaka.triptroop.travel.domain.type.VisibleStatus;
+import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인�
     public Page<TravelResponse> findAll(final Integer page ){
 
         Page<Travel> travels = null;
-        travels = travelRepository.findByStatus(getPageable(page), VisibleStatus.PUBLIC);
+        travels = travelRepository.findByStatus(getPageable(page), Visibility.PUBLIC);
 
 
         return travels.map(TravelResponse::from);
