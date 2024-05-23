@@ -451,7 +451,6 @@ ALTER TABLE `blocks`
     ADD CONSTRAINT `blocks_FK1` FOREIGN KEY (`blocked_id`)
         REFERENCES `users` (`id`);
 
-
 CREATE TABLE `likes` (
     `id`           BIGINT NOT NULL COMMENT '좋아요_코드',
     `user_id`      BIGINT NOT NULL COMMENT '회원_코드',
@@ -475,7 +474,7 @@ ALTER TABLE `likes`
         REFERENCES `travels` (`id`);
 
 ALTER TABLE `likes`
-    ADD CONSTRAINT `likes_CK` CHECK ( `kind` );
+    ADD CONSTRAINT `likes_CK` CHECK ( `kind` IN ('SCHEDULE', 'TRAVEL', 'COMPANION') );
 
 
 CREATE TABLE `reports` (
