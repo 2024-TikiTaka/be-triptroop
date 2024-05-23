@@ -1,6 +1,5 @@
-package com.tikitaka.triptroop.travel.domain.entity;
+package com.tikitaka.triptroop.common.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

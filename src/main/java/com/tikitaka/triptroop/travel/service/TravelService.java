@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.travel.service;
 
+import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
-import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,15 +27,19 @@ public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인�
 
     /* 공개 게시글 조회 */
     @Transactional(readOnly = true)
-    public Page<TravelResponse> findAll(final Integer page ){
+    public Page<TravelResponse> findByAll(final Integer page, final Long categoryId, final Long areaId) {
+
 
         Page<Travel> travels = null;
-        travels = travelRepository.findByStatus(getPageable(page), Visibility.PUBLIC);
+        if (areaId != null && areaId > 0) {
+            travels = travelRepository.findByAreaIdAndVisibility(getPageable(page), areaId, Visibility.PUBLIC);
+        } else if (categoryId != null && categoryId > 0) {
+            travels = travelRepository.findByCategoryIdAndVisibility(getPageable(page), categoryId, Visibility.PUBLIC);
+        }
 
 
         return travels.map(TravelResponse::from);
-    };
-
+    }
 
 
 }

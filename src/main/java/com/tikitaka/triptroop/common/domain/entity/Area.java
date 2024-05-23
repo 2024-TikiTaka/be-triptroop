@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.travel.domain.entity;
+package com.tikitaka.triptroop.common.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

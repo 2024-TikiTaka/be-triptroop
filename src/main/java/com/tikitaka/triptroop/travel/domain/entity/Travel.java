@@ -1,6 +1,9 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
+import com.tikitaka.triptroop.common.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.common.domain.entity.Category;
+import com.tikitaka.triptroop.common.domain.entity.Place;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,7 +32,7 @@ public class Travel extends BaseTimeEntity {
     private Area area;
     @ManyToOne
     @JoinColumn(name = "placeId")
-    private Places place;
+    private Place place;
     private String title;
     private String content;
     @Enumerated(EnumType.STRING)
