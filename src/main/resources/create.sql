@@ -19,7 +19,7 @@ CREATE TABLE `areas`
 CREATE TABLE `categories`
 (
     `id`         BIGINT AUTO_INCREMENT              NOT NULL COMMENT '카테고리_코드',
-    `name`       BIGINT                             NOT NULL COMMENT '카테고리_이름',
+    `name`       VARCHAR(127)                       NOT NULL COMMENT '카테고리_이름',
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '생성일시',
     `deleted_at` DATETIME COMMENT '삭제일시',
     PRIMARY KEY (`id`)
