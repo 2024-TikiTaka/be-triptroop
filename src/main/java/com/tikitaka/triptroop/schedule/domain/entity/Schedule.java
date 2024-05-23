@@ -2,12 +2,14 @@ package com.tikitaka.triptroop.schedule.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.VisibleStatus;
+import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,15 +23,32 @@ public class Schedule extends BaseTimeEntity { // <- Entity 를 본인의 엔티
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //    private User userId;
-//    private Area areaId;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "areaId")
+    private Area area;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String title;
-    private int count;
+    private Long count;
     @Enumerated(EnumType.STRING)
     private VisibleStatus visibility = VisibleStatus.PUBLIC;
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
     private LocalDateTime deletedAt;
 
+    public Schedule(String title, Long count, Area area, LocalDate endDate, LocalDate startDate) {
+        this.title = title;
+        this.count = count;
+        this.area = area;
+        this.endDate = endDate;
+        this.startDate = startDate;
+    }
+
+    public static Schedule of(String title, Long count, Area area, LocalDate endDate, LocalDate startDate) {
+        return new Schedule(
+                title, count, area, endDate, startDate
+        );
+    }
 }

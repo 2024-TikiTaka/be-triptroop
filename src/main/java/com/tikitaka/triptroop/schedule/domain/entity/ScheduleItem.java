@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,7 +26,7 @@ public class ScheduleItem extends BaseTimeEntity { // <- Entity 를 본인의 �
     @JoinColumn(name = "scheduleId")
     private Schedule schedule;
     private Long placeId;
-    private LocalDateTime planDate;
+    private LocalDate planDate;
     @Enumerated(EnumType.STRING)
     private ScheduleItemKind kind;
     private Long cost;

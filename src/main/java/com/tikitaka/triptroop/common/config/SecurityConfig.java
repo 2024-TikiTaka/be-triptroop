@@ -9,7 +9,6 @@ import com.tikitaka.triptroop.security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,14 +40,14 @@ public class SecurityConfig {
                 csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManage -> sessionManage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll();
-                    auth.requestMatchers(HttpMethod.PUT, "/api/v1/**").permitAll();
-                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll();
-                    auth.anyRequest().authenticated();
-                })
+//                .authorizeHttpRequests(auth -> {
+//                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.PUT, "/api/v1/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll();
+//                    auth.anyRequest().authenticated();
+//                })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> {
@@ -62,7 +61,9 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
