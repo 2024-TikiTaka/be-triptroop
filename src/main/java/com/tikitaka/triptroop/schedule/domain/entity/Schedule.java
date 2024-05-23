@@ -1,13 +1,11 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.type.DeleteStatus;
+import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.VisibleStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,25 +15,21 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Schedule { // <- Entity 를 본인의 엔티티 명으로 바꿔 주세요. ( ! 첫문자 대문자임 (ex-Member O / member X) )
+public class Schedule extends BaseTimeEntity { // <- Entity 를 본인의 엔티티 명으로 바꿔 주세요. ( ! 첫문자 대문자임 (ex-Member O / member X) )
 
     /* 매핑할 필드( 컬럼명 : 카멜케이스 )를 적어주세요. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    //    private User userId;
+//    private Area areaId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
     private int count;
     @Enumerated(EnumType.STRING)
-    private VisibleStatus status = VisibleStatus.PUBLIC;
-    @Enumerated(EnumType.STRING)
-    private DeleteStatus isDeleted = DeleteStatus.USABLE;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
+    private VisibleStatus visibility = VisibleStatus.PUBLIC;
+    private Boolean isDeleted;
     private LocalDateTime deletedAt;
 
 }
