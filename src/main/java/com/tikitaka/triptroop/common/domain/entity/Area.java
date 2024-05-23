@@ -17,7 +17,7 @@ public class Area { // <- Entity 를 본인의 엔티티 명으로 바꿔 주세
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String region;
+    private String sido;
 
 
 }

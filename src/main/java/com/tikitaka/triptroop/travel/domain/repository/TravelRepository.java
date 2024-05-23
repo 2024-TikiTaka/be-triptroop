@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     /* Repository 앞에 부분을 지우고 본인의 기능 폴더명을 적어주세요. */
+    /* 공개 게시글 */
+    Page<Travel> findByVisibility(Pageable pageable, Visibility visibility);
+
     /* 공개 게시글 (지역포함) */
     Page<Travel> findByAreaIdAndVisibility(Pageable pageable, Long Id, Visibility travelType);
 

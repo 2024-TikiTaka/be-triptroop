@@ -1,11 +1,10 @@
 package com.tikitaka.triptroop.common.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +12,13 @@ import java.time.LocalDateTime;
 @Table(name = "categories")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Category extends BaseTimeEntity {
+public class Category {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @CreatedDate
+    private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 }

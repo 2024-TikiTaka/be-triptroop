@@ -41,4 +41,38 @@ public class Travel extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    private Travel(
+            Long userId,
+            Category category,
+            Area area,
+            Place place,
+            String title,
+            String content
+    ) {
+        this.userId = userId;
+        this.category = category;
+        this.area = area;
+        this.place = place;
+        this.title = title;
+        this.content = content;
+    }
+
+
+    public static Travel of(
+            final Long userId,
+            final Category category,
+            final Area area,
+            final Place place,
+            final String title,
+            final String content
+    ) {
+        return new Travel(
+                userId,
+                category,
+                area,
+                place,
+                title,
+                content
+        );
+    }
 }
