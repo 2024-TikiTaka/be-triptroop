@@ -1,19 +1,22 @@
 # ===========================================================
+DROP DATABASE `triptroop`;
 CREATE DATABASE `triptroop`;
 
+# ===========================================================
 # GRANT ALL PRIVILEGES ON `triptroop`.* TO `ohgiraffers`@`%`;
 
-USE triptroop;
 # ===========================================================
+USE triptroop;
+
 CREATE TABLE `areas` (
-    `id`   BIGINT       NOT NULL COMMENT '지역_코드',
-    `sido` VARCHAR(127) NOT NULL COMMENT '시도',
+    `id`   BIGINT AUTO_INCREMENT NOT NULL COMMENT '지역_코드',
+    `sido` VARCHAR(127)          NOT NULL COMMENT '시도',
     PRIMARY KEY (`id`)
 ) COMMENT = '지역';
 
 
 CREATE TABLE `categories` (
-    `id`         BIGINT                             NOT NULL COMMENT '카테고리_코드',
+    `id`         BIGINT AUTO_INCREMENT              NOT NULL COMMENT '카테고리_코드',
     `name`       BIGINT                             NOT NULL COMMENT '카테고리_이름',
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '생성일시',
     `deleted_at` DATETIME COMMENT '삭제일시',
@@ -22,7 +25,7 @@ CREATE TABLE `categories` (
 
 
 CREATE TABLE `places` (
-    `id`          BIGINT                             NOT NULL COMMENT '장소_코드',
+    `id`          BIGINT AUTO_INCREMENT              NOT NULL COMMENT '장소_코드',
     `kakaomap_id` VARCHAR(255) COMMENT '카카오맵장소코드',
     `address`     VARCHAR(255)                       NOT NULL COMMENT '주소지',
     `name`        VARCHAR(255) COMMENT '장소명',
@@ -34,13 +37,13 @@ CREATE TABLE `places` (
 
 
 CREATE TABLE `users` (
-    `id`          BIGINT                                NOT NULL COMMENT '회원_코드',
-    `email`       VARCHAR(255)                          NOT NULL COMMENT '이메일',
+    `id`          BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '회원_코드',
+    `email`       VARCHAR(255)                          NOT NULL UNIQUE COMMENT '이메일',
     `password`    VARCHAR(255) COMMENT '비밀번호',
     `name`        VARCHAR(50)                           NOT NULL COMMENT '이름',
     `birth`       DATE                                  NOT NULL COMMENT '생년월일',
     `role`        VARCHAR(10) DEFAULT 'USER'            NOT NULL COMMENT '권한',
-    `gender`      CHAR(1)                               NOT NULL COMMENT '성별',
+    `gender`      CHAR(1) COMMENT '성별',
     `phone`       VARCHAR(127) COMMENT '전화번호',
     `godo`        INT         DEFAULT 38                NOT NULL COMMENT '고도',
     `status`      VARCHAR(10) DEFAULT 'ACTIVE'          NOT NULL COMMENT '상태',
@@ -62,26 +65,26 @@ ALTER TABLE `users`
 
 
 CREATE TABLE `user_refresh_tokens` (
-    `id`            BIGINT       NOT NULL COMMENT '회원리프레시토큰_코드',
-    `user_id`       BIGINT       NOT NULL COMMENT '회원_코드',
-    `refresh_token` VARCHAR(255) NOT NULL COMMENT '리프레시토큰',
-    `expired_at`    DATETIME     NOT NULL COMMENT '만료일자',
+    `id`            BIGINT AUTO_INCREMENT NOT NULL COMMENT '회원리프레시토큰_코드',
+    `user_id`       BIGINT                NOT NULL COMMENT '회원_코드',
+    `refresh_token` VARCHAR(255)          NOT NULL COMMENT '리프레시토큰',
+    `expired_at`    DATETIME              NOT NULL COMMENT '만료일자',
     PRIMARY KEY (`id`)
 ) COMMENT = '유저_리프레시토큰';
 
 
 CREATE TABLE `interests` (
-    `id`     BIGINT       NOT NULL COMMENT '성향항목_코드',
-    `name`   VARCHAR(255) NOT NULL COMMENT '항목내용',
+    `id`     BIGINT AUTO_INCREMENT NOT NULL COMMENT '성향항목_코드',
+    `name`   VARCHAR(255)          NOT NULL COMMENT '항목내용',
     `ref_id` BIGINT COMMENT '성향항목_참조코드',
     PRIMARY KEY (`id`)
 ) COMMENT = '성향항목';
 
 
 CREATE TABLE `user_interests` (
-    `id`          BIGINT NOT NULL COMMENT '회원성향_코드',
-    `interest_id` BIGINT NOT NULL COMMENT '성향항목_코드',
-    `user_id`     BIGINT NOT NULL COMMENT '회원_코드',
+    `id`          BIGINT AUTO_INCREMENT NOT NULL COMMENT '회원성향_코드',
+    `interest_id` BIGINT                NOT NULL COMMENT '성향항목_코드',
+    `user_id`     BIGINT                NOT NULL COMMENT '회원_코드',
     PRIMARY KEY (`id`)
 ) COMMENT = '회원성향';
 
@@ -95,12 +98,12 @@ ALTER TABLE `user_interests`
 
 
 CREATE TABLE `social_users` (
-    `id`            BIGINT       NOT NULL COMMENT '소셜로그인_코드',
-    `user_id`       BIGINT       NOT NULL COMMENT '회원_코드',
-    `provider`      VARCHAR(10)  NOT NULL COMMENT '소셜로그인제공자',
-    `access_token`  VARCHAR(255) NOT NULL COMMENT '액세스토큰',
-    `refresh_token` VARCHAR(255) NOT NULL COMMENT '리프레시토큰',
-    `expired_at`    DATETIME     NOT NULL COMMENT '리프레시토큰만료시간',
+    `id`            BIGINT AUTO_INCREMENT NOT NULL COMMENT '소셜로그인_코드',
+    `user_id`       BIGINT                NOT NULL COMMENT '회원_코드',
+    `provider`      VARCHAR(10)           NOT NULL COMMENT '소셜로그인제공자',
+    `access_token`  VARCHAR(255)          NOT NULL COMMENT '액세스토큰',
+    `refresh_token` VARCHAR(255)          NOT NULL COMMENT '리프레시토큰',
+    `expired_at`    DATETIME              NOT NULL COMMENT '리프레시토큰만료시간',
     PRIMARY KEY (`id`)
 ) COMMENT = '소셜로그인';
 
@@ -108,7 +111,7 @@ ALTER TABLE `social_users`
     ADD CONSTRAINT `social_users_CK` CHECK ( `provider` IN ('KAKAO', 'NAVER', 'GOOGLE') );
 
 CREATE TABLE `travels` (
-    `id`          BIGINT                                NOT NULL COMMENT '여행지소개_코드',
+    `id`          BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '여행지소개_코드',
     `user_id`     BIGINT                                NOT NULL COMMENT '회원_코드',
     `category_id` BIGINT                                NOT NULL COMMENT '카테고리_코드',
     `area_id`     BIGINT                                NOT NULL COMMENT '지역_코드',
@@ -144,7 +147,7 @@ ALTER TABLE `travels`
 
 
 CREATE TABLE `travel_comments` (
-    `id`          BIGINT                             NOT NULL COMMENT '여행지소개댓글_코드',
+    `id`          BIGINT AUTO_INCREMENT              NOT NULL COMMENT '여행지소개댓글_코드',
     `user_id`     BIGINT                             NOT NULL COMMENT '회원_코드',
     `travel_id`   BIGINT                             NOT NULL COMMENT '여행지소개_코드',
     `content`     VARCHAR(500)                       NOT NULL COMMENT '내용',
@@ -161,7 +164,7 @@ ALTER TABLE `travel_comments`
 
 
 CREATE TABLE `travel_logs` (
-    `id`          BIGINT                                NOT NULL COMMENT '여행기록_코드',
+    `id`          BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '여행기록_코드',
     `user_id`     BIGINT                                NOT NULL COMMENT '회원_코드',
     `category_id` BIGINT                                NOT NULL COMMENT '카테고리_코드',
     `area_id`     BIGINT                                NOT NULL COMMENT '지역_코드',
@@ -193,7 +196,7 @@ ALTER TABLE `travel_logs`
 
 
 CREATE TABLE `travel_log_items` (
-    `id`            BIGINT                             NOT NULL COMMENT '여행기록항목_코드',
+    `id`            BIGINT AUTO_INCREMENT              NOT NULL COMMENT '여행기록항목_코드',
     `travel_log_id` BIGINT                             NOT NULL COMMENT '여행기록_코드',
     `place_id`      BIGINT                             NOT NULL COMMENT '장소_코드',
     `order`         INT                                NOT NULL COMMENT '순서',
@@ -216,7 +219,7 @@ ALTER TABLE `travel_log_items`
 
 
 CREATE TABLE `schedules` (
-    `id`          BIGINT                                NOT NULL COMMENT '일정_코드',
+    `id`          BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '일정_코드',
     `user_id`     BIGINT                                NOT NULL COMMENT '회원_코드',
     `area_id`     BIGINT                                NOT NULL COMMENT '지역_코드',
     `start_date`  DATE                                  NOT NULL COMMENT '여행시작일',
@@ -243,7 +246,7 @@ ALTER TABLE `schedules`
         REFERENCES `users` (`id`);
 
 CREATE TABLE `schedule_items` (
-    `id`          BIGINT                             NOT NULL COMMENT '일정계획_코드',
+    `id`          BIGINT AUTO_INCREMENT              NOT NULL COMMENT '일정계획_코드',
     `schedule_id` BIGINT                             NOT NULL COMMENT '일정_코드',
     `kind`        VARCHAR(10)                        NOT NULL COMMENT '구분',
     `place_id`    BIGINT COMMENT '장소_코드',
@@ -281,7 +284,7 @@ ALTER TABLE `schedule_items`
 
 
 CREATE TABLE `schedule_participants` (
-    `id`             BIGINT                                NOT NULL COMMENT '일정참여자_코드',
+    `id`             BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '일정참여자_코드',
     `reviewer_id`    BIGINT                                NOT NULL COMMENT '회원_코드',
     `schedule_id`    BIGINT                                NOT NULL COMMENT '일정_코드',
     `review_point`   INT COMMENT '일정후기평점',
@@ -306,7 +309,7 @@ ALTER TABLE `schedule_participants`
 
 
 CREATE TABLE `companions` (
-    `id`                 BIGINT                                NOT NULL COMMENT '동행글_코드',
+    `id`                 BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '동행글_코드',
     `user_id`            BIGINT                                NOT NULL COMMENT '회원_코드',
     `schedule_id`        BIGINT                                NOT NULL COMMENT '일정_코드',
     `age_restriction`    VARCHAR(127)                          NOT NULL COMMENT '동행글나이',
@@ -335,7 +338,7 @@ ALTER TABLE `companions`
 
 
 CREATE TABLE `user_reviews` (
-    `id`               BIGINT                             NOT NULL COMMENT '회원후기_코드',
+    `id`               BIGINT AUTO_INCREMENT              NOT NULL COMMENT '회원후기_코드',
     `companion_id`     BIGINT                             NOT NULL COMMENT '동행글_코드',
     `reviewer_id`      BIGINT                             NOT NULL COMMENT '리뷰작성자_코드',
     `reviewed_user_id` BIGINT                             NOT NULL COMMENT '리뷰를받는회원_코드',
@@ -360,7 +363,7 @@ ALTER TABLE `user_reviews`
 
 
 CREATE TABLE `notifications` (
-    `id`         BIGINT                             NOT NULL COMMENT '알림_코드',
+    `id`         BIGINT AUTO_INCREMENT              NOT NULL COMMENT '알림_코드',
     `user_id`    BIGINT                             NOT NULL COMMENT '회원_코드',
     `kind`       VARCHAR(30)                        NOT NULL COMMENT '구분',
     `is_read`    TINYINT  DEFAULT 0                 NOT NULL COMMENT '읽음상태',
@@ -380,9 +383,9 @@ ALTER TABLE `notifications`
 
 
 CREATE TABLE `profiles` (
-    `id`            BIGINT                             NOT NULL COMMENT '프로필_코드',
+    `id`            BIGINT AUTO_INCREMENT              NOT NULL COMMENT '프로필_코드',
     `user_id`       BIGINT                             NOT NULL COMMENT '회원_코드',
-    `nickname`      VARCHAR(50)                        NOT NULL COMMENT '닉네임',
+    `nickname`      VARCHAR(50)                        NOT NULL UNIQUE COMMENT '닉네임',
     `profile_image` VARCHAR(255) COMMENT '프로필이미지',
     `introduction`  VARCHAR(500) COMMENT '자기소개',
     `mbti`          VARCHAR(4) COMMENT 'MBTI',
@@ -397,7 +400,7 @@ ALTER TABLE `profiles`
 
 
 CREATE TABLE `inquiries` (
-    `id`           BIGINT                             NOT NULL COMMENT '문의_코드',
+    `id`           BIGINT AUTO_INCREMENT              NOT NULL COMMENT '문의_코드',
     `user_id`      BIGINT                             NOT NULL COMMENT '회원_코드',
     `kind`         VARCHAR(10)                        NOT NULL COMMENT '분류',
     `content`      VARCHAR(500)                       NOT NULL COMMENT '문의',
@@ -416,7 +419,7 @@ ALTER TABLE `inquiries`
 
 
 CREATE TABLE `friends` (
-    `id`           BIGINT                        NOT NULL COMMENT '친구_코드',
+    `id`           BIGINT AUTO_INCREMENT         NOT NULL COMMENT '친구_코드',
     `requester_id` BIGINT                        NOT NULL COMMENT '회원_코드',
     `accepter_id`  BIGINT                        NOT NULL COMMENT '친구대상회원_코드',
     `status`       VARCHAR(10) DEFAULT 'PENDING' NOT NULL COMMENT '친구상태',
@@ -433,7 +436,7 @@ ALTER TABLE `friends`
 
 
 CREATE TABLE `blocks` (
-    `id`           BIGINT                             NOT NULL COMMENT '차단_코드',
+    `id`           BIGINT AUTO_INCREMENT              NOT NULL COMMENT '차단_코드',
     `blocked_id`   BIGINT                             NOT NULL COMMENT '차단된회원_코드',
     `blocker_id`   BIGINT                             NOT NULL COMMENT '차단한회원_코드',
     `status`       VARCHAR(10)                        NOT NULL COMMENT '상태',
@@ -452,11 +455,11 @@ ALTER TABLE `blocks`
         REFERENCES `users` (`id`);
 
 CREATE TABLE `likes` (
-    `id`           BIGINT NOT NULL COMMENT '좋아요_코드',
-    `user_id`      BIGINT NOT NULL COMMENT '회원_코드',
+    `id`           BIGINT AUTO_INCREMENT NOT NULL COMMENT '좋아요_코드',
+    `user_id`      BIGINT                NOT NULL COMMENT '회원_코드',
     `kind`         VARCHAR(20) COMMENT '분류',
     `schedule_id`  BIGINT COMMENT '일정_코드',
-    `travel_id`    BIGINT NOT NULL COMMENT '여행지소개_코드',
+    `travel_id`    BIGINT                NOT NULL COMMENT '여행지소개_코드',
     `companion_id` BIGINT COMMENT '동행글_코드',
     PRIMARY KEY (`id`)
 ) COMMENT = '좋아요';
@@ -478,7 +481,7 @@ ALTER TABLE `likes`
 
 
 CREATE TABLE `reports` (
-    `id`           BIGINT                                NOT NULL COMMENT '신고_코드',
+    `id`           BIGINT AUTO_INCREMENT                 NOT NULL COMMENT '신고_코드',
     `reporter_id`  BIGINT                                NOT NULL COMMENT '신고자_코드',
     `kind`         VARCHAR(20)                           NOT NULL COMMENT '분류',
     `schedule_id`  BIGINT COMMENT '일정_코드',
@@ -520,7 +523,7 @@ ALTER TABLE `reports`
 
 
 CREATE TABLE `images` (
-    `id`           BIGINT                             NOT NULL COMMENT '이미지_코드',
+    `id`           BIGINT AUTO_INCREMENT              NOT NULL COMMENT '이미지_코드',
     `travel_id`    BIGINT COMMENT '여행지소개_코드',
     `schedule_id`  BIGINT COMMENT '일정_코드',
     `companion_id` BIGINT COMMENT '동행글_코드',
@@ -557,5 +560,3 @@ ALTER TABLE `images`
 ALTER TABLE `images`
     ADD CONSTRAINT `images_FK4` FOREIGN KEY (`travel_id`)
         REFERENCES `travels` (`id`);
-
-
