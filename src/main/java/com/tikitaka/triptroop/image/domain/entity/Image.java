@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.image.domain.entity;
 
-import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.type.ImageKind;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,9 +22,7 @@ public class Image { // <- Entity 를 본인의 엔티티 명으로 바꿔 주�
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long travelId;
-    @ManyToOne
-    @JoinColumn(name = "scheduleId")
-    private Schedule schedule;
+    private Long scheduleId;
     private Long companionId;
     private Long reportId;
     private Long inquiryId;
@@ -40,7 +37,7 @@ public class Image { // <- Entity 를 본인의 엔티티 명으로 바꿔 주�
 
     public Image(ImageKind kind, Long id, String path, String uuid, String extension, String name) {
         this.kind = kind;
-        this.id = id;
+        this.scheduleId = id;
         this.path = path;
         this.uuid = uuid;
         this.extension = extension;

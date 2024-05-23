@@ -12,6 +12,7 @@ public class ImageCreateRequest { //<- 무슨 요청인지 알수 있게 Request
 //    private final Long travelId;
     @NotBlank
     private final String path;
+    private final Long scheduleId;
     @NotBlank
     private final String uuid;
     @NotBlank

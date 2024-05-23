@@ -29,14 +29,14 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-    @PostMapping("/{scheduleId}/upload")
+    @PostMapping("/{id}/upload")
     public ResponseEntity<Void> imageSave(
             @RequestPart final MultipartFile image,
-            @PathVariable final Long scheduleId
+            @PathVariable final Long id
     ) {
 
-        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+        imageService.save(ImageKind.SCHEDULE, id, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedule/" + id)).build();
     }
 
 }
