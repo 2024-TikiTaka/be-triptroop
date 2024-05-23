@@ -1,10 +1,16 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
+import com.tikitaka.triptroop.travel.domain.type.DeleteStatus;
+import com.tikitaka.triptroop.travel.domain.type.VisibleStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @jakarta.persistence.Entity
 @Table(name = "travels") // <- ""안에 엔티티 매핑할 테이블 명 적어주세요.
@@ -19,7 +25,29 @@ public class Travel { // <- Entity 를 본인의 엔티티 명으로 바꿔 주�
     private Long id;
     private Long userId;
     private Long categoryId;
-    private Long areaId;
+    @ManyToOne
+    @JoinColumn(name = "areaId")
+    private Area areaId;
     private Long placeId;
+    private String title;
+    private String content;
+    @Enumerated(EnumType.STRING)
+    private VisibleStatus status = VisibleStatus.PUBLIC;
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus isDeleted = DeleteStatus.USABLE;
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
+
+    private LocalDateTime deletedAt;
+
+
+
+
 
 }
