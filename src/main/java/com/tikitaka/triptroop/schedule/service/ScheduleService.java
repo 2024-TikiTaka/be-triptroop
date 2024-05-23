@@ -20,11 +20,12 @@ public class ScheduleService {
     private final AreaRepository areaRepository;
 
     /* 내용을 작성해주세요. */
-    public Long save(ScheduleCreateRequest scheduleRequest) {
+    public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
+                userId,
                 area,
                 scheduleRequest.getEndDate(),
                 scheduleRequest.getStartDate()

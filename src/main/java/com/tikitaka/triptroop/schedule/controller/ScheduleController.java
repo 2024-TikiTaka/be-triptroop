@@ -1,14 +1,14 @@
 package com.tikitaka.triptroop.schedule.controller;
 
+import com.tikitaka.triptroop.image.service.ImageService;
+import com.tikitaka.triptroop.schedule.domain.type.ImageKind;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 
@@ -17,13 +17,26 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private final ImageService imageService;
 
     /* 내용을 작성해주세요. */
     @PostMapping("/")
     public ResponseEntity<Void> save(
             @RequestBody @Valid final ScheduleCreateRequest scheduleRequest
+//            @AuthenticationPrincipal final
     ) {
-        final Long scheduleId = scheduleService.save(scheduleRequest);
+        final Long scheduleId = scheduleService.save(scheduleRequest, 2L);// userId 받기
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
+
+    @PostMapping("/{scheduleId}/upload")
+    public ResponseEntity<Void> imageSave(
+            @RequestPart final MultipartFile image,
+            @PathVariable final Long scheduleId
+    ) {
+
+        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+    }
+
 }

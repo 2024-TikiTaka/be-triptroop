@@ -2,7 +2,6 @@ package com.tikitaka.triptroop.schedule.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.VisibleStatus;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,9 +22,7 @@ public class Schedule extends BaseTimeEntity { // <- Entity 를 본인의 엔티
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    private Long userId;
     @ManyToOne
     @JoinColumn(name = "areaId")
     private Area area;
@@ -38,17 +35,18 @@ public class Schedule extends BaseTimeEntity { // <- Entity 를 본인의 엔티
     private Boolean isDeleted = false;
     private LocalDateTime deletedAt;
 
-    public Schedule(String title, Long count, Area area, LocalDate endDate, LocalDate startDate) {
+    public Schedule(String title, Long count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;
         this.count = count;
+        this.userId = userId;
         this.area = area;
         this.endDate = endDate;
         this.startDate = startDate;
     }
 
-    public static Schedule of(String title, Long count, Area area, LocalDate endDate, LocalDate startDate) {
+    public static Schedule of(String title, Long count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         return new Schedule(
-                title, count, area, endDate, startDate
+                title, count, userId, area, endDate, startDate
         );
     }
 }
