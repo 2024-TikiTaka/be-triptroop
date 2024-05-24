@@ -17,13 +17,13 @@ import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.FAIL_TO
 
 public class FileUploadUtils {
 
-    public static String saveFile(String uploadDir, String fileName, MultipartFile multipartFile) {
+    public static String uploadFile(String uploadDir, String fileName, MultipartFile multipartFile) {
 
-        try(InputStream inputStream = multipartFile.getInputStream()) {
-
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             Path uploadPath = Paths.get(uploadDir);
+
             /* 업로드 경로가 존재하지 않을 시 경로 먼저 생성 */
-            if(!Files.exists(uploadPath))
+            if (!Files.exists(uploadPath))
                 Files.createDirectories(uploadPath);
 
             /* 파일명 생성 */
@@ -49,9 +49,7 @@ public class FileUploadUtils {
         } catch (IOException e) {
             throw new ServerInternalException(FAIL_TO_DELETE_FILE);
         }
-
     }
-
 }
 
 

@@ -3,7 +3,7 @@ package com.tikitaka.triptroop.image.service;
 import com.tikitaka.triptroop.common.util.FileUploadUtils;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
-import com.tikitaka.triptroop.schedule.domain.type.ImageKind;
+import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +32,8 @@ public class ImageService {
     }
 
     public void save(ImageKind kind, Long id, MultipartFile image) {
-        String replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, getRandomName(), image);
+        String replaceFileName = FileUploadUtils.uploadFile(IMAGE_DIR, getRandomName(), image);
 
-        System.out.println(id + "@@@@@@@@");
         final Image newImage = Image.of(
                 kind,
                 id,
@@ -43,8 +42,7 @@ public class ImageService {
                 image.getContentType(),
                 image.getName()
         );
+
         imageRepository.save(newImage);
     }
-
-
 }
