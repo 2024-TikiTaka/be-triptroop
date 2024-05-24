@@ -20,9 +20,9 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public Message sendMessage(@Payload Message message) {
-    /* 클라이언트로부터 수신한 메시지를 처리하는 메서드
-    * @Payload 어노테이션은 메시지의 페이로드를 메서드 매개변수로 전달한다.
-    * 즉, Message 객체를 매개변수로 받고 어떠한 가공도 하지 않은 채로 클라이언트에게 반환한다. */
+        /* 클라이언트로부터 수신한 메시지를 처리하는 메서드
+        * @Payload 어노테이션은 메시지의 페이로드를 메서드 매개변수로 전달한다.
+        * 즉, Message 객체를 매개변수로 받고 어떠한 가공도 하지 않은 채로 클라이언트에게 반환한다. */
         return message;
     }
 
@@ -38,10 +38,5 @@ public class ChatController {
         return message;
 
     }
-
-
-
-
-
 
 }
