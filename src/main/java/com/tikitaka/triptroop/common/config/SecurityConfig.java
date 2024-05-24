@@ -25,8 +25,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -43,11 +41,13 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll();
-                    auth.requestMatchers(HttpMethod.PUT, "/api/v1/**").permitAll();
-                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll();
-                    auth.anyRequest().authenticated();
+                    /* TODO :: 추후 설정 */
+                    // auth.requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll();
+                    // auth.requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll();
+                    // auth.requestMatchers(HttpMethod.PUT, "/api/v1/**").permitAll();
+                    // auth.requestMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll();
+                    // auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
@@ -62,12 +62,13 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList(
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
-                "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
-        corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
+        /* TODO :: 추후 설정 */
+        // corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        // corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
+        // corsConfiguration.setAllowedHeaders(Arrays.asList(
+        //         "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
+        //         "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
+        // corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
