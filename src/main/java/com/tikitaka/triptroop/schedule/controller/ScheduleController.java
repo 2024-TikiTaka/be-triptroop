@@ -1,8 +1,10 @@
 package com.tikitaka.triptroop.schedule.controller;
 
+import com.tikitaka.triptroop.common.dto.response.CommonResponse;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.domain.type.ImageKind;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class ScheduleController {
 
     /* 내용을 작성해주세요. */
     @PostMapping("/")
-    public ResponseEntity<Void> save(
+    public ResponseEntity<CommonResponse<Void>> save(
             @RequestBody @Valid final ScheduleCreateRequest scheduleRequest
 //            @AuthenticationPrincipal final
     ) {
@@ -29,14 +31,24 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<Void> imageSave(
-            @RequestPart final MultipartFile image,
+    @PostMapping("/{id}/item")
+    public ResponseEntity<CommonResponse<Void>> itemSave(
+            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
             @PathVariable final Long id
     ) {
 
-        imageService.save(ImageKind.SCHEDULE, id, image);
+        scheduleService.itemSave(scheduleItemRequest, id);
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + id)).build();
+    }
+
+    @PostMapping("/{imgId}/upload")
+    public ResponseEntity<CommonResponse<Void>> imageSave(
+            @RequestPart final MultipartFile image,
+            @PathVariable final Long imgId
+    ) {
+
+        imageService.save(ImageKind.SCHEDULE, imgId, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedule/" + imgId)).build();
     }
 
 }
