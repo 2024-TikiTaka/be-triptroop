@@ -5,5 +5,5 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ScheduleCreateResponse {
+public class ScheduleResponse {
 }

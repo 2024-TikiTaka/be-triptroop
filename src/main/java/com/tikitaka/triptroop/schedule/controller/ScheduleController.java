@@ -22,6 +22,16 @@ public class ScheduleController {
 
     private final ImageService imageService;
 
+//    @GetMapping()
+//    public ResponseEntity<PagingResponse> findAllSchedules(
+//            @RequestParam(defaultValue = "1") final Integer page,
+//            @RequestParam(required = false) final Long areaId,
+//            @RequestParam(required = false) final Long likeId,
+//            @RequestParam(required = false) final String title
+//    ) {
+//        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, areaId, likeId, title);
+//    }
+
     @PostMapping()
     public ResponseEntity<Void> save(@RequestBody @Valid final ScheduleCreateRequest scheduleRequest
             /* @AuthenticationPrincipal final */) {

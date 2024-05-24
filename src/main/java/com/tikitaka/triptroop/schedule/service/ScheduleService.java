@@ -28,7 +28,7 @@ public class ScheduleService {
 
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -53,5 +53,9 @@ public class ScheduleService {
         );
         final ScheduleItem scheduleItem = scheduleItemRepository.save(newItem);
     }
+
+//    public Page<ScheduleResponse> findAllSchedules(Integer page, Long areaId, Long likeId, String title) {
+//        return
+//    }
 }
 
