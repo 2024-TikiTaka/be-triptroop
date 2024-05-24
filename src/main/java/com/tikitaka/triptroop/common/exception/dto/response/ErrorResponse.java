@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 public class ErrorResponse {
 
     private final int code;
-    private final String message;
 
+    private final String message;
+ 
     public ErrorResponse(ExceptionCode exceptionCode) {
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMessage();
