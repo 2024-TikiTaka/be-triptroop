@@ -67,4 +67,6 @@ public class Image {
             case COMPANION -> this.companionId = id;
         }
     }
+
+
 }
