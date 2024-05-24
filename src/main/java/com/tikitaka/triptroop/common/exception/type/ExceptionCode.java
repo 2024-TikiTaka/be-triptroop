@@ -19,7 +19,8 @@ public enum ExceptionCode {
     NOT_FOUND_VALID_ORDER(5001, "유효한 주문 건이 아닙니다."),
     ALREADY_EXIST_REVIEW(6000, "해당 주문 건에 이미 작성 된 리뷰가 있습니다."),
     NOT_FOUND_AREA_CODE(2001, " 지역코드에 해당하는 지역이 존재하지 않습니다."),
-    NOT_FOUND_PLACE_CODE(2002, " 장소코드에 해당하는 지역이 존재하지 않습니다.");
+    NOT_FOUND_PLACE_CODE(2002, " 장소코드에 해당하는 지역이 존재하지 않습니다."),
+    NOT_FOUND_IMAGE(2003, "이미지코드에 이미지가 없습니다.");
 
     private final int code;
     private final String message;

@@ -1,5 +1,7 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
+
+import com.tikitaka.triptroop.common.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.VisibleStatus;
 import jakarta.persistence.*;

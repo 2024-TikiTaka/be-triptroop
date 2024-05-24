@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -58,7 +57,7 @@ public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인�
 
 
     /* 여행지 소개 등록 */
-    public Long save(final TravelRequest travelRequest, final MultipartFile travelImg, Long userId) {
+    public Long save(final TravelRequest travelRequest, final Long userId) {
 
 
         Category category = categoryRepository.findById(travelRequest.getCategoryId())

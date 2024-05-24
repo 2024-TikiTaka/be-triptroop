@@ -14,12 +14,19 @@ public class TravelResponse { //<- 무슨 응답인지 알수 있게 Response �
     private final Long id;
     private final String title;
     private final String content;
+    private final String images;
+
 
     public static TravelResponse from(final Travel travel) {
+
+
         return new TravelResponse(
                 travel.getId(),
                 travel.getTitle(),
-                travel.getContent()
+                travel.getContent(),
+                travel.getImages().toString()
+
+
         );
     }
 }
