@@ -19,7 +19,7 @@ CREATE TABLE `areas`
 CREATE TABLE `categories`
 (
     `id`         BIGINT AUTO_INCREMENT              NOT NULL COMMENT '카테고리_코드',
-    `name`       BIGINT                             NOT NULL COMMENT '카테고리_이름',
+    `name`       VARCHAR(127)                       NOT NULL COMMENT '카테고리_이름',
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '생성일시',
     `deleted_at` DATETIME COMMENT '삭제일시',
     PRIMARY KEY (`id`)
@@ -262,7 +262,7 @@ CREATE TABLE `schedule_items`
 (
     `id`          BIGINT AUTO_INCREMENT              NOT NULL COMMENT '일정계획_코드',
     `schedule_id` BIGINT                             NOT NULL COMMENT '일정_코드',
-    `kind`        VARCHAR(10)                        NOT NULL COMMENT '구분',
+    `kind`        VARCHAR(20)                        NOT NULL COMMENT '구분',
     `place_id`    BIGINT COMMENT '장소_코드',
     `plan_date`   DATE                               NOT NULL COMMENT '계획일정일자',
     `cost`        INT COMMENT '비용',
