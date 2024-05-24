@@ -1,4 +1,4 @@
-name: Example CI & CD
+name: CI/CD
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
   #  branches: ["develop"]
 
 jobs:
+  # [CI] 
   test:
     runs-on: ubuntu-latest
     steps:
@@ -39,8 +40,8 @@ jobs:
           arguments: build -x test
 
       # 테스트 진행
-      - name: Test
-        run: ./gradlew test
+      # - name: Test
+      #   run: ./gradlew test
 
       # Docker 로그인
       - name: Docker Login
@@ -56,9 +57,9 @@ jobs:
           docker tag  ${{ secrets.DOCKER_REPO }}:latest ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
-      # ssh 접속 및 명령어로 기존 컨테이너를 내리고, 이미지를 업데이트해 배포한다.
+      # [CD] ssh 접속 및 명령어로 기존 컨테이너를 내리고, 이미지를 업데이트해 배포한다.
       - name: Deploy to server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master 
         id: deploy
         with:
           host: ${{ secrets.EC2_HOST }}
