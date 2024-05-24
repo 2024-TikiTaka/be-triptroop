@@ -18,7 +18,9 @@ public class ScheduleCreateRequest { //<- 무슨 요청인지 알수 있게 Requ
     private final String title;
     @Min(value = 1)
     private final Long count;
+    @NotNull
     private final Long areaId;
+    @NotNull
     private final Long userId;
     @NotNull
     private final LocalDate startDate;

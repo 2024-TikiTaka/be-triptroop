@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.schedule.dto.request;
 
+import com.tikitaka.triptroop.schedule.domain.type.ScheduleItemKind;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,9 +18,11 @@ public class ScheduleItemCreateRequest { //<- 무슨 요청인지 알수 있게 
     @NotBlank
     private final String content;
     @Min(value = 1)
-    private final Long cost;
+    private final int cost;
     @NotNull
-    private final Long scheduleId;
     private final Long placeId;
+    @NotNull
     private final LocalDate planDate;
+    @NotNull
+    private final ScheduleItemKind kind;
 }
