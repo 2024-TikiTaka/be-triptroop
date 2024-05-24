@@ -48,10 +48,11 @@ public class Travel extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-
+    private int views;
     @OneToMany
     @JoinColumn(name = "travelId")
     private List<Image> images;
+
 
     private Travel(Long userId,
                    Category category,
@@ -65,6 +66,7 @@ public class Travel extends BaseTimeEntity {
         this.place = place;
         this.title = title;
         this.content = content;
+
     }
 
     public static Travel of(
@@ -74,6 +76,7 @@ public class Travel extends BaseTimeEntity {
             final Place place,
             final String title,
             final String content
+
     ) {
         return new Travel(
                 userId,
@@ -83,5 +86,9 @@ public class Travel extends BaseTimeEntity {
                 title,
                 content
         );
+    }
+
+    public void increaseViews() {
+        this.views++;
     }
 }

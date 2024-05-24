@@ -2,6 +2,7 @@ package com.tikitaka.triptroop.travel.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TravelRequest {
 
-    @Min(value = 1)
+    @NotNull
     private final Long userId;
 
     @Min(value = 1)
