@@ -262,7 +262,7 @@ CREATE TABLE `schedule_items`
 (
     `id`          BIGINT AUTO_INCREMENT              NOT NULL COMMENT '일정계획_코드',
     `schedule_id` BIGINT                             NOT NULL COMMENT '일정_코드',
-    `kind`        VARCHAR(10)                        NOT NULL COMMENT '구분',
+    `kind`        VARCHAR(20)                        NOT NULL COMMENT '구분',
     `place_id`    BIGINT COMMENT '장소_코드',
     `plan_date`   DATE                               NOT NULL COMMENT '계획일정일자',
     `cost`        INT COMMENT '비용',

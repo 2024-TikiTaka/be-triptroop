@@ -46,6 +46,5 @@ public class ImageService {
         imageRepository.save(newImage);
     }
 
-    /* 내용을 작성해주세요. */
 
 }

@@ -35,9 +35,9 @@ public class Image { // <- Entity 를 본인의 엔티티 명으로 바꿔 주�
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Image(ImageKind kind, Long id, String path, String uuid, String extension, String name) {
+    private Image(ImageKind kind, Long id, String path, String uuid, String extension, String name) {
         this.kind = kind;
-        this.scheduleId = id;
+        setIdByKind(kind, id);
         this.path = path;
         this.uuid = uuid;
         this.extension = extension;
@@ -46,5 +46,15 @@ public class Image { // <- Entity 를 본인의 엔티티 명으로 바꿔 주�
 
     public static Image of(ImageKind kind, Long id, String path, String uuid, String extension, String name) {
         return new Image(kind, id, path, uuid, extension, name);
+    }
+
+    private void setIdByKind(ImageKind kind, Long id) {
+        switch (kind) {
+            case REPORT -> this.reportId = id;
+            case TRAVEL -> this.travelId = id;
+            case SCHEDULE -> this.scheduleId = id;
+            case INQUIRY -> this.inquiryId = id;
+            case COMPANION -> this.companionId = id;
+        }
     }
 }

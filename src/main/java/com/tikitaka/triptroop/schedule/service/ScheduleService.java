@@ -1,10 +1,10 @@
 package com.tikitaka.triptroop.schedule.service;
 
+import com.tikitaka.triptroop.common.domain.entity.Area;
+import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.schedule.domain.entity.Area;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
-import com.tikitaka.triptroop.schedule.domain.repository.AreaRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import lombok.RequiredArgsConstructor;
