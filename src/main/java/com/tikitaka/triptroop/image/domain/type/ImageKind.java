@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.schedule.domain.type;
+package com.tikitaka.triptroop.image.domain.type;
 
 public enum ImageKind {
 

@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,12 +18,12 @@ import java.util.List;
 @Table(name = "travels")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 public class Travel extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long userId;
 
     @ManyToOne
@@ -49,28 +48,26 @@ public class Travel extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-
+    private int views;
     @OneToMany
     @JoinColumn(name = "travelId")
     private List<Image> images;
 
 
-    private Travel(
-            Long userId,
-            Category category,
-            Area area,
-            Place place,
-            String title,
-            String content
-    ) {
+    private Travel(Long userId,
+                   Category category,
+                   Area area,
+                   Place place,
+                   String title,
+                   String content) {
         this.userId = userId;
         this.category = category;
         this.area = area;
         this.place = place;
         this.title = title;
         this.content = content;
-    }
 
+    }
 
     public static Travel of(
             final Long userId,
@@ -79,6 +76,7 @@ public class Travel extends BaseTimeEntity {
             final Place place,
             final String title,
             final String content
+
     ) {
         return new Travel(
                 userId,
@@ -90,5 +88,7 @@ public class Travel extends BaseTimeEntity {
         );
     }
 
-
+    public void increaseViews() {
+        this.views++;
+    }
 }

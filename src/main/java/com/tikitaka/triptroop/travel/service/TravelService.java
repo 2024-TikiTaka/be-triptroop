@@ -24,23 +24,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인의 폴더명으로 바꿔주세요.
+public class TravelService {
 
-    /* 내용을 작성해주세요. */
     private final TravelRepository travelRepository;
+
     private final CategoryRepository categoryRepository;
+
     private final AreaRepository areaRepository;
+
     private final PlaceRepository placeRepository;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("id").descending());
     }
 
-
-    /* 공개 게시글 조회 */
+    /* 여행지 소개 조회 */
     @Transactional(readOnly = true)
     public Page<TravelResponse> findAll(final Integer page, final Long categoryId, final Long areaId) {
-
 
         Page<Travel> travels = null;
         if (areaId != null && areaId > 0) {
@@ -55,10 +55,8 @@ public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인�
         return travels.map(TravelResponse::from);
     }
 
-
     /* 여행지 소개 등록 */
     public Long save(final TravelRequest travelRequest, final Long userId) {
-
 
         Category category = categoryRepository.findById(travelRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
@@ -67,23 +65,16 @@ public class TravelService { //<- Service 앞의 tt 부분을 변경한 본인�
         Place place = placeRepository.findById(travelRequest.getPlaceId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
 
-
         final Travel newTravel = Travel.of(
-                userId,  //유저엔티티
+                userId,  // 유저엔티티
                 category, // 카테고리엔티티
                 area, // 지역엔티티
                 place, // 장소 엔티티
                 travelRequest.getTitle(),
                 travelRequest.getContent()
-
-
         );
-
-
         final Travel travel = travelRepository.save(newTravel);
 
         return travel.getId();
-
-
     }
 }
