@@ -37,19 +37,18 @@ public class ScheduleItem extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-    private ScheduleItem(Long id, String content, Integer cost, LocalDate planDate, Long placeId, ScheduleItemKind
+    private ScheduleItem(Long id, String content, Integer cost, LocalDate planDate, ScheduleItemKind
             kind) {
         this.scheduleId = id;
         this.content = content;
         this.cost = cost;
         this.planDate = planDate;
-        this.placeId = placeId;
         this.kind = kind;
     }
 
-    public static ScheduleItem of(final Long id, final String content, final Integer cost, final LocalDate planDate, final Long placeId, final ScheduleItemKind kind) {
+    public static ScheduleItem of(final Long id, final String content, final Integer cost, final LocalDate planDate, final ScheduleItemKind kind) {
         return new ScheduleItem(
-                id, content, cost, planDate, placeId, kind
+                id, content, cost, planDate, kind
         );
     }
 }
