@@ -8,6 +8,7 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,25 +33,39 @@ public class TravelController {
     public ResponseEntity<CommonResponse<PagingResponse>> findAll(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long areaId,
-            @RequestParam(required = false) final Long categoryId) {
+            @RequestParam(required = false) final Long categoryId,
+            @RequestParam(required = false) final String title) {
 
-        final Page<TravelResponse> travels = travelService.findAll(page, areaId, categoryId);
+
+        final Page<TravelsResponse> travels = travelService.findAll(page, areaId, categoryId, title);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(travels);
         final PagingResponse pagingResponse = PagingResponse.of(travels.getContent(), pagingButtonInfo);
 
         return ResponseEntity.ok(CommonResponse.success(pagingResponse));
     }
 
-    /* 여행 소개 등록 */
-    @PostMapping("/{travelId}/insert")
-    public ResponseEntity<CommonResponse<Void>> save(
-            @RequestBody @Valid final TravelRequest travelRequest
+    /* 상세 게시글 조회 */
+    @GetMapping("/{travelId}")
+    public ResponseEntity<CommonResponse<TravelResponse>> findTravelId(@PathVariable final Long travelId) {
 
-    ) {
+        final TravelResponse travelResponse = travelService.findTravelId(travelId);
+
+        return ResponseEntity.ok(CommonResponse.success(travelResponse));
+    }
+
+
+    /* 여행 소개 등록 */
+    @PostMapping("/insert")
+    public ResponseEntity<CommonResponse<Void>> save(
+            @RequestPart @Valid final TravelRequest travelRequest,
+            @RequestPart final MultipartFile image) {
 
         final Long travelId = travelService.save(travelRequest, 2L);
-        return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
+        imageService.save(ImageKind.TRAVEL, travelId, image);
+
+        return ResponseEntity.created(URI.create("/api/v1/travels/" + travelId)).build();
     }
+
 
     @PostMapping(value = "/{travelId}/upload")
     public ResponseEntity<Void> imageSave(@RequestPart final MultipartFile image,

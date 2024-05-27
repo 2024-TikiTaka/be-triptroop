@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /* Entity에는 Entity명 적기 */
 public interface TravelRepository extends JpaRepository<Travel, Long> {
 
@@ -26,5 +28,12 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
     @EntityGraph(attributePaths = "images")
     Page<Travel> findByCategoryIdAndVisibility(Pageable pageable, Long id, Visibility visibility);
 
+    /* 공개게시글 제목 기준 조회*/
+    @EntityGraph(attributePaths = "images")
+    Page<Travel> findByTitleAndVisibility(Pageable pageable, String title, Visibility visibility);
+
+    /* 공개 게시글 상세 조회 */
+    @EntityGraph(attributePaths = "images")
+    Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
 
 }

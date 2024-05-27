@@ -13,6 +13,7 @@ import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,26 +35,40 @@ public class TravelService {
 
     private final PlaceRepository placeRepository;
 
+
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("id").descending());
     }
 
     /* 여행지 소개 조회 */
     @Transactional(readOnly = true)
-    public Page<TravelResponse> findAll(final Integer page, final Long categoryId, final Long areaId) {
+    public Page<TravelsResponse> findAll(final Integer page, final Long categoryId, final Long areaId, final String title) {
 
         Page<Travel> travels = null;
         if (areaId != null && areaId > 0) {
             travels = travelRepository.findByAreaIdAndVisibility(getPageable(page), areaId, Visibility.PUBLIC);
         } else if (categoryId != null && categoryId > 0) {
             travels = travelRepository.findByCategoryIdAndVisibility(getPageable(page), categoryId, Visibility.PUBLIC);
+        } else if (title != null && !title.isEmpty()) {
+            travels = travelRepository.findByTitleAndVisibility(getPageable(page), title, Visibility.PUBLIC);
         } else {
             travels = travelRepository.findByVisibility(getPageable(page), Visibility.PUBLIC);
         }
 
 
-        return travels.map(TravelResponse::from);
+        return travels.map(TravelsResponse::from);
     }
+
+    /* 여행지 소개 상세 조회*/
+    @Transactional(readOnly = true)
+    public TravelResponse findTravelId(final Long id) {
+
+        Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL_CODE));
+
+        return TravelResponse.from(travel);
+    }
+
 
     /* 여행지 소개 등록 */
     public Long save(final TravelRequest travelRequest, final Long userId) {

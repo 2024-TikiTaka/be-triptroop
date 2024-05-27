@@ -14,6 +14,8 @@ public class ImageCreateRequest {
 
     private final Long scheduleId;
 
+    private final Long travelId;
+
     @NotBlank
     private final String uuid;
 

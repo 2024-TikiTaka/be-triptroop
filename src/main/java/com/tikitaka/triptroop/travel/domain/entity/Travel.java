@@ -22,20 +22,21 @@ public class Travel extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "travel_id")
     private Long id;
 
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "areaId")
+    @JoinColumn(name = "area_id")
     private Area area;
 
     @ManyToOne
-    @JoinColumn(name = "placeId")
+    @JoinColumn(name = "place_id")
     private Place place;
 
     private String title;
@@ -50,7 +51,7 @@ public class Travel extends BaseTimeEntity {
     private LocalDateTime deletedAt;
     private int views;
     @OneToMany
-    @JoinColumn(name = "travelId")
+    @JoinColumn(name = "image_id")
     private List<Image> images;
 
 

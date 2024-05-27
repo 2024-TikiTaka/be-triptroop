@@ -17,6 +17,7 @@ public class Place extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "place_id")
     private Long id;
 
     private String kakaomapId;
