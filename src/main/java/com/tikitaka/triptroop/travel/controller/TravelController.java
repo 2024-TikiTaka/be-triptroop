@@ -48,7 +48,7 @@ public class TravelController {
     @GetMapping("/{travelId}")
     public ResponseEntity<CommonResponse<TravelResponse>> findTravelId(@PathVariable final Long travelId) {
 
-        final TravelResponse travelResponse = travelService.findTravelId(travelId);
+        final TravelResponse travelResponse = travelService.findByTravelId(travelId);
 
         return ResponseEntity.ok(CommonResponse.success(travelResponse));
     }

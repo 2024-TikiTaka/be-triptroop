@@ -2,13 +2,13 @@ package com.tikitaka.triptroop.travel.service;
 
 import com.tikitaka.triptroop.common.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.entity.Category;
-import com.tikitaka.triptroop.common.domain.entity.Place;
 import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
 import com.tikitaka.triptroop.common.domain.repository.CategoryRepository;
-import com.tikitaka.triptroop.common.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.place.domain.entity.Place;
+import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
@@ -61,7 +61,7 @@ public class TravelService {
 
     /* 여행지 소개 상세 조회*/
     @Transactional(readOnly = true)
-    public TravelResponse findTravelId(final Long id) {
+    public TravelResponse findByTravelId(final Long id) {
 
         Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL_CODE));

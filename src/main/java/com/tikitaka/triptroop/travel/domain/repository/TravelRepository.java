@@ -33,7 +33,7 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
     Page<Travel> findByTitleAndVisibility(Pageable pageable, String title, Visibility visibility);
 
     /* 공개 게시글 상세 조회 */
-    @EntityGraph(attributePaths = "images")
+    @EntityGraph(attributePaths = {"images", "place", "travelComments"})
     Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
 
 }

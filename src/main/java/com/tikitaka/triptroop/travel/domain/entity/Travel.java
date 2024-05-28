@@ -3,9 +3,9 @@ package com.tikitaka.triptroop.travel.domain.entity;
 import com.tikitaka.triptroop.common.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.entity.Category;
-import com.tikitaka.triptroop.common.domain.entity.Place;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.image.domain.entity.Image;
+import com.tikitaka.triptroop.place.domain.entity.Place;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,6 +27,23 @@ public class Travel extends BaseTimeEntity {
 
     private Long userId;
 
+    private String title;
+
+    private String content;
+
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility = Visibility.PUBLIC;
+
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deletedAt;
+    private int views;
+
+
+//    @ManyToOne
+//    @JoinColumn(name = "profileId")
+//    private Profile profile;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -39,20 +56,13 @@ public class Travel extends BaseTimeEntity {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private String title;
-
-    private String content;
-
-    @Enumerated(EnumType.STRING)
-    private Visibility visibility = Visibility.PUBLIC;
-
-    private Boolean isDeleted = false;
-
-    private LocalDateTime deletedAt;
-    private int views;
     @OneToMany
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "travelId")
     private List<Image> images;
+
+    @OneToMany
+    @JoinColumn(name = "travelId")
+    private List<TravelComment> travelComments;
 
 
     private Travel(Long userId,
@@ -67,7 +77,6 @@ public class Travel extends BaseTimeEntity {
         this.place = place;
         this.title = title;
         this.content = content;
-
     }
 
     public static Travel of(
@@ -77,7 +86,6 @@ public class Travel extends BaseTimeEntity {
             final Place place,
             final String title,
             final String content
-
     ) {
         return new Travel(
                 userId,
