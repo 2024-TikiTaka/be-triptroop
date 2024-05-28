@@ -1,21 +1,24 @@
 package com.tikitaka.triptroop.common.domain.entity;
 
+import com.tikitaka.triptroop.common.domain.type.ContentKind;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "areas")
+@Table(name = "likes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Area {
+public class Like {
 
     @Id
-    @Column(name = "area_id")
+    @Column(name = "like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "area_id")
     private Long id;
-
-    private String sido;
+    private Long userId;
+    private ContentKind kind;
+    private Long scheduleId;
+    private Long travelId;
+    private Long companionId;
 }

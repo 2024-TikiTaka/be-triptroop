@@ -19,13 +19,14 @@ import java.time.LocalDateTime;
 public class Schedule extends BaseTimeEntity {
 
     @Id
+    @Column(name = "schedule_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "areaId")
+    @JoinColumn(name = "area_id")
     private Area area;
 
     private LocalDate startDate;
@@ -34,7 +35,7 @@ public class Schedule extends BaseTimeEntity {
 
     private String title;
 
-    private Long count;
+    private Integer count;
 
     @Enumerated(EnumType.STRING)
     private Visibility visibility = Visibility.PUBLIC;
@@ -42,8 +43,9 @@ public class Schedule extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
+    private Integer views = 0;
 
-    private Schedule(String title, Long count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
+    private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;
         this.count = count;
         this.userId = userId;
@@ -52,7 +54,7 @@ public class Schedule extends BaseTimeEntity {
         this.startDate = startDate;
     }
 
-    public static Schedule of(String title, Long count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
+    public static Schedule of(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         return new Schedule(
                 title, count, userId, area, endDate, startDate
         );
