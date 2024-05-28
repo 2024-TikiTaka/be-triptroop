@@ -1,5 +1,6 @@
-package com.tikitaka.triptroop.common.domain.entity;
+package com.tikitaka.triptroop.place.domain.entity;
 
+import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +22,8 @@ public class Place extends BaseTimeEntity {
     private Long id;
 
     private String kakaomapId;
+
+    private String address;
 
     private String name;
 
