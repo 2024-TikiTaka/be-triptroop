@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.common.domain.entity;
+package com.tikitaka.triptroop.common.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

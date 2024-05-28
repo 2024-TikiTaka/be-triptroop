@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import jakarta.persistence.*;

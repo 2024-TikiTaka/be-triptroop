@@ -1,7 +1,7 @@
 package com.tikitaka.triptroop.user.domain.entity;
 
 
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,9 +16,14 @@ public class Profile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
+
     private Long userId;
+
     private String nickname;
+
     private String profileImage;
+
     private String introduction;
+
     private String mbti;
 }

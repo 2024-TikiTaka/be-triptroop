@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.travel.service;
 
 
-import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
-import com.tikitaka.triptroop.common.domain.repository.CategoryRepository;
+import com.tikitaka.triptroop.area.repository.AreaRepository;
+import com.tikitaka.triptroop.category.domain.repository.CategoryRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
@@ -62,7 +62,7 @@ public class TravelService {
     public TravelResponse findByTravelId(final Long id) {
 
         Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL_CODE));
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL_CODE));
 
         return TravelResponse.from(travel);
     }
@@ -71,12 +71,12 @@ public class TravelService {
     /* 여행지 소개 등록 */
     public Long save(final TravelRequest travelRequest, final Long userId) {
 
-//        Category category = categoryRepository.findById(travelRequest.getCategoryId())
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
-//        Area area = areaRepository.findById(travelRequest.getAreaId())
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_CODE));
-//        Place place = placeRepository.findById(travelRequest.getPlaceId())
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
+        //        Category category = categoryRepository.findById(travelRequest.getCategoryId())
+        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
+        //        Area area = areaRepository.findById(travelRequest.getAreaId())
+        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_CODE));
+        //        Place place = placeRepository.findById(travelRequest.getPlaceId())
+        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
 
         final Travel newTravel = Travel.of(
                 userId,

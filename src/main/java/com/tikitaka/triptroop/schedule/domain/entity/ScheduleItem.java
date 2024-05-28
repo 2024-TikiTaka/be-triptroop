@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.schedule.domain.type.ScheduleItemKind;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

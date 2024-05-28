@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.common.util;
+package com.tikitaka.triptroop.image.util;
 
 import com.tikitaka.triptroop.common.exception.ServerInternalException;
 import com.tikitaka.triptroop.image.domain.entity.Image;

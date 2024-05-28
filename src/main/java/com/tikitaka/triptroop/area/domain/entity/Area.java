@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.common.domain.entity;
+package com.tikitaka.triptroop.area.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class Area {
 
     @Id
-    @Column(name = "area_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "area_id")
     private Long id;

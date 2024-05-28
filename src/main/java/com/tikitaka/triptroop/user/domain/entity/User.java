@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.user.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.user.domain.type.Gender;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
 import com.tikitaka.triptroop.user.domain.type.UserStatus;

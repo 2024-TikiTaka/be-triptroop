@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
 
-import com.tikitaka.triptroop.common.domain.entity.Area;
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.area.domain.entity.Area;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -43,6 +43,7 @@ public class Schedule extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
+
     private Integer views = 0;
 
     private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
