@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.common.util;
 
 import com.tikitaka.triptroop.common.exception.ServerInternalException;
+import com.tikitaka.triptroop.image.domain.entity.Image;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,10 @@ public class FileUploadUtils {
         } catch (IOException e) {
             throw new ServerInternalException(FAIL_TO_UPLOAD_FILE);
         }
+    }
+
+    public static String getFullPath(Image image) {
+        return image.getPath() + image.getUuid();
     }
 
     public static void deleteFile(String uploadDir, String fileName) {
