@@ -10,17 +10,17 @@ import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
+import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -29,34 +29,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
 
-    private Pageable getPageable(final Integer page) {
-        return PageRequest.of(page - 1, 10, Sort.by("id").descending());
+    private Pageable getPageable(final Integer page, final String sort) {
+        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
     }
+
+    private Pageable getPageable(final Integer page) {
+        return getPageable(page, null);
+    }
+
 
     ;
 
-    public Page<ScheduleResponse> findAllSchedules(Integer page, String sido, String title, Integer views) {
-        Page<Schedule> schedules = null;
-//        Page<Like> likes = null;
+    public Page<ScheduleResponse> findAllSchedules(Integer page, String title, String sort) {
+//        Page<Schedule> schedules = null;
+        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, title, sort);
 
-        if (sido != null && !sido.isEmpty()) {
-            schedules = scheduleRepository.findByAreaSidoAndVisibility(getPageable(page), sido, Visibility.PUBLIC);
-        } else if (title != null && !title.isEmpty()) {
-            schedules = scheduleRepository.findByTitleContainsAndVisibility(getPageable(page), title, Visibility.PUBLIC);
-//        } else if (likeId != null && likeId > 0) {
-//            schedules = scheduleRepository.findByLikeIdAndVisibility(getPageable(page), likeId, Visibility.PUBLIC);
-
-        } else if (views != null && views > 0) {
-            schedules = scheduleRepository.findByViewsAndVisibility(getPageable(page), views, Visibility.PUBLIC);
-        } else {
-            schedules = scheduleRepository.findByVisibility(getPageable(page), Visibility.PUBLIC);
-        }
-        return schedules.map(ScheduleResponse::from);
+        return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
     }
 
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {

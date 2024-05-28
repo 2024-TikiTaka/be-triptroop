@@ -20,7 +20,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 //    Page<Schedule> findByLikeIdAndVisibility(Pageable pageable, Long likeId, Visibility visibility);
 
     // TODO: 일정 조회순 조회
-    Page<Schedule> findByViewsAndVisibility(Pageable pageable, int views, Visibility visibility);
+//    Page<Schedule> findByVisibilityOrderByViews(Pageable pageable, Visibility visibility);
 
 
 }

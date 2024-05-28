@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,6 +17,7 @@ public class ScheduleResponse {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String title;
+    private final int views;
 
     public static ScheduleResponse from(final Schedule schedule) {
         return new ScheduleResponse(
@@ -22,7 +25,14 @@ public class ScheduleResponse {
                 schedule.getCount(),
                 schedule.getStartDate(),
                 schedule.getEndDate(),
-                schedule.getTitle()
+                schedule.getTitle(),
+                schedule.getViews()
         );
+    }
+
+    public static List<ScheduleResponse> fromList(List<Schedule> schedules) {
+        return schedules.stream()
+                .map(ScheduleResponse::from)
+                .collect(Collectors.toList());
     }
 }

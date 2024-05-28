@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/schedule")
+@RequestMapping("/api/v1/schedules")
 @RequiredArgsConstructor
 public class ScheduleController {
 
@@ -30,11 +30,11 @@ public class ScheduleController {
     @GetMapping()
     public ResponseEntity<PagingResponse> findAllSchedules(
             @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final String sido,
             @RequestParam(required = false) final String title,
-            @RequestParam(required = false) final Integer views
+            @RequestParam(required = false) final String sort
+
     ) {
-        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, sido, title, views);
+        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, title, sort);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
         final PagingResponse pagingResponse = PagingResponse.of(schedules.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(pagingResponse);
