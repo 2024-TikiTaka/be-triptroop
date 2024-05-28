@@ -28,5 +28,5 @@ public class ScheduleCreateRequest {
     private final String title;
 
     @Min(value = 1)
-    private final Long count;
+    private final Integer count;
 }

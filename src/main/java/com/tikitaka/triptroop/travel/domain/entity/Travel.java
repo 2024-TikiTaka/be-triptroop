@@ -1,9 +1,6 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.Area;
-import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
-import com.tikitaka.triptroop.common.domain.entity.Category;
-import com.tikitaka.triptroop.common.domain.entity.Place;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import jakarta.persistence.*;
@@ -22,25 +19,22 @@ public class Travel extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "travel_id")
     private Long id;
 
+    private Long categoryId;
+
+    private Long areaId;
+
+    private Long placeId;
+
     private Long userId;
-
-    @ManyToOne
-    @JoinColumn(name = "categoryId")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "areaId")
-    private Area area;
-
-    @ManyToOne
-    @JoinColumn(name = "placeId")
-    private Place place;
 
     private String title;
 
     private String content;
+
+    private int views;
 
     @Enumerated(EnumType.STRING)
     private Visibility visibility = Visibility.PUBLIC;
@@ -48,41 +42,39 @@ public class Travel extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-    private int views;
+    
     @OneToMany
     @JoinColumn(name = "travelId")
     private List<Image> images;
 
 
     private Travel(Long userId,
-                   Category category,
-                   Area area,
-                   Place place,
+                   Long categoryId,
+                   Long areaId,
+                   Long placeId,
                    String title,
                    String content) {
         this.userId = userId;
-        this.category = category;
-        this.area = area;
-        this.place = place;
+        this.categoryId = categoryId;
+        this.areaId = areaId;
+        this.placeId = placeId;
         this.title = title;
         this.content = content;
-
     }
 
     public static Travel of(
             final Long userId,
-            final Category category,
-            final Area area,
-            final Place place,
+            final Long categoryId,
+            final Long areaId,
+            final Long placeId,
             final String title,
             final String content
-
     ) {
         return new Travel(
                 userId,
-                category,
-                area,
-                place,
+                categoryId,
+                areaId,
+                placeId,
                 title,
                 content
         );

@@ -27,4 +27,6 @@ public class TravelRequest {
 
     @NotBlank
     private final String content;
+
+
 }

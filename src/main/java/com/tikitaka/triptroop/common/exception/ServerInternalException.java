@@ -4,7 +4,8 @@ import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class ServerInternalException extends CustomException {
+public class ServerInternalException extends BaseException {
+
     public ServerInternalException(final ExceptionCode exceptionCode) {
         super(exceptionCode);
     }

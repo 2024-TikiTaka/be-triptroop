@@ -1,9 +1,9 @@
 package com.tikitaka.triptroop.image.service;
 
-import com.tikitaka.triptroop.common.util.FileUploadUtils;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
+import com.tikitaka.triptroop.image.util.FileUploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
