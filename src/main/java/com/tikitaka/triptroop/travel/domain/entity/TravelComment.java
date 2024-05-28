@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
+import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,9 +20,13 @@ public class TravelComment extends BaseTimeEntity {
     @Column(name = "travel_comment_id")
     private Long id;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User userId;
 
-    private Long travelId;
+    @ManyToOne
+    @JoinColumn(name = "travel_id")
+    private Travel travelId;
 
     private String content;
 

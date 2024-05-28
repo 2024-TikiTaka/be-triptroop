@@ -1,11 +1,8 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
-import com.tikitaka.triptroop.common.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.entity.BaseTimeEntity;
-import com.tikitaka.triptroop.common.domain.entity.Category;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.image.domain.entity.Image;
-import com.tikitaka.triptroop.place.domain.entity.Place;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,11 +22,19 @@ public class Travel extends BaseTimeEntity {
     @Column(name = "travel_id")
     private Long id;
 
+    private Long categoryId;
+
+    private Long areaId;
+
+    private Long placeId;
+
     private Long userId;
 
     private String title;
 
     private String content;
+
+    private int views;
 
     @Enumerated(EnumType.STRING)
     private Visibility visibility = Visibility.PUBLIC;
@@ -37,61 +42,40 @@ public class Travel extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-    private int views;
 
-
-//    @ManyToOne
-//    @JoinColumn(name = "profileId")
-//    private Profile profile;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private Area area;
-
-    @ManyToOne
-    @JoinColumn(name = "place_id")
-    private Place place;
 
     @OneToMany
-    @JoinColumn(name = "travelId")
+    @JoinColumn(name = "travel_id")
     private List<Image> images;
-
-    @OneToMany
-    @JoinColumn(name = "travelId")
-    private List<TravelComment> travelComments;
 
 
     private Travel(Long userId,
-                   Category category,
-                   Area area,
-                   Place place,
+                   Long categoryId,
+                   Long areaId,
+                   Long placeId,
                    String title,
                    String content) {
         this.userId = userId;
-        this.category = category;
-        this.area = area;
-        this.place = place;
+        this.categoryId = categoryId;
+        this.areaId = areaId;
+        this.placeId = placeId;
         this.title = title;
         this.content = content;
     }
 
     public static Travel of(
             final Long userId,
-            final Category category,
-            final Area area,
-            final Place place,
+            final Long categoryId,
+            final Long areaId,
+            final Long placeId,
             final String title,
             final String content
     ) {
         return new Travel(
                 userId,
-                category,
-                area,
-                place,
+                categoryId,
+                areaId,
+                placeId,
                 title,
                 content
         );
