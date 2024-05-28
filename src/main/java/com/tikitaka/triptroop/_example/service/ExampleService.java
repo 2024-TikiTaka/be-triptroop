@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.example.service;
+package com.tikitaka.triptroop._example.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
