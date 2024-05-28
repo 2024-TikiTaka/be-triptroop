@@ -38,6 +38,7 @@ public class TravelService {
         return PageRequest.of(page - 1, 10, Sort.by("id").descending());
     }
 
+    /* 여행지 소개 조회 */
     @Transactional(readOnly = true)
     public Page<TravelResponse> findAll(final Integer page, final Long categoryId, final Long areaId) {
 
@@ -50,6 +51,7 @@ public class TravelService {
             travels = travelRepository.findByVisibility(getPageable(page), Visibility.PUBLIC);
         }
 
+
         return travels.map(TravelResponse::from);
     }
 
@@ -57,11 +59,11 @@ public class TravelService {
     public Long save(final TravelRequest travelRequest, final Long userId) {
 
         Category category = categoryRepository.findById(travelRequest.getCategoryId())
-                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
         Area area = areaRepository.findById(travelRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_CODE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_CODE));
         Place place = placeRepository.findById(travelRequest.getPlaceId())
-                                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
 
         final Travel newTravel = Travel.of(
                 userId,  // 유저엔티티

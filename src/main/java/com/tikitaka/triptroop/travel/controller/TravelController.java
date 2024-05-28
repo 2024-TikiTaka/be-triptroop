@@ -29,9 +29,10 @@ public class TravelController {
 
     /* 전체 게시글 조회 */
     @GetMapping()
-    public ResponseEntity<CommonResponse<PagingResponse>> findAll(@RequestParam(defaultValue = "1") final Integer page,
-                                                                  @RequestParam(required = false) final Long areaId,
-                                                                  @RequestParam(required = false) final Long categoryId) {
+    public ResponseEntity<CommonResponse<PagingResponse>> findAll(
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(required = false) final Long areaId,
+            @RequestParam(required = false) final Long categoryId) {
 
         final Page<TravelResponse> travels = travelService.findAll(page, areaId, categoryId);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(travels);
@@ -41,8 +42,11 @@ public class TravelController {
     }
 
     /* 여행 소개 등록 */
-    @PostMapping()
-    public ResponseEntity<CommonResponse<Void>> save(@RequestPart @Valid final TravelRequest travelRequest) {
+    @PostMapping("/{travelId}/insert")
+    public ResponseEntity<CommonResponse<Void>> save(
+            @RequestBody @Valid final TravelRequest travelRequest
+
+    ) {
 
         final Long travelId = travelService.save(travelRequest, 2L);
         return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
