@@ -19,7 +19,15 @@ public class Message { // <- Entity 를 본인의 엔티티 명으로 바꿔 주
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private MessageType type;
+    private String content;
     private String sender;
+
+    public enum MessageType {
+        CHAT,
+        JOIN,
+        LEAVE
+    }
 
 
 }
