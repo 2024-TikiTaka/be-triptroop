@@ -8,14 +8,28 @@ var connectingElement = document.querySelector('.connecting');
 var initiate = document.querySelector('.initiate');
 
 var stompClient = null;
-var username = "kyle";
+var usernames = ["Kyle", "Andy", "Danny", "Rafael", "Aug"]
+var currentUsername = null;
+var activeUsers = new Set();
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
+/* 테스트를 위해 임의의 사용자 추가 */
+function getRandomName() {
+    let username = null;
+    while (!username || activeUsers.has(username)) {
+        username = usernames[Math.floor(Math.random()*usernames.length)];
+    }
+    return username;
+}
+
 function connect(event) {
+    currentUsername = getRandomName();
+    activeUsers.add(currentUsername);
+
     if(initiate) {
         chatPage.classList.remove('hidden');
 
@@ -37,7 +51,7 @@ function onConnected() {
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
         {},
-        JSON.stringify({sender: username, type: 'JOIN'})
+        JSON.stringify({sender: currentUsername, type: 'JOIN'})
     )
 
     connectingElement.classList.add('hidden');
@@ -55,7 +69,7 @@ function sendMessage(event) {
 
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            sender: currentUsername,
             content: messageInput.value,
             type: 'CHAT'
         };
@@ -78,9 +92,11 @@ function onMessageReceived(payload) {
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
+        activeUsers.add(message.sender);
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
+        activeUsers.delete(message.sender);
     } else {
         messageElement.classList.add('chat-message');
 
