@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.security.dto;
+package com.tikitaka.triptroop.auth.dto;
 
 import com.tikitaka.triptroop.user.domain.type.UserRole;
 import lombok.Getter;

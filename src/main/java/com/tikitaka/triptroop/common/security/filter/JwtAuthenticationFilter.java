@@ -1,6 +1,6 @@
-package com.tikitaka.triptroop.security.filter;
+package com.tikitaka.triptroop.common.security.filter;
 
-import com.tikitaka.triptroop.security.service.AuthService;
+import com.tikitaka.triptroop.auth.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
-package com.tikitaka.triptroop.security.service;
+package com.tikitaka.triptroop.auth.service;
 
 
-import com.tikitaka.triptroop.security.dto.LoginDto;
+import com.tikitaka.triptroop.auth.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

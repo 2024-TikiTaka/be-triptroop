@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.security.handler;
+package com.tikitaka.triptroop.common.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
