@@ -13,10 +13,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ScheduleItemCreateRequest {
 
-    @NotNull
-    private final Long scheduleId;
-
-    private final Long placeId;
 
     @NotNull
     private final LocalDate planDate;
