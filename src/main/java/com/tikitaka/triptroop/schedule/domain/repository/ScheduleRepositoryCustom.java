@@ -6,5 +6,5 @@ import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import java.util.List;
 
 public interface ScheduleRepositoryCustom {
-    List<Schedule> findSchedulesByKeyword(Visibility visibility, String keyword, String sort);
+    List<Schedule> findSchedulesByKeyword(Visibility visibility, String keyword, String sort, Long areaId);
 }

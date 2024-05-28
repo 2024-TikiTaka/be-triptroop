@@ -46,9 +46,9 @@ public class ScheduleService {
 
     ;
 
-    public Page<ScheduleResponse> findAllSchedules(Integer page, String title, String sort) {
+    public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
 //        Page<Schedule> schedules = null;
-        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, title, sort);
+        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
 
         return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
     }
