@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.schedule.controller;
 
-import com.tikitaka.triptroop.common.paging.Pagination;
-import com.tikitaka.triptroop.common.paging.PagingButtonInfo;
-import com.tikitaka.triptroop.common.paging.PagingResponse;
+import com.tikitaka.triptroop.common.page.PageResponse;
+import com.tikitaka.triptroop.common.page.Pagination;
+import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
@@ -28,7 +28,7 @@ public class ScheduleController {
     private final ImageService imageService;
 
     @GetMapping()
-    public ResponseEntity<PagingResponse> findAllSchedules(
+    public ResponseEntity<PageResponse> findAllSchedules(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final String title,
             @RequestParam(required = false) final String sort
@@ -36,7 +36,7 @@ public class ScheduleController {
     ) {
         final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, title, sort);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
-        final PagingResponse pagingResponse = PagingResponse.of(schedules.getContent(), pagingButtonInfo);
+        final PageResponse pagingResponse = PageResponse.of(schedules.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(pagingResponse);
     }
 

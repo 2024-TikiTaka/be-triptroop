@@ -1,9 +1,8 @@
 package com.tikitaka.triptroop.schedule.service;
 
 
-import com.tikitaka.triptroop.common.domain.entity.Area;
-import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
-import com.tikitaka.triptroop.common.domain.type.Visibility;
+import com.tikitaka.triptroop.area.domain.entity.Area;
+import com.tikitaka.triptroop.area.repository.AreaRepository;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
@@ -16,11 +15,12 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -29,6 +29,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
     private final ScheduleItemRepository scheduleItemRepository;
@@ -47,15 +48,16 @@ public class ScheduleService {
     ;
 
     public Page<ScheduleResponse> findAllSchedules(Integer page, String title, String sort) {
-//        Page<Schedule> schedules = null;
-        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, title, sort);
+        Page<Schedule> schedules = null;
+        //         List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, title, sort);
 
-        return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
+        // return new PageImpl<>()ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size();
+        return null;
     }
 
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
