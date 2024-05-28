@@ -10,11 +10,9 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class TravelResponse {
+public class TravelsResponse {
 
     private final Long id;
-
-    private final Long userid;
 
     private final String title;
 
@@ -22,14 +20,12 @@ public class TravelResponse {
 
     private final List<String> images;
 
-    public static TravelResponse from(final Travel travel) {
-        return new TravelResponse(
+    public static TravelsResponse from(final Travel travel) {
+        return new TravelsResponse(
                 travel.getId(),
-                travel.getUserId(),
                 travel.getTitle(),
                 travel.getContent(),
                 travel.getImages().stream().map(FileUploadUtils::getFullPath).toList()
         );
     }
 }
-
