@@ -1,9 +1,9 @@
 package com.tikitaka.triptroop.travel.controller;
 
-import com.tikitaka.triptroop.common.dto.response.CommonResponse;
-import com.tikitaka.triptroop.common.paging.Pagination;
-import com.tikitaka.triptroop.common.paging.PagingButtonInfo;
-import com.tikitaka.triptroop.common.paging.PagingResponse;
+import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import com.tikitaka.triptroop.common.page.PageResponse;
+import com.tikitaka.triptroop.common.page.Pagination;
+import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
@@ -30,7 +30,7 @@ public class TravelController {
 
     /* 전체 게시글 조회 */
     @GetMapping()
-    public ResponseEntity<CommonResponse<PagingResponse>> findAll(
+    public ResponseEntity<ApiResponse<PageResponse>> findAll(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long areaId,
             @RequestParam(required = false) final Long categoryId,
@@ -39,24 +39,24 @@ public class TravelController {
 
         final Page<TravelsResponse> travels = travelService.findAll(page, areaId, categoryId, title);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(travels);
-        final PagingResponse pagingResponse = PagingResponse.of(travels.getContent(), pagingButtonInfo);
+        final PageResponse pagingResponse = PageResponse.of(travels.getContent(), pagingButtonInfo);
 
-        return ResponseEntity.ok(CommonResponse.success(pagingResponse));
+        return ResponseEntity.ok(ApiResponse.success(pagingResponse));
     }
 
     /* 상세 게시글 조회 */
     @GetMapping("/{travelId}")
-    public ResponseEntity<CommonResponse<TravelResponse>> findTravelId(@PathVariable final Long travelId) {
+    public ResponseEntity<ApiResponse<TravelResponse>> findTravelId(@PathVariable final Long travelId) {
 
         final TravelResponse travelResponse = travelService.findByTravelId(travelId);
 
-        return ResponseEntity.ok(CommonResponse.success(travelResponse));
+        return ResponseEntity.ok(ApiResponse.success(travelResponse));
     }
 
 
     /* 여행 소개 등록 */
     @PostMapping("/insert")
-    public ResponseEntity<CommonResponse<Void>> save(
+    public ResponseEntity<ApiResponse<Void>> save(
             @RequestPart @Valid final TravelRequest travelRequest,
             @RequestPart final MultipartFile image) {
 

@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.auth.dto;
+package com.tikitaka.triptroop.common.security.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

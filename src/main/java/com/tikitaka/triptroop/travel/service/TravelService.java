@@ -62,7 +62,7 @@ public class TravelService {
     public TravelResponse findByTravelId(final Long id) {
 
         Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL_CODE));
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
 
         return TravelResponse.from(travel);
     }
