@@ -84,6 +84,4 @@ public class TravelController {
     public Optional<Travel> getTravelByIdAndVisibility(@PathVariable Long id, @RequestParam String visibility) {
         return travelService.getTravelByIdAndVisibility(id, visibility);
     }
-
-
 }
