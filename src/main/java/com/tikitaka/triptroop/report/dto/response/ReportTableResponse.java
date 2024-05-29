@@ -2,8 +2,8 @@ package com.tikitaka.triptroop.report.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tikitaka.triptroop.report.domain.entity.Report;
+import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
-import com.tikitaka.triptroop.report.domain.type.ReportTarget;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ReportTableResponse {
 
     private final Long id;
-    private final ReportTarget kind;
+    private final ReportKind kind;
     private final ReportType type;
     private final String content;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
