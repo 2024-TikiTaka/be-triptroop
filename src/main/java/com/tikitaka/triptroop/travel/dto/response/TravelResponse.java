@@ -22,6 +22,7 @@ public class TravelResponse {
 
     private final List<String> images;
 
+
     public static TravelResponse from(final Travel travel) {
         return new TravelResponse(
                 travel.getId(),
@@ -29,7 +30,11 @@ public class TravelResponse {
                 travel.getTitle(),
                 travel.getContent(),
                 travel.getImages().stream().map(FileUploadUtils::getFullPath).toList()
+
+
         );
+
+
     }
 }
 

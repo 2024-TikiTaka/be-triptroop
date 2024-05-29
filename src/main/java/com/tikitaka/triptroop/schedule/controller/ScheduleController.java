@@ -29,15 +29,23 @@ public class ScheduleController {
 
     @GetMapping()
     public ResponseEntity<PageResponse> findAllSchedules(
-            @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final String title,
-            @RequestParam(required = false) final String sort
+            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+            @RequestParam(required = false, name = "keyword") final String keyword,
+            @RequestParam(required = false, name = "sort") final String sort,
+            @RequestParam(required = false, name = "area") final Long area
+
 
     ) {
-        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, title, sort);
+        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, keyword, sort, area);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
         final PageResponse pagingResponse = PageResponse.of(schedules.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(pagingResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponse> findByScheduleId(@PathVariable(name = "id") final Long scheduleId) {
+        final ScheduleResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+        return ResponseEntity.ok(scheduleDetailResponse);
     }
 
     @PostMapping()

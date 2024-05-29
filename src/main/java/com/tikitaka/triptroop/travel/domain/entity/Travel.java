@@ -42,7 +42,7 @@ public class Travel extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-    
+
     @OneToMany
     @JoinColumn(name = "travelId")
     private List<Image> images;
