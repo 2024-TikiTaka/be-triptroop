@@ -1,17 +1,19 @@
 package com.tikitaka.triptroop.common.security.dto;
 
 import com.tikitaka.triptroop.user.domain.type.UserRole;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-// @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginDto {
 
-    private String email;
+    private final Long userId;
 
-    private String password;
+    private final String email;
 
-    private UserRole role;
+    private final String password;
+
+    private final UserRole role;
 }
