@@ -1,26 +1,22 @@
-package com.tikitaka.triptroop.user.domain.entity;
+package com.tikitaka.triptroop.interest.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "user_refresh_tokens")
+@Table(name = "user_interests")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserRefreshToken {
+public class UserInterest {
 
     @Id
+    @Column(name = "user_interest_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_refresh_token_id")
     private Long id;
 
     private Long userId;
 
-    private String refreshToken;
-
-    private LocalDateTime expiredAt;
+    private Long interestId;
 }

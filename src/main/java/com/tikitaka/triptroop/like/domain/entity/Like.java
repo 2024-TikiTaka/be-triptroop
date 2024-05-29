@@ -19,6 +19,7 @@ public class Like {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
     private ContentKind kind;
 
     private Long scheduleId;

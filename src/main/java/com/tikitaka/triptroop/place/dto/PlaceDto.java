@@ -2,7 +2,7 @@ package com.tikitaka.triptroop.place.dto;
 
 public class PlaceDto {
 
-    public Long id;
+    public Long placeId;
 
     public String kakaomapId;
 

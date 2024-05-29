@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class Profile extends BaseTimeEntity {
 
     @Id
+    @Column(name = "profile_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
 
