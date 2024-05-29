@@ -1,10 +1,13 @@
 package com.tikitaka.triptroop.schedule.service;
 
 
-import com.tikitaka.triptroop.area.domain.entity.Area;
-import com.tikitaka.triptroop.area.repository.AreaRepository;
+import com.tikitaka.triptroop.common.domain.entity.Area;
+import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
+import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.image.domain.entity.Image;
+import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
@@ -15,12 +18,12 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -29,12 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
+    private final ImageRepository imageRepository;
 
     private Pageable getPageable(final Integer page, final String sort) {
         return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
@@ -44,20 +47,37 @@ public class ScheduleService {
         return getPageable(page, null);
     }
 
+    // TODO : 전체 리스트 조회
+    @Transactional(readOnly = true)
+    public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
+        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
+        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
-    ;
+        for (Schedule schedule : schedules) {
+            Long scheduleId = schedule.getId();
+            List<Image> images = imageRepository.findByScheduleId(scheduleId);
 
-    public Page<ScheduleResponse> findAllSchedules(Integer page, String title, String sort) {
-        Page<Schedule> schedules = null;
-        //         List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, title, sort);
+            // 이미지와 함께 ScheduleResponse를 생성하여 리스트에 추가
+            ScheduleResponse scheduleResponse = ScheduleResponse.from(schedule, images);
+            scheduleResponses.add(scheduleResponse);
+        }
 
-        // return new PageImpl<>()ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size();
-        return null;
+        // Page 객체 생성 및 반환
+        return new PageImpl<>(scheduleResponses, getPageable(page, sort), schedules.size());
     }
 
+    // TODO : 상세 조회
+    @Transactional(readOnly = true)
+    public ScheduleResponse getFindByScheduleId(Long scheduleId) {
+
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC);
+        return ScheduleResponse.from(schedule);
+    }
+
+    // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -70,6 +90,7 @@ public class ScheduleService {
         return schedule.getId();
     }
 
+    // TODO : 일정 계획 등록
     public Long saveItem(ScheduleItemCreateRequest scheduleItemRequest, Long id) {
         final ScheduleItem newItem = ScheduleItem.of(
                 id,
@@ -81,6 +102,7 @@ public class ScheduleService {
         final ScheduleItem scheduleItem = scheduleItemRepository.save(newItem);
         return scheduleItem.getId();
     }
+
 
 }
 

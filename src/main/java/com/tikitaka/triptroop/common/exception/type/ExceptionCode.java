@@ -17,15 +17,15 @@ public enum ExceptionCode {
     ACCESS_DENIED(4003, "허가 되지 않은 요청입니다."),
 
     /* 404, NotFoundException */
-    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
     NOT_FOUND_REFRESH_TOKEN(4001, "해당 리프레시 토큰이 유효하지 않습니다."),
-    NOT_FOUND_USER(4004, "해당 회원이 존재하지 않습니다."),
     NOT_FOUND_CATEGORY(1201, "해당 카테고리가 존재하지 않습니다."),
     NOT_FOUND_AREA(2001, "해당 지역이 존재하지 않습니다."),
     NOT_FOUND_PLACE(2002, "해당 장소가 존재하지 않습니다."),
     NOT_FOUND_IMAGE(2003, "해당 이미지가 존재하지 않습니다."),
     NOT_FOUND_TRAVEL(2004, "해당하는 여행지 소개글이 없습니다."),
-
+    NOT_FOUND_REPORT(2005, "신고 내역이 존재하지 않습니다."),
+    NOT_FOUND_BLOCK(2006, "차단한 회원이 존재하지 않습니다."),
+    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
 
     /* 409, ConflictException */
     ALREADY_EXISTS_EMAIL(2000, "이미 존재하는 이메일입니다."),

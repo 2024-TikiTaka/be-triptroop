@@ -4,6 +4,7 @@ package com.tikitaka.triptroop.schedule.domain.entity;
 import com.tikitaka.triptroop.area.domain.entity.Area;
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
+import com.tikitaka.triptroop.image.domain.entity.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "schedules")
@@ -45,6 +47,10 @@ public class Schedule extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     private Integer views = 0;
+
+    @OneToMany
+    @JoinColumn(name = "scheduleId")
+    private List<Image> images;
 
     private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;
