@@ -44,7 +44,7 @@ public class Travel extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @OneToMany
-    @JoinColumn(name = "travelId")
+    @JoinColumn(name = "id")
     private List<Image> images;
 
 

@@ -1,12 +1,21 @@
 package com.tikitaka.triptroop.travel.service;
 
 
+import com.tikitaka.triptroop.area.domain.entity.Area;
+import com.tikitaka.triptroop.area.repository.AreaRepository;
+import com.tikitaka.triptroop.category.domain.entity.Category;
+import com.tikitaka.triptroop.category.domain.repository.CategoryRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.place.domain.entity.Place;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
+import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
+import com.tikitaka.triptroop.travel.domain.repository.TravelCommentRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
+import com.tikitaka.triptroop.travel.domain.repository.TravelRepositoryImpl;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
@@ -18,7 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,6 +36,11 @@ public class TravelService {
 
     private final TravelRepository travelRepository;
     private final PlaceRepository placeRepository;
+    private final TravelRepositoryImpl travelRepositoryImpl;
+    private final CategoryRepository categoryRepository;
+    private final AreaRepository areaRepository;
+    private final ImageRepository imageRepository;
+    private final TravelCommentRepository travelCommentRepository;
 
 
     private Pageable getPageable(final Integer page) {
@@ -56,14 +70,27 @@ public class TravelService {
     @Transactional(readOnly = true)
     public TravelResponse findByTravelId(final Long id) {
 
-        Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
+        Travel foundTravel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
 
+        Category foundCategory = categoryRepository.findById(foundTravel.getCategoryId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY));
+
+        Area foundArea = areaRepository.findById(foundTravel.getAreaId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+        Place foundPlace = placeRepository.findById(foundTravel.getPlaceId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
+
+        List<TravelComment> travelComments = travelCommentRepository.findByTravelId(foundTravel.getId());
+
+
+//        Travel travel = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(id, visibility)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
 //        Place places = placeRepository.findByIdAndAddressAndName(placeId, address, name)
 //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_MAP));
 
 
-        return TravelResponse.from(travel);
+        return TravelResponse.from(foundTravel, foundCategory, foundArea, foundPlace, travelComments);
     }
 
 
@@ -90,9 +117,5 @@ public class TravelService {
         return travel.getId();
     }
 
-
-    public Optional<Travel> getTravelByIdAndVisibility(Long id, String visibility) {
-        return travelRepository.findByIdAndVisibility(id, visibility);
-    }
 
 }

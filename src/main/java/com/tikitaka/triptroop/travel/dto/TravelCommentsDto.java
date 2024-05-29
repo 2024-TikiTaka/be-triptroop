@@ -12,4 +12,5 @@ public class TravelCommentsDto {
     private final Long Id;
     private final Long userId;
     private final String content;
+
 }
