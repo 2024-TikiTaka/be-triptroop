@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.report.domain.entity;
 
-import com.tikitaka.triptroop._example.domain.entity.Companion;
+import com.tikitaka.triptroop.companions.domain.entity.Companion;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportTarget;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
@@ -25,34 +25,33 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name="reporter_id")
-//    private User reporterId;
+    //    @ManyToOne
+    //    @JoinColumn(name="reporter_id")
+    //    private User reporterId;
     private Long reporterId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportTarget kind;
 
     @ManyToOne
-    @JoinColumn(name="schedule_id")
-    private Schedule scheduleId;
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
 
     @ManyToOne
-    @JoinColumn(name="repertee_id")
-    private User reporteeId;
+    @JoinColumn(name = "repertee_id")
+    private User reportee;
 
     @ManyToOne
-    @JoinColumn(name="travel_id")
-    private Travel travelId;
+    @JoinColumn(name = "travel_id")
+    private Travel travel;
 
     @ManyToOne
-    @JoinColumn(name="companion_id")
-    private Companion companionId;
+    @JoinColumn(name = "companion_id")
+    private Companion companion;
 
     @Enumerated(value = EnumType.STRING)
     private ReportType type;
 
-    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(value = EnumType.STRING)
@@ -62,5 +61,4 @@ public class Report {
     private LocalDateTime reportedAt;
 
     private LocalDateTime processedAt;
-
 }
