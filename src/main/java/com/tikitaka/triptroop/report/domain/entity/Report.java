@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.report.domain.entity;
 
-import com.tikitaka.triptroop.companions.domain.entity.Companion;
+import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportTarget;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
