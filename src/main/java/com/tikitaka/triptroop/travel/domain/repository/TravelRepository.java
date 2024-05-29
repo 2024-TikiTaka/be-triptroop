@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /* Entity에는 Entity명 적기 */
+
 public interface TravelRepository extends JpaRepository<Travel, Long> {
+
 
     /* Repository 앞에 부분을 지우고 본인의 기능 폴더명을 적어주세요. */
     /* 공개 게시글 */
@@ -34,11 +36,8 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     /* 공개 게시글 상세 조회 */
 
-    @EntityGraph(attributePaths = {"images"})
+    @EntityGraph(attributePaths = {"images", "places", "comments"})
     Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
-
-
-    Optional<Travel> findByIdAndVisibility(Long id, String visibility);
 
 
 }
