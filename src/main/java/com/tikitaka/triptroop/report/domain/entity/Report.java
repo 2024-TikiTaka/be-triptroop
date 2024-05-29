@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.report.domain.entity;
 
-import com.tikitaka.triptroop._example.domain.entity.Companion;
+import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
@@ -25,11 +25,9 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "report_id")
     private Long id;
 
-    //    @ManyToOne
-//    @JoinColumn(name="reporter_id")
-//    private User reporter;
     private Long reporterId;
 
     @Enumerated(value = EnumType.STRING)
@@ -54,7 +52,6 @@ public class Report {
     @Enumerated(value = EnumType.STRING)
     private ReportType type;
 
-    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(value = EnumType.STRING)
@@ -64,5 +61,4 @@ public class Report {
     private LocalDateTime reportedAt;
 
     private LocalDateTime processedAt;
-
 }
