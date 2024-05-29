@@ -6,6 +6,7 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
+import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/travels")
@@ -46,7 +48,9 @@ public class TravelController {
 
     /* 상세 게시글 조회 */
     @GetMapping("/{travelId}")
-    public ResponseEntity<ApiResponse<TravelResponse>> findTravelId(@PathVariable final Long travelId) {
+    public ResponseEntity<ApiResponse<TravelResponse>> findTravelId(
+            @PathVariable final Long travelId) {
+
 
         final TravelResponse travelResponse = travelService.findByTravelId(travelId);
 
@@ -74,4 +78,12 @@ public class TravelController {
         imageService.save(ImageKind.TRAVEL, travelId, image);
         return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
     }
+
+    /* 상세조회 (Q*/
+    @GetMapping("/{id}")
+    public Optional<Travel> getTravelByIdAndVisibility(@PathVariable Long id, @RequestParam String visibility) {
+        return travelService.getTravelByIdAndVisibility(id, visibility);
+    }
+
+
 }
