@@ -4,7 +4,8 @@ import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class NotFoundException extends CustomException {
+public class NotFoundException extends BaseException {
+
     public NotFoundException(final ExceptionCode exceptionCode) {
         super(exceptionCode);
     }

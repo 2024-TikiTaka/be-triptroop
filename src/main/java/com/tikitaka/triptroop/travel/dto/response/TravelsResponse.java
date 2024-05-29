@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.travel.dto.response;
 
-import com.tikitaka.triptroop.common.util.FileUploadUtils;
+import com.tikitaka.triptroop.image.util.FileUploadUtils;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import lombok.AccessLevel;
 import lombok.Getter;

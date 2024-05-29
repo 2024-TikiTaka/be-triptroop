@@ -18,10 +18,11 @@ public class SocialUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "social_user_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Enumerated(value = EnumType.STRING)
@@ -32,5 +33,4 @@ public class SocialUser {
     private String refreshToken;
 
     private LocalDateTime expiredAt;
-
 }

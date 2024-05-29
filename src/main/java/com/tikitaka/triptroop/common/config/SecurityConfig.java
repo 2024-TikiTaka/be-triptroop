@@ -1,11 +1,11 @@
 package com.tikitaka.triptroop.common.config;
 
-import com.tikitaka.triptroop.security.filter.CustomAuthenticationFilter;
-import com.tikitaka.triptroop.security.filter.JwtAuthenticationFilter;
-import com.tikitaka.triptroop.security.handler.JwtAccessDeniedHandler;
-import com.tikitaka.triptroop.security.handler.JwtAuthenticationEntryPoint;
-import com.tikitaka.triptroop.security.handler.LoginFailureHandler;
-import com.tikitaka.triptroop.security.handler.LoginSuccessHandler;
+import com.tikitaka.triptroop.common.security.filter.CustomAuthenticationFilter;
+import com.tikitaka.triptroop.common.security.filter.JwtAuthenticationFilter;
+import com.tikitaka.triptroop.common.security.handler.JwtAccessDeniedHandler;
+import com.tikitaka.triptroop.common.security.handler.JwtAuthenticationEntryPoint;
+import com.tikitaka.triptroop.common.security.handler.LoginFailureHandler;
+import com.tikitaka.triptroop.common.security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

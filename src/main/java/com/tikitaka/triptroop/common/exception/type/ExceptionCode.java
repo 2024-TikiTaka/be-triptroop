@@ -6,23 +6,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ExceptionCode {
+
     FAIL_TO_UPLOAD_FILE(1001, "파일 저장에 실패하였습니다."),
     FAIL_TO_DELETE_FILE(1002, "파일 삭제에 실패하였습니다."),
-    NOT_FOUND_CATEGORY_CODE(2000, " 카테고리 코드에 해당하는 카테고리가 존재하지 않습니다."),
-    NOT_FOUND_AREA_ID(3000, " AREA ID에 해당하는 AREA가 존재하지 않습니다."),
-    NOT_FOUND_PRODUCT_CODE(3000, "상품 코드에 해당하는 상품이 존재하지 않습니다."),
-    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
-    NOT_FOUND_REFRESH_TOKEN(4001, "해당 리프레시 토큰이 유효하지 않습니다."),
+
+    /* 401 Unauthorized */
     UNAUTHORIZED(4002, "인증 되지 않은 요청입니다."),
+
+    /* 403 Forbidden */
     ACCESS_DENIED(4003, "허가 되지 않은 요청입니다."),
-    NOT_ENOUGH_STOCK(5000, "재고 부족으로 주문 불가합니다."),
-    NOT_FOUND_VALID_ORDER(5001, "유효한 주문 건이 아닙니다."),
-    ALREADY_EXIST_REVIEW(6000, "해당 주문 건에 이미 작성 된 리뷰가 있습니다."),
-    NOT_FOUND_AREA_CODE(2001, " 지역코드에 해당하는 지역이 존재하지 않습니다."),
-    NOT_FOUND_PLACE_CODE(2002, " 장소코드에 해당하는 지역이 존재하지 않습니다."),
-    NOT_FOUND_IMAGE(2003, "이미지코드에 이미지가 없습니다."),
-    NOT_FOUND_TRAVEL_CODE(2004, "여행지소개코드에 존재하는 게시글이 없습니다.");
+
+    /* 404, NotFoundException */
+    NOT_FOUND_REFRESH_TOKEN(4001, "해당 리프레시 토큰이 유효하지 않습니다."),
+    NOT_FOUND_CATEGORY(1201, "해당 카테고리가 존재하지 않습니다."),
+    NOT_FOUND_AREA(2001, "해당 지역이 존재하지 않습니다."),
+    NOT_FOUND_PLACE(2002, "해당 장소가 존재하지 않습니다."),
+    NOT_FOUND_IMAGE(2003, "해당 이미지가 존재하지 않습니다."),
+    NOT_FOUND_TRAVEL(2004, "해당하는 여행지 소개글이 없습니다."),
+    NOT_FOUND_REPORT(2005, "신고 내역이 존재하지 않습니다."),
+    NOT_FOUND_BLOCK(2006, "차단한 회원이 존재하지 않습니다."),
+    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
+
+    /* 409, ConflictException */
+    ALREADY_EXISTS_EMAIL(2000, "이미 존재하는 이메일입니다."),
+    ALREADY_EXIST_REVIEW(6000, "후기 작성내역이 존재합니다.");
 
     private final int code;
+
     private final String message;
 }
