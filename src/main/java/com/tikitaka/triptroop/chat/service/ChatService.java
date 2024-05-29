@@ -1,14 +1,20 @@
 package com.tikitaka.triptroop.chat.service;
 
+import com.tikitaka.triptroop.chat.domain.entity.Message;
+import com.tikitaka.triptroop.chat.domain.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ChatService { //<- Service 앞의 tt 부분을 변경한 본인의 폴더명으로 바꿔주세요.
-
-    /* 내용을 작성해주세요. */
+public class ChatService {
+    private final ChatRepository chatRepository;
+    public List<Message> getAllChats() {
+        return chatRepository.findAll();
+    }
 
 }
