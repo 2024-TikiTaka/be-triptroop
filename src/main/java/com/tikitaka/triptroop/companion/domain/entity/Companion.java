@@ -1,7 +1,7 @@
-package com.tikitaka.triptroop.companions.domain.entity;
+package com.tikitaka.triptroop.companion.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
-import com.tikitaka.triptroop.companions.domain.type.OpenStatus;
+import com.tikitaka.triptroop.companion.domain.type.OpenStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

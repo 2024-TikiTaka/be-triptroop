@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.userReview.domain.entity;
+package com.tikitaka.triptroop.review.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -28,5 +28,4 @@ public class UserReview extends BaseTimeEntity {
     private Integer reviewPoint;
 
     private LocalDateTime deletedAt;
-
 }
