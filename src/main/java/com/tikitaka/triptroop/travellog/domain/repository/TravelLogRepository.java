@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.travelLong.domain.repository;
+package com.tikitaka.triptroop.travellog.domain.repository;
 
 import com.tikitaka.triptroop._example.domain.entity.Example;
 import org.springframework.data.jpa.repository.JpaRepository;

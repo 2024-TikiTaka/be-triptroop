@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.travelLong.controller;
+package com.tikitaka.triptroop.travellog.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TravelLogController {
 
     /* 내용을 작성해주세요. */
-//    @RequestMapping("/hello")
-//    public ResponseEntity<String> hello() {
-//        return ResponseEntity.ok("Hello");
-//    }
+    //    @RequestMapping("/hello")
+    //    public ResponseEntity<String> hello() {
+    //        return ResponseEntity.ok("Hello");
+    //    }
 }

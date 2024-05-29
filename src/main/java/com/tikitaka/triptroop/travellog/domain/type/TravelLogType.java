@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.travelLong.domain.type;
+package com.tikitaka.triptroop.travellog.domain.type;
 
 
 /* Type, Status 라는 이름으로 생성! */

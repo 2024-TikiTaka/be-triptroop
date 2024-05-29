@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.travelLong.domain.entity;
+package com.tikitaka.triptroop.travellog.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -20,11 +20,17 @@ public class TravelLogItem extends BaseTimeEntity { // <- Entity 를 본인의 �
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long travelLogId;
+
     private Long placeId;
+
     private int order;
+
     private int point;
+
     private String content;
+
     private LocalDateTime deletedAt;
 
 }
