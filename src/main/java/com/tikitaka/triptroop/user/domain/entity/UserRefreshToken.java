@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.user.domain.entity;
 
-import com.tikitaka.triptroop.user.domain.type.Provider;
+import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,22 +9,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "social_users")
+@Table(name = "user_refresh_tokens")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SocialUser {
+public class UserRefreshToken extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "social_user_id")
+    @Column(name = "user_refresh_token_id")
     private Long id;
 
     private Long userId;
-
-    @Enumerated(value = EnumType.STRING)
-    private Provider provider;
-
-    private String accessToken;
 
     private String refreshToken;
 

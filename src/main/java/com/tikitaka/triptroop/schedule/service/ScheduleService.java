@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.schedule.service;
 
 
-import com.tikitaka.triptroop.common.domain.entity.Area;
-import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
+import com.tikitaka.triptroop.area.domain.entity.Area;
+import com.tikitaka.triptroop.area.repository.AreaRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
@@ -32,11 +32,13 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
+
     private final ImageRepository imageRepository;
 
     private Pageable getPageable(final Integer page, final String sort) {
@@ -77,7 +79,7 @@ public class ScheduleService {
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
