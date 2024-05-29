@@ -50,7 +50,7 @@ public class ScheduleController {
 
     @PostMapping()
     public ResponseEntity<Void> save(@RequestBody @Valid final ScheduleCreateRequest scheduleRequest
-            /* @AuthenticationPrincipal final */) {
+            /* @AuthenticationPrincipalfinal */) {
         final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
