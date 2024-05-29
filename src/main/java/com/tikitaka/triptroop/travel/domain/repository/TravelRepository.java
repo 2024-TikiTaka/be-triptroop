@@ -33,12 +33,12 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
     Page<Travel> findByTitleAndVisibility(Pageable pageable, String title, Visibility visibility);
 
     /* 공개 게시글 상세 조회 */
+
     @EntityGraph(attributePaths = {"images"})
     Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
 
-//    @Query(
-//            "select new com.tikitaka.triptroop.travel.dto.response.TravelCommentsResponse(t, c, p) " +
-//                    "from Travel t join TravelComment c on t.travelCommentsId = "
-//    )
+
+    Optional<Travel> findByIdAndVisibility(Long id, String visibility);
+
 
 }

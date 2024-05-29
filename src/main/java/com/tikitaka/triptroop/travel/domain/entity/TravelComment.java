@@ -33,4 +33,6 @@ public class TravelComment extends BaseTimeEntity {
     private boolean isDeleted;
 
     private LocalDateTime deletedAt;
+
+
 }

@@ -19,13 +19,13 @@ public class Place extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
-    private Long id;
+    public Long id;
 
-    private String kakaomapId;
+    public String kakaomapId;
 
-    private String address;
+    public String address;
 
-    private String name;
+    public String name;
 
-    private LocalDateTime deletedAt;
+    public LocalDateTime deletedAt;
 }
