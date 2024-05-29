@@ -42,6 +42,12 @@ public class ScheduleController {
         return ResponseEntity.ok(pagingResponse);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponse> findByScheduleId(@PathVariable(name = "id") final Long scheduleId) {
+        final ScheduleResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+        return ResponseEntity.ok(scheduleDetailResponse);
+    }
+
     @PostMapping()
     public ResponseEntity<Void> save(@RequestBody @Valid final ScheduleCreateRequest scheduleRequest
             /* @AuthenticationPrincipal final */) {

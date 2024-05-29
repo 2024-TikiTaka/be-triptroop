@@ -47,18 +47,8 @@ public class ScheduleService {
         return getPageable(page, null);
     }
 
-
-    ;
-
-    //    public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
-////        Page<Schedule> schedules = null;
-//        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
-//        for (Schedule schedule : schedules) {
-//            Long scheduleId = schedule.getId();
-//            List<Image> images = imageRepository.findByScheduleId(scheduleId);
-//        }
-//        return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
-//    }
+    // TODO : 전체 리스트 조회
+    @Transactional(readOnly = true)
     public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
         List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
         List<ScheduleResponse> scheduleResponses = new ArrayList<>();
@@ -76,7 +66,15 @@ public class ScheduleService {
         return new PageImpl<>(scheduleResponses, getPageable(page, sort), schedules.size());
     }
 
+    // TODO : 상세 조회
+    @Transactional(readOnly = true)
+    public ScheduleResponse getFindByScheduleId(Long scheduleId) {
 
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC);
+        return ScheduleResponse.from(schedule);
+    }
+
+    // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_ID));
@@ -92,6 +90,7 @@ public class ScheduleService {
         return schedule.getId();
     }
 
+    // TODO : 일정 계획 등록
     public Long saveItem(ScheduleItemCreateRequest scheduleItemRequest, Long id) {
         final ScheduleItem newItem = ScheduleItem.of(
                 id,
@@ -103,6 +102,7 @@ public class ScheduleService {
         final ScheduleItem scheduleItem = scheduleItemRepository.save(newItem);
         return scheduleItem.getId();
     }
+
 
 }
 
