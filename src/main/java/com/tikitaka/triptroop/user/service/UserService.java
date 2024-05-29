@@ -1,10 +1,12 @@
 package com.tikitaka.triptroop.user.service;
 
 import com.tikitaka.triptroop.common.exception.ConflictException;
+import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.request.SignUpRequest;
+import com.tikitaka.triptroop.user.dto.request.UserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,14 +37,19 @@ public class UserService {
         );
 
         userRepository.save(newUser);
-        log.info("✅signUp ::: newUser : {} ", newUser);
     }
 
     @Transactional(readOnly = true)
     public void existsByEmail(String email) {
-        log.info("={}", userRepository.existsByEmail(email));
         if (userRepository.existsByEmail(email)) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_EMAIL);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public UserRequest findUser(Long userId) {
+        final User findUser = userRepository.findById(userId)
+                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        return UserRequest.from(findUser);
     }
 }
