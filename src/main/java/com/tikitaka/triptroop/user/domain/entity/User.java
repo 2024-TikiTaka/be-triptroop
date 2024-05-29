@@ -23,17 +23,15 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
     private String name;
 
     private LocalDate birth;
 
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
     private String phone;
