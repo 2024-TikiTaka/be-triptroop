@@ -23,7 +23,7 @@ public class Image {
     private Long id;
 
     private Long travelId;
-
+    @Column(name = "schedule_id")
     private Long scheduleId;
 
     private Long companionId;

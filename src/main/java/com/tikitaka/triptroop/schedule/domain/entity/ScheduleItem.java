@@ -17,10 +17,12 @@ import java.time.LocalDateTime;
 public class ScheduleItem extends BaseTimeEntity {
 
     @Id
+    @Column(name = "scheduleItemId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long scheduleId;
+
 
     private Long placeId;
 

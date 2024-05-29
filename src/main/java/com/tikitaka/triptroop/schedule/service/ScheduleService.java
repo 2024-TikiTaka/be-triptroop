@@ -71,15 +71,22 @@ public class ScheduleService {
     // TODO : 상세 조회
     @Transactional(readOnly = true)
     public ScheduleResponse getFindByScheduleId(Long scheduleId) {
+//        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
         Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC);
+
+        List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
+
+//        List<ScheduleItem> scheduleItem = scheduleRepositoryImpl.findScheduleItemById(scheduleId);
+
+
         return ScheduleResponse.from(schedule);
     }
 
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
