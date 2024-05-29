@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.schedule.controller;
 
-import com.tikitaka.triptroop.common.page.PageResponse;
-import com.tikitaka.triptroop.common.page.Pagination;
-import com.tikitaka.triptroop.common.page.PagingButtonInfo;
+import com.tikitaka.triptroop.common.paging.Pagination;
+import com.tikitaka.triptroop.common.paging.PagingButtonInfo;
+import com.tikitaka.triptroop.common.paging.PagingResponse;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
@@ -28,16 +28,24 @@ public class ScheduleController {
     private final ImageService imageService;
 
     @GetMapping()
-    public ResponseEntity<PageResponse> findAllSchedules(
-            @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final String title,
-            @RequestParam(required = false) final String sort
+    public ResponseEntity<PagingResponse> findAllSchedules(
+            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+            @RequestParam(required = false, name = "keyword") final String keyword,
+            @RequestParam(required = false, name = "sort") final String sort,
+            @RequestParam(required = false, name = "area") final Long area
+
 
     ) {
-        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, title, sort);
+        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, keyword, sort, area);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
-        final PageResponse pagingResponse = PageResponse.of(schedules.getContent(), pagingButtonInfo);
+        final PagingResponse pagingResponse = PagingResponse.of(schedules.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(pagingResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponse> findByScheduleId(@PathVariable(name = "id") final Long scheduleId) {
+        final ScheduleResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+        return ResponseEntity.ok(scheduleDetailResponse);
     }
 
     @PostMapping()
