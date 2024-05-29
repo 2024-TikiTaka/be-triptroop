@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ScheduleParticipants extends BaseTimeEntity {
 
     @Id
+    @Column(name = "schedule_participant_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

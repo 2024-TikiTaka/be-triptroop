@@ -1,10 +1,12 @@
 package com.tikitaka.triptroop.travel.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
+import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "travel_comments")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class TravelComment extends BaseTimeEntity {
 
     @Id
@@ -19,13 +22,19 @@ public class TravelComment extends BaseTimeEntity {
     @Column(name = "travel_comment_id")
     private Long id;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private Long travelId;
+    @ManyToOne
+    @JoinColumn(name = "travel_id")
+    private Travel travel;
 
     private String content;
 
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     private LocalDateTime deletedAt;
+
+
 }

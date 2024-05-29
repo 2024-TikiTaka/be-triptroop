@@ -34,10 +34,10 @@ public class Companion extends BaseTimeEntity {
 
     private Integer views;
 
-    private OpenStatus status;
+    @Enumerated(EnumType.STRING)
+    private OpenStatus status = OpenStatus.OPEN;
 
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
-
 }

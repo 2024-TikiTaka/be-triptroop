@@ -21,6 +21,7 @@ public class Block {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "block_id")
     private Long id;
 
     @ManyToOne
