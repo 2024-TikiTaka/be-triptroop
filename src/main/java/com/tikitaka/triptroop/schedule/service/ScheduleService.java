@@ -6,6 +6,8 @@ import com.tikitaka.triptroop.common.domain.repository.AreaRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.image.domain.entity.Image;
+import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +37,7 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
+    private final ImageRepository imageRepository;
 
     private Pageable getPageable(final Integer page, final String sort) {
         return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
@@ -46,12 +50,32 @@ public class ScheduleService {
 
     ;
 
+    //    public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
+////        Page<Schedule> schedules = null;
+//        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
+//        for (Schedule schedule : schedules) {
+//            Long scheduleId = schedule.getId();
+//            List<Image> images = imageRepository.findByScheduleId(scheduleId);
+//        }
+//        return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
+//    }
     public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
-//        Page<Schedule> schedules = null;
         List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
+        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
-        return new PageImpl<>(ScheduleResponse.fromList(schedules), getPageable(page, sort), schedules.size());
+        for (Schedule schedule : schedules) {
+            Long scheduleId = schedule.getId();
+            List<Image> images = imageRepository.findByScheduleId(scheduleId);
+
+            // 이미지와 함께 ScheduleResponse를 생성하여 리스트에 추가
+            ScheduleResponse scheduleResponse = ScheduleResponse.from(schedule, images);
+            scheduleResponses.add(scheduleResponse);
+        }
+
+        // Page 객체 생성 및 반환
+        return new PageImpl<>(scheduleResponses, getPageable(page, sort), schedules.size());
     }
+
 
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
