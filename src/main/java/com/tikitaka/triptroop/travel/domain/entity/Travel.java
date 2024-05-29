@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "travels")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Travel extends BaseTimeEntity {
 
     @Id
@@ -44,7 +46,7 @@ public class Travel extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @OneToMany
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "travelId")
     private List<Image> images;
 
 

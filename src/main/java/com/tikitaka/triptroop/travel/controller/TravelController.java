@@ -7,6 +7,7 @@ import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
+import com.tikitaka.triptroop.travel.dto.response.TravelCommentUserResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
@@ -73,11 +74,19 @@ public class TravelController {
 
 
     @PostMapping(value = "/{travelId}/upload")
-    public ResponseEntity<Void> imageSave(@RequestPart final MultipartFile image,
+    public ResponseEntity<Void> saveImage(@RequestPart final MultipartFile image,
                                           @PathVariable final Long travelId) {
 
         imageService.save(ImageKind.TRAVEL, travelId, image);
         return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
+    }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<TravelCommentUserResponse> getTravelCommentUser(
+            @PathVariable final Long travelId
+    ) {
+        TravelCommentUserResponse travelCommentUserResponse = travelService.getTravelCommentUser(travelId);
+        return ResponseEntity.ok(travelCommentUserResponse);
     }
 
 
