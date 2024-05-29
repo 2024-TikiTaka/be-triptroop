@@ -9,4 +9,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
 
     List<Image> findByTravelId(Long travelId);
+
+    List<Image> findByScheduleId(Long scheduleId);
 }

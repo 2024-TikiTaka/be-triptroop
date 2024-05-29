@@ -1,10 +1,17 @@
 HELP.md
 .gradle
 build/
+generated/**
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 application*.yml
+**/src/main/resources/**/*.jpg
+**/src/main/resources/**/*.jpeg
+**/src/main/resources/**/*.png
+
+### QueryDSL ###
+/src/main/generated/
 
 ### STS ###
 .apt_generated
