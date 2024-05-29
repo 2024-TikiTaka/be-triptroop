@@ -1,8 +1,6 @@
 package com.tikitaka.triptroop.travel.service;
 
 
-import com.tikitaka.triptroop.area.repository.AreaRepository;
-import com.tikitaka.triptroop.category.domain.repository.CategoryRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
@@ -20,17 +18,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TravelService {
 
     private final TravelRepository travelRepository;
-
-    private final CategoryRepository categoryRepository;
-
-    private final AreaRepository areaRepository;
-
     private final PlaceRepository placeRepository;
 
 
@@ -62,7 +57,11 @@ public class TravelService {
     public TravelResponse findByTravelId(final Long id) {
 
         Travel travel = travelRepository.findByIdAndVisibility(id, Visibility.PUBLIC)
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+
+//        Place places = placeRepository.findByIdAndAddressAndName(placeId, address, name)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_MAP));
+
 
         return TravelResponse.from(travel);
     }
@@ -90,4 +89,10 @@ public class TravelService {
 
         return travel.getId();
     }
+
+
+    public Optional<Travel> getTravelByIdAndVisibility(Long id, String visibility) {
+        return travelRepository.findByIdAndVisibility(id, visibility);
+    }
+
 }
