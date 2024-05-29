@@ -6,18 +6,18 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ApiErrorResponse {
+public class ErrorResponse {
 
     private final int code;
 
     private final String message;
 
-    public ApiErrorResponse(ExceptionCode exceptionCode) {
+    public ErrorResponse(ExceptionCode exceptionCode) {
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMessage();
     }
 
-    public static ApiErrorResponse of(int code, String message) {
-        return new ApiErrorResponse(code, message);
+    public static ErrorResponse of(int code, String message) {
+        return new ErrorResponse(code, message);
     }
 }
