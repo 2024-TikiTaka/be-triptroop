@@ -25,12 +25,13 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_id")
+    @Column(name="report_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "reporter_id")
+    @JoinColumn(name="reporter_id")
     private User reporter;
+//    private Long reporterId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportKind kind;
@@ -42,18 +43,22 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "reportee_id")
     private User reportee;
+//    private Long reporteeId;
 
     @ManyToOne
     @JoinColumn(name = "travel_id")
     private Travel travel;
+//    private Long travelId;
 
     @ManyToOne
     @JoinColumn(name = "companion_id")
     private Companion companion;
+//    private Long companionId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportType type;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(value = EnumType.STRING)
@@ -63,4 +68,5 @@ public class Report {
     private LocalDateTime reportedAt;
 
     private LocalDateTime processedAt;
+
 }

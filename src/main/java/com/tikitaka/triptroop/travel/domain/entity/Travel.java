@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@SQLDelete(sql = "UPDATE travels SET is_deleted = '1' WHERE travel_id = ?")
 public class Travel extends BaseTimeEntity {
 
     @Id
@@ -84,5 +86,15 @@ public class Travel extends BaseTimeEntity {
 
     public void increaseViews() {
         this.views++;
+    }
+
+    public void update(Long userId, Long categoryId, Long areaId, Long placeId, String title, String content) {
+        this.userId = userId;
+        this.categoryId = categoryId;
+        this.areaId = areaId;
+        this.placeId = placeId;
+        this.title = title;
+        this.content = content;
+
     }
 }
