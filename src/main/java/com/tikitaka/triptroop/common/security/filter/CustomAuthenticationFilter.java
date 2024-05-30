@@ -43,8 +43,6 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         String password = bodyMap.get("password");
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-
-        /* Authentication Manager에게 Authentication Token 전달 */
         return this.getAuthenticationManager().authenticate(authenticationToken);
     }
 }
