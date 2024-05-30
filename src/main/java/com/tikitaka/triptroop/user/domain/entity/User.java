@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@SQLDelete(sql = "UPDATE users SET status = 'SUSPENDED' WHERE email = ?")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -48,6 +48,10 @@ public class User extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole role = UserRole.USER;
 
+    private String refreshToken;
+
+    private LocalDateTime expiredAt;
+
     private LocalDateTime deletedAt;
 
     private User(String email, String password, String name, LocalDate birth, Gender gender) {
@@ -66,5 +70,9 @@ public class User extends BaseTimeEntity {
                 birth,
                 Gender.valueOf(gender)
         );
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

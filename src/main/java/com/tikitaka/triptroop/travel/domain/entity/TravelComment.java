@@ -26,9 +26,9 @@ public class TravelComment extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "travel_id")
-    private Travel travel;
+    //    @ManyToOne
+//    @JoinColumn(name = "travel_id")
+    private Long travel;
 
     private String content;
 
