@@ -25,6 +25,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -63,12 +65,12 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         /* TODO :: 추후 설정 */
-        // corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        // corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
-        // corsConfiguration.setAllowedHeaders(Arrays.asList(
-        //         "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
-        //         "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
-        // corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
+         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
+         corsConfiguration.setAllowedHeaders(Arrays.asList(
+                 "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
+                 "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
+         corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
