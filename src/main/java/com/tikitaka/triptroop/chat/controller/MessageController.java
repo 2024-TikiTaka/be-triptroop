@@ -1,7 +1,7 @@
 package com.tikitaka.triptroop.chat.controller;
 
 import com.tikitaka.triptroop.chat.domain.entity.Message;
-import com.tikitaka.triptroop.chat.service.ChatService;
+import com.tikitaka.triptroop.chat.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vi/chat")
+@RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
-public class ChatController {
+public class MessageController {
 
-    private final ChatService chatService;
+    private final MessageService messageService;
 
-    @GetMapping("/list")
-    public List<Message> getChatList() {
-        return chatService.getAllChats();
+    @GetMapping("/message")
+    public List<Message> getChatMessage() {
+        return messageService.getAllMessages();
     }
 
 }
