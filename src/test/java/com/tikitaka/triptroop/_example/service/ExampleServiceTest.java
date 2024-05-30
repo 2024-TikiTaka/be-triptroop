@@ -1,14 +1,12 @@
 package com.tikitaka.triptroop._example.service;
 
-import com.tikitaka.triptroop._example.domain.repository.ExampleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ExampleServiceTest {
 
-    @Autowired
-    private ExampleRepository exampleRepository;
+    // @Autowired
+    // private ExampleRepository exampleRepository;
 
     // @DisplayName("기본 테스트")
     // @Test

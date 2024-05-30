@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.report.domain.type;
 
-public enum ReportTarget {
+public enum ReportKind {
     //신고 대상
     USER,  //회원
     COMPANION,  //동행글

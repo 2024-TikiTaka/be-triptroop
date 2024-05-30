@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class PlaceResponse {
 
     private final String address;
+
     private final String name;
-
-
 }

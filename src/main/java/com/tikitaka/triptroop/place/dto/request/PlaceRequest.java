@@ -14,6 +14,4 @@ public class PlaceRequest {
     private final String address;
 
     private final String name;
-
-
 }
