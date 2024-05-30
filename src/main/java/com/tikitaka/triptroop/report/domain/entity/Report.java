@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.report.domain.entity;
 
-
 import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
@@ -26,13 +25,13 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_id")
+    @Column(name="report_id")
     private Long id;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "reporter_id")
-//    private User reporter;
-    private Long reporterId;
+    @ManyToOne
+    @JoinColumn(name="reporter_id")
+    private User reporter;
+//    private Long reporterId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportKind kind;
@@ -44,14 +43,17 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "reportee_id")
     private User reportee;
+//    private Long reporteeId;
 
     @ManyToOne
     @JoinColumn(name = "travel_id")
     private Travel travel;
+//    private Long travelId;
 
     @ManyToOne
     @JoinColumn(name = "companion_id")
     private Companion companion;
+//    private Long companionId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportType type;
