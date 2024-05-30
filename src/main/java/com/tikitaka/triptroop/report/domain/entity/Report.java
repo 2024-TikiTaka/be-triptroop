@@ -28,7 +28,9 @@ public class Report {
     @Column(name = "report_id")
     private Long id;
 
-    private Long reporterId;
+    @ManyToOne
+    @JoinColumn(name = "reporter_id")
+    private User reporter;
 
     @Enumerated(value = EnumType.STRING)
     private ReportKind kind;
@@ -38,7 +40,7 @@ public class Report {
     private Schedule schedule;
 
     @ManyToOne
-    @JoinColumn(name = "repertee_id")
+    @JoinColumn(name = "reportee_id")
     private User reportee;
 
     @ManyToOne
