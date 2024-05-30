@@ -1,13 +1,25 @@
 package com.tikitaka.triptroop.chat.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
+@Setter
 @RequiredArgsConstructor
-public class ChatResponse { //<- 무슨 응답인지 알수 있게 Response 앞에 명시해주세요. ( ex) 프로필 응답 일때 -> ProfileResponse )
+public class ChatResponse {
+    private String id;
 
-    /* 응답시 사용할 필드명을 입력해주세요. */
+    private String roomName;
+
+    private String invitor;
+
+    private List<String> participants;
+
+    private String createdAt;
 
 
 }
