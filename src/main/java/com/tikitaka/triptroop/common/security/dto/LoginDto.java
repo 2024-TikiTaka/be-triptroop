@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.common.security.dto;
 
+import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,4 +17,13 @@ public class LoginDto {
     private final String password;
 
     private final UserRole role;
+
+    public static LoginDto from(User user) {
+        return new LoginDto(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole()
+        );
+    }
 }
