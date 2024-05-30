@@ -11,4 +11,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByTravelId(Long travelId);
 
     List<Image> findByScheduleId(Long scheduleId);
+
+    List<Image> findByCompanionId(Long id);
+
+    List<Image> findByReportId(Long id);
+
+    List<Image> findByInquiryId(Long id);
 }

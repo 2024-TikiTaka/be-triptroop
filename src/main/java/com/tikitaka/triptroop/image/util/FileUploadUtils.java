@@ -52,9 +52,12 @@ public class FileUploadUtils {
             Path filePath = uploadPath.resolve(fileName);
             Files.delete(filePath);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ServerInternalException(FAIL_TO_DELETE_FILE);
         }
     }
+
+
 }
 
 
