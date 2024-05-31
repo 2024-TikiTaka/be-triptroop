@@ -9,7 +9,9 @@ import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.place.domain.entity.Place;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
+import com.tikitaka.triptroop.place.dto.response.PlaceResponse;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
 import com.tikitaka.triptroop.travel.domain.repository.TravelCommentRepository;
@@ -156,22 +158,19 @@ public class TravelService {
         Travel travel = travelRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
         List<Image> images = imageRepository.findByTravelId(travelId);
         List<ImageResponse> image = ImageResponse.from(images);
-//        Image image = imageRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
         List<TravelComment> travelComments = travelCommentRepository.findByTravelId(travelId);
         List<TravelCommentResponse> travelComment = TravelCommentResponse.from(travelComments);
-
-//        TravelComment travelComment = travelCommentRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
-
+        Place place = placeRepository.findById(travel.getPlaceId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
         User user = userRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
         Profile profile = profileRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+
 
         TravelDetailResponse travelDetailResponse = TravelDetailResponse.of(
                 travel.getTitle(),
                 travel.getContent(),
-//                travelComment.getId(),
-//                travelComment.getContent(),
                 travelComment,
                 image,
+                PlaceResponse.from(place),
                 profile.getProfileImage(),
                 profile.getNickname()
         );

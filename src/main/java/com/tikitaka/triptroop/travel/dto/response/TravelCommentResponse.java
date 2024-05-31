@@ -19,7 +19,7 @@ public class TravelCommentResponse {
     public static TravelCommentResponse from(TravelComment comment) {
         return new TravelCommentResponse(
                 comment.getId(),
-                comment.getUser().getId(),
+                comment.getUserId().getId(),
                 comment.getContent()
         );
     }
