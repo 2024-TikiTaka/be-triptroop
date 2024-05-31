@@ -11,7 +11,7 @@ import java.time.Period;
 
 /**
  * 회원 프로필 정보
- * 나이 구간, 성별, 고도, 닉네임, 프로필이미지, 설명
+ * 나이 구간, 성별, 고도, 닉네임, 프로필이미지, 설명, mbti
  */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
