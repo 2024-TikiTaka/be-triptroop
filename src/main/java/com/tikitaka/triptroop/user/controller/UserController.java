@@ -11,11 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-
-    // @GetMapping("/{userId}")
-    // public ResponseEntity<ApiResponse> getUser(@PathVariable Long userId) {
+    //
+    // @GetMapping("/me")
+    // public ResponseEntity<ApiResponse> getMyUserProfile(@AuthenticationPrincipal CustomUser loginUser) {
+    //     UserDetailResponse userDetail = userService.findById(loginUser.getUserId());
+    //     return ResponseEntity.ok(ApiResponse.success(userDetail));
+    // }
+    //
+    // @PostMapping("/me/password/check")
+    // public ResponseEntity<ApiResponse> verifyPassword() {
     //     return ResponseEntity.ok(
-    //             ApiResponse.success(userService.findById(userId))
+    //             ApiResponse.success(null)
     //     );
     // }
+    //
+    // @GetMapping("/{userId}")
+    // public ResponseEntity<ApiResponse> getUserByUserId(@PathVariable Long userId) {
+    //     return ResponseEntity.ok(
+    //             ApiResponse.success(null)
+    //     );
+    // }
+
 }

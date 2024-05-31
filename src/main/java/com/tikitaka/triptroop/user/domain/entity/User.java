@@ -54,6 +54,10 @@ public class User extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    private User(String email, String password, String name, LocalDate birth, String gender) {
+        this(email, password, name, birth, Gender.valueOf(gender));
+    }
+
     private User(String email, String password, String name, LocalDate birth, Gender gender) {
         this.email = email;
         this.password = password;
@@ -62,13 +66,13 @@ public class User extends BaseTimeEntity {
         this.gender = gender;
     }
 
-    public static User of(String email, String password, String name, LocalDate birth, String gender) {
+    public static User from(String email, String password, String name, LocalDate birth, String gender) {
         return new User(
                 email,
                 password,
                 name,
                 birth,
-                Gender.valueOf(gender)
+                gender
         );
     }
 
