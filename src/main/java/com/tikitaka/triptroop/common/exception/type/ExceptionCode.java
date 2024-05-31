@@ -9,6 +9,7 @@ public enum ExceptionCode {
 
     FAIL_TO_UPLOAD_FILE(1001, "파일 저장에 실패하였습니다."),
     FAIL_TO_DELETE_FILE(1002, "파일 삭제에 실패하였습니다."),
+    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
 
     /* 401 Unauthorized */
     UNAUTHORIZED(4002, "인증 되지 않은 요청입니다."),
@@ -26,7 +27,6 @@ public enum ExceptionCode {
     NOT_FOUND_TRAVEL(2004, "해당 여행지 소개글이 없습니다."),
     NOT_FOUND_REPORT(2005, "신고 내역이 존재하지 않습니다."),
     NOT_FOUND_BLOCK(2006, "차단 내역이 존재하지 않습니다."),
-    FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
     NOT_FOUND_COMMENT(2007, "댓글이 존재 하지 않습니다."),
 
     /* 409, ConflictException */

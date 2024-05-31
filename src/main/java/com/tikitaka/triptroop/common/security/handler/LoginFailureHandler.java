@@ -25,7 +25,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(
-                ApiResponse.fail(new ErrorResponse(ExceptionCode.UNAUTHORIZED)))
+                ApiResponse.fail(new ErrorResponse(ExceptionCode.FAIL_LOGIN)))
         );
     }
 }
