@@ -27,6 +27,7 @@ public enum ExceptionCode {
     NOT_FOUND_REPORT(2005, "신고 내역이 존재하지 않습니다."),
     NOT_FOUND_BLOCK(2006, "차단 내역이 존재하지 않습니다."),
     FAIL_LOGIN(4000, "로그인에 실패하였습니다."),
+    NOT_FOUND_COMMENT(2007, "댓글이 존재 하지 않습니다."),
 
     /* 409, ConflictException */
     ALREADY_EXISTS_EMAIL(2000, "이미 존재하는 이메일입니다."),

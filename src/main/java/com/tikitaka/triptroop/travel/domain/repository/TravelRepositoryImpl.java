@@ -1,25 +1,27 @@
 package com.tikitaka.triptroop.travel.domain.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
-//    @Autowired
-//    private JPAQueryFactory queryFactory;
-//
+@Repository
+public class TravelRepositoryImpl {
+
+    @Autowired
+    private JPAQueryFactory queryFactory;
+
 //    @Override
-//    public Optional<Travel> findDetailedTravelByIdAndVisibility(Long id, String visibility) {
-//        Travel fetchedTravel = queryFactory
-//                .selectFrom(travel)
-//                .leftJoin(travel.userId, user.id).fetchJoin()
-//                .leftJoin(travel.travelcomment, travelComment).fetchJoin()
-//                .leftJoin(travel.place, place).fetchJoin()
+//    public Optional<Travel> findDetailedTravelByIdAndVisibility(Long id, Visibility visibility) {
+//        Travel fetchedTravel=  queryFactory
+//                .selectFrom(QTravel.travel)
+//                .leftJoin(QTravel.travel.userId, QUser.user).fetchJoin()
+//                .leftJoin(QTravel.travel.travelcomment, QTravelComment.travelComment).fetchJoin()
+//                .leftJoin(QTravel.travel.place, QPlace.place).fetchJoin()
 //                .where(
-//                        travel.id.eq(id),
-//                        travel.visibility.eq(visibility)
-//                )
-//                .fetchOne();
+//                        QTravel.travel.id.eq(id),
+//                        QTravel.travel.visibility.eq(String.valueOf(visibility)
+//                ).
 //
 //        return Optional.ofNullable(fetchedTravel);
 //    }
