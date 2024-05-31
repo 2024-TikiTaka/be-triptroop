@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TravelCommentRepository extends JpaRepository<TravelComment, Long> {
     List<TravelComment> findByTravelId(Long travelId);
+
+
 }
