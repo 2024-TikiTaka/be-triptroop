@@ -4,7 +4,10 @@ import com.tikitaka.triptroop.report.dto.response.ReportTableResponse;
 import com.tikitaka.triptroop.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,14 +18,14 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    /* 1. 신고 목록 조회 */
-    @GetMapping("/{reporter}")
-    public ResponseEntity< List<ReportTableResponse> > getReportTest(
-            @PathVariable final Long reporter
+    /* 1. 신고 목록 조회 Test */
+    @GetMapping("/{reporterId}")
+    public ResponseEntity<List<ReportTableResponse>> getReport(
+            @PathVariable final Long reporterId
 
     ) {
 
-        final List<ReportTableResponse> reportResponse = reportService.getReportTest(reporter);
+        final List<ReportTableResponse> reportResponse = reportService.getReport(reporterId);
 
         return ResponseEntity.ok(reportResponse);
     }

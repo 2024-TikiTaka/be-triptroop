@@ -6,6 +6,7 @@ import com.tikitaka.triptroop.common.security.handler.JwtAccessDeniedHandler;
 import com.tikitaka.triptroop.common.security.handler.JwtAuthenticationEntryPoint;
 import com.tikitaka.triptroop.common.security.handler.LoginFailureHandler;
 import com.tikitaka.triptroop.common.security.handler.LoginSuccessHandler;
+import com.tikitaka.triptroop.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final AuthService authService;
+
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -44,12 +47,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     /* TODO :: 추후 설정 */
-                    // auth.requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll();
-                    // auth.requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll();
-                    // auth.requestMatchers(HttpMethod.PUT, "/api/v1/**").permitAll();
-                    // auth.requestMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll();
-                    // auth.anyRequest().authenticated();
-                    auth.anyRequest().permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/images/**", "/api/v1/travels/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/api/v1/signup", "/api/v1/login").permitAll();
+                    auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
+                    auth.anyRequest().authenticated();
+                    // auth.anyRequest().permitAll();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
@@ -80,18 +82,18 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        // provider.setUserDetailsService(authService);
+        provider.setUserDetailsService(authService);
         return new ProviderManager(provider);
     }
 
     @Bean
     LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler(null);
+        return new LoginFailureHandler();
     }
 
     @Bean
     LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(null);
+        return new LoginSuccessHandler(authService);
     }
 
     @Bean
@@ -108,16 +110,16 @@ public class SecurityConfig {
 
     @Bean
     JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(null);
+        return new JwtAuthenticationFilter(authService);
     }
 
     @Bean
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint(null);
+        return new JwtAuthenticationEntryPoint();
     }
 
     @Bean
     JwtAccessDeniedHandler jwtAccessDeniedHandler() {
-        return new JwtAccessDeniedHandler(null);
+        return new JwtAccessDeniedHandler();
     }
 }

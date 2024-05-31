@@ -1,6 +1,8 @@
 package com.tikitaka.triptroop.companion.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
+import com.tikitaka.triptroop.companion.domain.type.AgeRestriction;
+import com.tikitaka.triptroop.companion.domain.type.GenderRestriction;
 import com.tikitaka.triptroop.companion.domain.type.OpenStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,9 +26,11 @@ public class Companion extends BaseTimeEntity {
 
     private Long scheduleId;
 
-    private String ageRestriction;
+    @Enumerated(EnumType.STRING) //추가 [companion/domain/type/AgeRestriction.java 이넘 파일 추가]
+    private AgeRestriction ageRestriction;
 
-    private String genderRestriction;
+    @Enumerated(EnumType.STRING) //추가  [companion/domain/type/GenderRestriction.java 이넘 파일 추가]
+    private GenderRestriction genderRestriction;
 
     private String title;
 

@@ -36,7 +36,7 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     /* 공개 게시글 상세 조회 */
 
-    @EntityGraph(attributePaths = {"images", "places", "comments"})
+    @EntityGraph(attributePaths = "images")
     Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
 
 
