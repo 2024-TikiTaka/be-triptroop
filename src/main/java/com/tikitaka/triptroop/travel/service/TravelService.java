@@ -8,6 +8,7 @@ import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
@@ -16,9 +17,12 @@ import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepositoryImpl;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.TravelCommentUserResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
+import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -42,6 +48,7 @@ public class TravelService {
     private final ImageRepository imageRepository;
     private final TravelCommentRepository travelCommentRepository;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
 
     private Pageable getPageable(final Integer page) {
@@ -85,10 +92,10 @@ public class TravelService {
 //        List<TravelComment> travelComments = travelCommentRepository.findByTravelId(foundTravel.getId());
 //
 //
-////        Travel travel = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(id, visibility)
-////                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-////        Place places = placeRepository.findByIdAndAddressAndName(placeId, address, name)
-////                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_MAP));
+//        Travel travel = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(id, visibility)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+//        Place places = placeRepository.findByIdAndAddressAndName(placeId, address, name)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_MAP));
 //
 //
 //        return TravelResponse.from(foundTravel, foundCategory, foundArea, foundPlace, travelComments);
@@ -119,30 +126,60 @@ public class TravelService {
     }
 
     /* 여행소개 상세 조회 (된거) */
-    public TravelCommentUserResponse getTravelCommentUser(Long travelId) {
+//    public TravelCommentUserResponse getTravelCommentUser(Long travelId) {
+//        Travel travel = travelRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+//        System.out.println("travel = " + travel);
+//        Image image = imageRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+//        System.out.println("image = " + image);
+//        TravelComment travelComment = travelCommentRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
+//        System.out.println("travelComment = " + travelComment);
+//        User user = userRepository.findById(travel.getId()).orElseThrow();
+//        System.out.println("user = " + user);
+//        TravelCommentUserResponse travelCommentUserResponse = TravelCommentUserResponse.of(
+//                travel.getTitle(),
+//                travel.getContent(),
+//                travelComment.getId(),
+//                travelComment.getContent(),
+//                user.getId(),
+//                user.getEmail(),
+//                user.getPassword(),
+//                user.getName(),
+//                image.getName(),
+//                image.getPath()
+//        );
+//
+//        return travelCommentUserResponse;
+//    }
+
+    /* 여행 소개 상세 조회 (수정) */
+    public TravelDetailResponse findTravelDetail(Long travelId) {
         Travel travel = travelRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-        System.out.println("travel = " + travel);
-        Image image = imageRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
-        System.out.println("image = " + image);
-        TravelComment travelComment = travelCommentRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
-        System.out.println("travelComment = " + travelComment);
-        User user = userRepository.findById(travel.getId()).orElseThrow();
-        System.out.println("user = " + user);
-        TravelCommentUserResponse travelCommentUserResponse = TravelCommentUserResponse.of(
+        List<Image> images = imageRepository.findByTravelId(travelId);
+        List<ImageResponse> image = ImageResponse.from(images);
+//        Image image = imageRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+        List<TravelComment> travelComments = travelCommentRepository.findByTravelId(travelId);
+        List<TravelCommentResponse> travelComment = TravelCommentResponse.from(travelComments);
+
+//        TravelComment travelComment = travelCommentRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
+
+        User user = userRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        Profile profile = profileRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+
+        TravelDetailResponse travelDetailResponse = TravelDetailResponse.of(
                 travel.getTitle(),
                 travel.getContent(),
-                travelComment.getId(),
-                travelComment.getContent(),
-                user.getId(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getName(),
-                image.getName(),
-                image.getPath()
+//                travelComment.getId(),
+//                travelComment.getContent(),
+                travelComment,
+                image,
+                profile.getProfileImage(),
+                profile.getNickname()
         );
 
-        return travelCommentUserResponse;
+        return travelDetailResponse;
+
     }
+
 
     /* 게시글 수정 */
     public void updateTravel(Long travelId, TravelUpdateRequest travelRequest, Long userId) {
