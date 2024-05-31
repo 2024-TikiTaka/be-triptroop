@@ -25,11 +25,11 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="report_id")
+    @Column(name = "report_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="reporter_id")
+    @JoinColumn(name = "reporter_id")
     private User reporter;
 //    private Long reporterId;
 

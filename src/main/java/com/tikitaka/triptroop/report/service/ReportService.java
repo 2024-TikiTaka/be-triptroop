@@ -6,7 +6,8 @@ import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.repository.ReportRepository;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.dto.response.ReportTableResponse;
-import com.tikitaka.triptroop.user.domain.repository.UserRepository;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
+import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +21,18 @@ import java.util.stream.Collectors;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional(readOnly = true)
-    public List<ReportTableResponse> getReport(final Long reporterId) {
-//        User user = userRepository.findById(reporter)
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-        List<Report> reports = reportRepository.findReportsByReporterIdAndKind(reporterId, ReportKind.USER);
+    public List<ReportTableResponse> getReport(final String nickname, String kind) {
+        Profile profile = profileRepository.findByNickname(nickname);
+        if (profile == null) {
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_USER);
+        }
+
+        Long reporterId = profile.getUserId();
+        ReportKind reportKind = ReportKind.valueOf(kind.toUpperCase());
+        List<Report> reports = reportRepository.findByReporterIdAndKind(reporterId, reportKind);
         if (reports.isEmpty()) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_REPORT);
         }
