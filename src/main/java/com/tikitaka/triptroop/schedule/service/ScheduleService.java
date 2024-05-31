@@ -11,6 +11,7 @@ import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
+import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
@@ -19,6 +20,7 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
@@ -90,11 +92,11 @@ public class ScheduleService {
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
         List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
 
-        User user = userRepository.findById(schedule.getId()).orElseThrow();
+        User user = userRepository.findById(schedule.getUserId()).orElseThrow();
         Profile profile = profileRepository.findById(user.getId()).orElseThrow();
 
-//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-//        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants);
+        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants);
 
         ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
                 schedule.getTitle(),
@@ -106,8 +108,8 @@ public class ScheduleService {
                 ImageResponse.from(image),
                 profile.getNickname(),
                 profile.getProfileImage(),
-                scheduleItem
-//                scheduleParticipant
+                scheduleItem,
+                scheduleParticipant
 
         );
 

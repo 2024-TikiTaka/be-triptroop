@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 public class ScheduleParticipantsResponse {
     private Long scheduleParticipantId;
 
+    private String reviewContent;
+
+
     private Double reviewPoint;
+
 
     private String userNickname;
 
-    private String reviewContent;
 
     public ScheduleParticipantsResponse(Long id, String reviewContent, Double reviewPoint) {
 
@@ -42,11 +45,4 @@ public class ScheduleParticipantsResponse {
     }
 
 
-//    public static ScheduleParticipantsResponse from(ScheduleParticipants scheduleParticipant) {
-//        return new ScheduleParticipantsResponse(
-//                scheduleParticipant.getId(),
-//                scheduleParticipant.getReviewContent(),
-//                scheduleParticipant.getReviewPoint()
-//        );
-//    }
 }

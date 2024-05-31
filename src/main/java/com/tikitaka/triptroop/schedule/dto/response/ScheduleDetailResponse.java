@@ -21,27 +21,28 @@ public class ScheduleDetailResponse {
     private final String userNickname;
     private final String profileImage;
     private final List<ScheduleItemResponse> scheduleItem;
-//    private final List<ScheduleParticipantsResponse> scheduleParticipant;
+    private final List<ScheduleParticipantsResponse> scheduleParticipant;
 
 
     public static ScheduleDetailResponse of(String title, String sido, Integer count,
                                             LocalDate startDate, LocalDate endDate,
                                             Integer views, ImageResponse image,
-                                            String userNickname, String profileImage, List<ScheduleItemResponse> scheduleItem)
-//            , List<ScheduleParticipantsResponse> scheduleParticipants) {
-    {
-        return new ScheduleDetailResponse(
-                title,
-                sido,
-                count,
-                startDate,
-                endDate,
-                views,
-                image,
-                userNickname,
-                profileImage,
-                scheduleItem
-//                scheduleParticipants
-        );
+                                            String userNickname, String profileImage, List<ScheduleItemResponse> scheduleItem
+            , List<ScheduleParticipantsResponse> scheduleParticipant) {
+        {
+            return new ScheduleDetailResponse(
+                    title,
+                    sido,
+                    count,
+                    startDate,
+                    endDate,
+                    views,
+                    image,
+                    userNickname,
+                    profileImage,
+                    scheduleItem,
+                    scheduleParticipant
+            );
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.type.RequestStatus;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,9 +20,8 @@ public class ScheduleParticipant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+
+    private Long reviewerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")
