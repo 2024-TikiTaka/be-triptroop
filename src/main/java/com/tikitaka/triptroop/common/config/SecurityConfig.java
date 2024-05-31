@@ -50,6 +50,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.GET, "/images/**", "/api/v1/travels/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/signup", "/api/v1/login").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.anyRequest().authenticated();
                     // auth.anyRequest().permitAll();
                 })

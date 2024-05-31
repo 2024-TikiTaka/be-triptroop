@@ -1,25 +1,34 @@
 package com.tikitaka.triptroop.chat.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.tikitaka.triptroop.chat.domain.entity.ChatRoom;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
-@Setter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatResponse {
-    private String id;
+    private final String id;
 
-    private String roomName;
+    private final String roomName;
 
-    private String invitor;
+    private final String creator;
 
-    private List<String> participants;
+    private List<String> member;
+
+    private String type;
 
     private String createdAt;
 
+    private String url;
 
+    private String lastMessageAt;
+
+    public static ChatResponse from(final ChatRoom chatRoom) {
+        return new ChatResponse(
+                chatRoom.getId().toHexString(),
+                chatRoom.getRoomName(),
+                chatRoom.getCreator()
+        );
+    }
 }
