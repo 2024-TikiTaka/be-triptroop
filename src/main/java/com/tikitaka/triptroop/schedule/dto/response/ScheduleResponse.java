@@ -3,7 +3,6 @@ package com.tikitaka.triptroop.schedule.dto.response;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.util.FileUploadUtils;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
-import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class ScheduleResponse {
     private final int views;
 
     private final List<String> imageUrl;
-    private final List<ScheduleItem> scheduleItem;
+//    private final List<ScheduleItem> scheduleItem;
 
 
     public static ScheduleResponse from(final Schedule schedule, List<Image> images) {
@@ -41,7 +40,7 @@ public class ScheduleResponse {
                 schedule.getTitle(),
                 schedule.getViews()
                 , images.stream().map(FileUploadUtils::getFullPath).toList()
-                , schedule.getScheduleItem()
+
         );
     }
 
@@ -54,7 +53,6 @@ public class ScheduleResponse {
                 schedule.getTitle(),
                 schedule.getViews(),
                 schedule.getImages().stream().map(FileUploadUtils::getFullPath).toList()
-                , schedule.getScheduleItem()
         );
     }
 
