@@ -22,8 +22,8 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
-    public ChatResponse createChatRoom(@Valid ChatRequest request) {
-        ChatRoom chatRoom = chatRoomRepository.createChatRoom(request);
-        return ChatResponse.from(chatRoom);
-    }
+//    public ChatResponse createChatRoom(@Valid ChatRequest request) {
+//        ChatRoom chatRoom = chatRoomRepository.createChatRoom(request);
+//        return ChatResponse.from(chatRoom);
+//    }
 }

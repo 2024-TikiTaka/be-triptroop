@@ -9,5 +9,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, ObjectId> {
 
 
-    ChatRoom createChatRoom(@Valid ChatRequest request);
+//    ChatRoom createChatRoom(@Valid ChatRequest request);
 }
