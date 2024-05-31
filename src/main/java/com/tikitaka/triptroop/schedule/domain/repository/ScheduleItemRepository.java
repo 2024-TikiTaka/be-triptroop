@@ -8,5 +8,4 @@ import java.util.List;
 public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long> {
     List<ScheduleItem> findByScheduleId(Long scheduleId);
 
-
 }

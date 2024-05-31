@@ -46,7 +46,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 case "latest": // 최신 순
                     query.orderBy(schedule.createdAt.desc());
                     break;
-
                 // 기본은 최신 순으로 설정
                 default:
                     query.orderBy(schedule.createdAt.desc());

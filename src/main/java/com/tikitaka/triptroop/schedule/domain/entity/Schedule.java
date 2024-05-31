@@ -49,31 +49,17 @@ public class Schedule extends BaseTimeEntity {
     private Integer views = 0;
 
     @OneToMany
-    @JoinColumn(name = "scheduleItemId")
-    private List<ScheduleItem> scheduleItem;
-
-    @OneToMany
-    @JoinColumn(name = "schedule_id")
+    @JoinColumn(name = "scheduleId")
     private List<Image> images;
 
-    private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate, List<ScheduleItem> scheduleItem) {
+
+    private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;
         this.count = count;
         this.userId = userId;
         this.area = area;
         this.endDate = endDate;
         this.startDate = startDate;
-        this.scheduleItem = scheduleItem;
-    }
-
-    public Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
-        this.title = title;
-        this.count = count;
-        this.userId = userId;
-        this.area = area;
-        this.endDate = endDate;
-        this.startDate = startDate;
-
     }
 
     public static Schedule of(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {

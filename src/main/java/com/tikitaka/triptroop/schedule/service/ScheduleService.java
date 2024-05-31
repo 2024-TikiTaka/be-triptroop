@@ -8,14 +8,22 @@ import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
+import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
+import com.tikitaka.triptroop.user.domain.entity.User;
+import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
+import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -32,12 +40,15 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ProfileRepository profileRepository;
 
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
+    private final ScheduleParticipantRepository scheduleParticipantRepository;
 
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
+    private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
 
@@ -70,17 +81,37 @@ public class ScheduleService {
 
     // TODO : 상세 조회
     @Transactional(readOnly = true)
-    public ScheduleResponse getFindByScheduleId(Long scheduleId) {
-//        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
+    public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
 
-        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC);
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
+        Image image = imageRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
 
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
+        List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
 
-//        List<ScheduleItem> scheduleItem = scheduleRepositoryImpl.findScheduleItemById(scheduleId);
+        User user = userRepository.findById(schedule.getId()).orElseThrow();
+        Profile profile = profileRepository.findById(user.getId()).orElseThrow();
 
+//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+//        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants);
 
-        return ScheduleResponse.from(schedule);
+        ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
+                schedule.getTitle(),
+                schedule.getArea().getSido(),
+                schedule.getCount(),
+                schedule.getStartDate(),
+                schedule.getEndDate(),
+                schedule.getViews(),
+                ImageResponse.from(image),
+                profile.getNickname(),
+                profile.getProfileImage(),
+                scheduleItem
+//                scheduleParticipant
+
+        );
+
+        return scheduleDetailResponse;
     }
 
     // TODO : 일정 등록
