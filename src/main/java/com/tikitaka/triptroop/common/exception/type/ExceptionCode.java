@@ -20,6 +20,7 @@ public enum ExceptionCode {
     /* 404, NotFoundException */
     NOT_FOUND_REFRESH_TOKEN(4001, "리프레시 토큰이 유효하지 않습니다."),
     NOT_FOUND_USER(4002, "회원 정보를 찾을 수 없습니다."),
+    NOT_FOUND_USER_PROFILE(4003, "회원의 프로필 정보를 찾을 수 없습니다."),
     NOT_FOUND_CATEGORY(1201, "해당 카테고리가 존재하지 않습니다."),
     NOT_FOUND_AREA(2001, "해당 지역이 존재하지 않습니다."),
     NOT_FOUND_PLACE(2002, "해당 장소가 존재하지 않습니다."),

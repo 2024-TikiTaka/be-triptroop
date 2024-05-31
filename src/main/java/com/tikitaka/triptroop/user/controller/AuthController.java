@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.user.AuthController;
+package com.tikitaka.triptroop.user.controller;
 
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.user.dto.request.SignUpRequest;
