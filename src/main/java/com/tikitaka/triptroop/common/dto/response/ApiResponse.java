@@ -2,20 +2,20 @@ package com.tikitaka.triptroop.common.dto.response;
 
 import com.tikitaka.triptroop.common.exception.dto.response.ErrorResponse;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class ApiResponse<T> {
 
-    private boolean success;
+    private final boolean success;
 
-    private String message;
+    private final String message;
 
-    private T result;
+    private final T result;
 
-    public ApiResponse(boolean success, String message, T result) {
-        this.success = success;
-        this.message = message;
-        this.result = result;
+    public static ApiResponse<Void> success() {
+        return new ApiResponse<>(true, null, null);
     }
 
     public static <T> ApiResponse<T> success(String message) {
