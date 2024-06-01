@@ -20,9 +20,13 @@ public class ProfileService {
 
     private final UserRepository userRepository;
 
-
+    /**
+     * 회원 번호로 프로필 정보 조회
+     *
+     * @return UserProfileResponse (회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI)
+     */
     @Transactional(readOnly = true)
-    public UserProfileResponse findByUserId(Long userId) {
+    public UserProfileResponse findUserProfileByUserId(Long userId) {
 
         final User user = userRepository.findById(userId)
                                         .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
@@ -30,6 +34,6 @@ public class ProfileService {
         final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
-        return UserProfileResponse.from(user, profile);
+        return UserProfileResponse.of(user, profile);
     }
 }
