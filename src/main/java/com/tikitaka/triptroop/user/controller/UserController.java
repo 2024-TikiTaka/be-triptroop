@@ -47,9 +47,8 @@ public class UserController {
                                                   @ModelAttribute @Valid UserSaveRequest userRequest) {
 
         return ResponseEntity.ok(
-                ApiResponse.success(
-                        userService.updateUser(loginUser.getUserId(), userRequest)
-                ));
+                ApiResponse.success(userService.updateUser(loginUser.getUserId(), userRequest))
+        );
     }
 
     /**

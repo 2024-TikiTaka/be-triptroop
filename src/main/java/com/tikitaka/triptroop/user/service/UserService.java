@@ -28,10 +28,8 @@ public class UserService {
      * 이메일 가입 여부
      */
     @Transactional(readOnly = true)
-    public void existsByEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_EMAIL);
-        }
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     /**
@@ -39,7 +37,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public UserResponse findById(Long userId) {
-        return UserResponse.from(findUser(userId));
+        return UserResponse.from(findUserById(userId));
     }
 
     /**
@@ -47,7 +45,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public UserResponse findByEmail(String email) {
-        return UserResponse.from(findUser(email));
+        return UserResponse.from(findUserByEmail(email));
     }
 
     /**
@@ -56,7 +54,9 @@ public class UserService {
     @Transactional
     public void signup(final SignUpRequest userRequest) {
 
-        existsByEmail(userRequest.getEmail());
+        if (existsByEmail(userRequest.getEmail())) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_EMAIL);
+        }
 
         final User newUser = User.from(
                 userRequest.getEmail(),
@@ -72,6 +72,7 @@ public class UserService {
     /**
      * 비밀번호 변경
      */
+    @Transactional
     public void changePassword(Long userId, PasswordRequest passwordRequest) {
 
         final User user = validatePassword(userId, passwordRequest.getCurrentPassword());
@@ -81,9 +82,10 @@ public class UserService {
     /**
      * 전화번호 변경
      */
+    @Transactional
     public UserResponse updateUser(Long userId, UserSaveRequest userRequest) {
 
-        final User user = findUser(userId);
+        final User user = findUserById(userId);
         user.updateUser(userRequest.getPhone());
 
         return UserResponse.from(user);
@@ -92,10 +94,11 @@ public class UserService {
     /**
      * 회원 탈퇴
      */
+    @Transactional
     public void withdrawal(Long userId, String currentPassword) {
 
         final User user = validatePassword(userId, currentPassword);
-        
+
         if (user.isWithdrawnUser()) {
             throw new BadRequestException(ExceptionCode.ALREADY_WITHDRAWN_USER);
         }
@@ -103,13 +106,13 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private User findUser(String email) {
+    private User findUserByEmail(String email) {
 
         return userRepository.findByEmail(email)
                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
     }
 
-    private User findUser(Long userId) {
+    private User findUserById(Long userId) {
 
         return userRepository.findById(userId)
                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
@@ -117,7 +120,7 @@ public class UserService {
 
     private User validatePassword(Long userId, String password) {
 
-        final User user = findUser(userId);
+        final User user = findUserById(userId);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException(ExceptionCode.INVALID_PASSWORD);
