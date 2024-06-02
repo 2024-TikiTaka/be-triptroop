@@ -41,6 +41,7 @@ public class UserProfileResponse {
 
     private static String calculateAgeRange(LocalDate birth) {
         int age = Period.between(birth, LocalDate.now()).getYears();
-        return String.valueOf((double) ((age / 10) * 10));
+        int ageRange = (age / 10) * 10;
+        return String.valueOf(ageRange < 10 ? null : ageRange);
     }
 }
