@@ -36,8 +36,7 @@ public class AuthService implements UserDetailsService {
         final User user = userRepository.findByEmail(email)
                                         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        System.out.println("AuthService.loadUserByUsername");
-        System.out.println(user.getPassword());
+        // if(!user.isActiveUser())
         return new CustomUser(user.getId(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
@@ -45,6 +44,7 @@ public class AuthService implements UserDetailsService {
      * RefreshToken 으로 조회
      */
     public LoginDto findByRefreshToken(String refreshToken) {
+
         return LoginDto.from(
                 userRepository.findByRefreshToken(refreshToken)
                               .orElseThrow(() -> new NotFoundException(INVALID_REFRESH_TOKEN))

@@ -29,6 +29,7 @@ public class ProfileController {
     // TODO: 성향, 친구여부, 차단여부, 채팅 링크
     @GetMapping("/users/profile")
     public ResponseEntity<ApiResponse> getProfile(String nickname) {
+        
         return ResponseEntity.ok(ApiResponse.success());
     }
 
@@ -40,6 +41,7 @@ public class ProfileController {
      */
     @GetMapping("/users/me/profile")
     public ResponseEntity<ApiResponse> getMyProfile(@AuthenticationPrincipal CustomUser loginUser) {
+
         return ResponseEntity.ok(ApiResponse.success());
     }
 
@@ -52,6 +54,7 @@ public class ProfileController {
     @PostMapping("/users/me/profile")
     public ResponseEntity<ApiResponse<Void>> createMyProfile(@AuthenticationPrincipal CustomUser loginUser,
                                                              @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
 
@@ -64,6 +67,7 @@ public class ProfileController {
     @PutMapping("/users/me/profile")
     public ResponseEntity<ApiResponse> updateMyProfile(@AuthenticationPrincipal CustomUser loginUser,
                                                        @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
+
         return ResponseEntity.ok(ApiResponse.success());
     }
 
@@ -76,6 +80,7 @@ public class ProfileController {
     @PutMapping("/users/me/profile/upload")
     public ResponseEntity<ApiResponse> uploadMyProfileImage(@AuthenticationPrincipal CustomUser loginUser,
                                                             @RequestBody MultipartFile profileImage) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
 
@@ -86,6 +91,7 @@ public class ProfileController {
      */
     @DeleteMapping("/users/me/profile/upload")
     public ResponseEntity<ApiResponse<Void>> deleteMyProfileImage(@AuthenticationPrincipal CustomUser loginUser) {
+
         return ResponseEntity.noContent().build();
     }
 }

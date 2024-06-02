@@ -76,7 +76,19 @@ public class User extends BaseTimeEntity {
         );
     }
 
-    public void updatePhone(String phone) {
+    public boolean isActiveUser() {
+        return UserStatus.ACTIVE.equals(status);
+    }
+
+    public boolean isSuspendedUser() {
+        return UserStatus.SUSPENDED.equals(status);
+    }
+
+    public boolean isWithdrawnUser() {
+        return UserStatus.WITHDRAWN.equals(status);
+    }
+
+    public void updateUser(String phone) {
         this.phone = phone;
     }
 

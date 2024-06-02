@@ -22,16 +22,6 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 회원 목록 조회
-     *
-     * @return 회원번호, 이메일, 이름, 성별, 생년월일, 전화번호, 가입일
-     */
-    @GetMapping
-    public ResponseEntity<ApiResponse> getAllUsers() {
-        return ResponseEntity.ok(ApiResponse.success());
-    }
-
-    /**
      * 내 정보 조회
      *
      * @param loginUser 로그인 정보
@@ -83,8 +73,7 @@ public class UserController {
      * @param password  비밀번호
      */
     @DeleteMapping("/me")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@AuthenticationPrincipal CustomUser loginUser,
-                                                        String password) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@AuthenticationPrincipal CustomUser loginUser, String password) {
 
         userService.withdrawal(loginUser.getUserId(), password);
         return ResponseEntity.noContent().build();

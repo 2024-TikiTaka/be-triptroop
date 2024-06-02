@@ -84,7 +84,7 @@ public class UserService {
     public UserResponse updateUser(Long userId, UserSaveRequest userRequest) {
 
         final User user = findUser(userId);
-        user.updatePhone(userRequest.getPhone());
+        user.updateUser(userRequest.getPhone());
 
         return UserResponse.from(user);
     }
