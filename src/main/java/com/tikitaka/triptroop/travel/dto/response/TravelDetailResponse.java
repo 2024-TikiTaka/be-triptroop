@@ -1,34 +1,36 @@
 package com.tikitaka.triptroop.travel.dto.response;
 
-import com.tikitaka.triptroop.place.dto.PlaceDto;
-import com.tikitaka.triptroop.travel.dto.TravelCommentsDto;
+import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.place.dto.response.PlaceResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TravelDetailResponse {
 
-    private Long travelId;
-
-    private Long categoryId;
-
-    private String area;
-
-    private PlaceDto place;
-
-    private Long userId;
-
     private String title;
-
     private String content;
+    private List<TravelCommentResponse> travelComments;
+    private List<ImageResponse> image;
+    private PlaceResponse place;
+    private String profileImage;
+    private String nickname;
 
-    private int views;
 
+    public static TravelDetailResponse of(String title, String content, List<TravelCommentResponse> travelComments, List<ImageResponse> image, PlaceResponse place, String profileImage, String nickname) {
 
-    private List<String> images;
+        return new TravelDetailResponse(
+                title,
+                content,
+                travelComments,
+                image,
+                place,
+                profileImage,
+                nickname
 
-    private final List<TravelCommentsDto> travelCommentsDto;
+        );
+    }
 }
