@@ -1,12 +1,8 @@
 package com.tikitaka.triptroop.report.domain.entity;
 
-import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
-import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
-import com.tikitaka.triptroop.travel.domain.entity.Travel;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,32 +24,33 @@ public class Report {
     @Column(name = "report_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "reporter_id")
-    private User reporter;
-//    private Long reporterId;
+    //    @ManyToOne
+//    @JoinColumn(name = "reporter_id")
+//    private User reporter;
+    private Long reporterId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportKind kind;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    //    @ManyToOne
+//    @JoinColumn(name = "schedule_id")
+//    private Schedule schedule;
+    private Long scheduleId;
 
-    @ManyToOne
-    @JoinColumn(name = "reportee_id")
-    private User reportee;
-//    private Long reporteeId;
+    //    @ManyToOne
+//    @JoinColumn(name = "reportee_id")
+//    private User reportee;
+    private Long reporteeId;
 
-    @ManyToOne
-    @JoinColumn(name = "travel_id")
-    private Travel travel;
-//    private Long travelId;
+    //    @ManyToOne
+//    @JoinColumn(name = "travel_id")
+//    private Travel travel;
+    private Long travelId;
 
-    @ManyToOne
-    @JoinColumn(name = "companion_id")
-    private Companion companion;
-//    private Long companionId;
+    //    @ManyToOne
+//    @JoinColumn(name = "companion_id")
+//    private Companion companion;
+    private Long companionId;
 
     @Enumerated(value = EnumType.STRING)
     private ReportType type;
