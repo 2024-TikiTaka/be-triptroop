@@ -11,5 +11,4 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     /* 다솔 - 신고 목록 닉네임 조회 테스트 */
     Profile findByNickname(String nickname);
-
 }
