@@ -7,9 +7,8 @@ import com.tikitaka.triptroop.common.security.dto.LoginDto;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.request.SignUpRequest;
-import com.tikitaka.triptroop.user.dto.request.UserRequest;
+import com.tikitaka.triptroop.user.dto.response.UserDetailResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.NOT_FOUND_REFRESH_TOKEN;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,10 +33,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserRequest findById(Long userId) {
+    public UserDetailResponse findById(Long userId) {
         final User foundUser = userRepository.findById(userId)
                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-        return UserRequest.from(foundUser);
+        return UserDetailResponse.of(foundUser);
     }
 
     @Transactional(readOnly = true)
@@ -59,9 +57,9 @@ public class UserService {
 
         existsByEmail(userRequest.getEmail());
 
-        final User newUser = User.of(
+        final User newUser = User.from(
                 userRequest.getEmail(),
-                passwordEncoder.encode(userRequest.getPassword()),
+                encode(userRequest.getPassword()),
                 userRequest.getName(),
                 userRequest.getBirth(),
                 userRequest.getGender()
@@ -74,5 +72,9 @@ public class UserService {
         final User user = userRepository.findByEmail(email)
                                         .orElseThrow(() -> new UsernameNotFoundException("해당 아이디가 존재하지 않습니다."));
         user.updateRefreshToken(refreshToken);
+    }
+
+    private String encode(String password) {
+        return passwordEncoder.encode(password);
     }
 }

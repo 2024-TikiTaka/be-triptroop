@@ -49,8 +49,8 @@ public class SecurityConfig {
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET, "/images/**", "/api/v1/travels/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/signup", "/api/v1/login").permitAll();
-                    auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
+                    auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                     // auth.anyRequest().permitAll();
                 })
@@ -68,12 +68,12 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         /* TODO :: 추후 설정 */
-         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
-         corsConfiguration.setAllowedHeaders(Arrays.asList(
-                 "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
-                 "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
-         corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList(
+                "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
+                "Content-Type", "Authorization", "X-Requested-With", "Access-Token", "Refresh-Token"));
+        corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
