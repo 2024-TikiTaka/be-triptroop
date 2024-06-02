@@ -11,7 +11,7 @@ public class PasswordRequest {
 
     @NotBlank
     @Size(min = 8, max = 20)
-    private final String oldPassword;
+    private final String currentPassword;
 
     @NotBlank
     @Size(min = 8, max = 20)
