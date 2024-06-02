@@ -51,7 +51,7 @@ public class GeneralExceptionHandler {
 
         log.info("MethodArgumentNotValidException : {}", e.getMessage());
         String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
-        final ErrorResponse errorResponse = ErrorResponse.of(9000, defaultMessage);
+        final ErrorResponse errorResponse = ErrorResponse.of(400, defaultMessage);
         return ResponseEntity.badRequest().body(ApiResponse.fail(errorResponse));
     }
 
