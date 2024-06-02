@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.NOT_FOUND_REFRESH_TOKEN;
+import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.INVALID_REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,8 @@ public class AuthService implements UserDetailsService {
         final User user = userRepository.findByEmail(email)
                                         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
+        System.out.println("AuthService.loadUserByUsername");
+        System.out.println(user.getPassword());
         return new CustomUser(user.getId(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
@@ -45,7 +47,7 @@ public class AuthService implements UserDetailsService {
     public LoginDto findByRefreshToken(String refreshToken) {
         return LoginDto.from(
                 userRepository.findByRefreshToken(refreshToken)
-                              .orElseThrow(() -> new NotFoundException(NOT_FOUND_REFRESH_TOKEN))
+                              .orElseThrow(() -> new NotFoundException(INVALID_REFRESH_TOKEN))
         );
     }
 
