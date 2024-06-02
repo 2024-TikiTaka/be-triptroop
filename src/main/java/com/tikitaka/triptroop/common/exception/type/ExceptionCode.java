@@ -37,6 +37,7 @@ public enum ExceptionCode {
 
     ALREADY_EXISTS_EMAIL(409, "이미 존재하는 이메일입니다."),
     ALREADY_EXISTS_REVIEW(409, "후기 작성내역이 존재합니다."),
+    ALREADY_WITHDRAWN_USER(409, "이미 탈퇴한 회원입니다."),
 
     FAIL_TO_UPLOAD_FILE(500, "파일 저장에 실패하였습니다."),
     FAIL_TO_DELETE_FILE(500, "파일 삭제에 실패하였습니다.");

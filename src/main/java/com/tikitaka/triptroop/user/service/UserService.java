@@ -95,6 +95,10 @@ public class UserService {
     public void withdrawal(Long userId, String currentPassword) {
 
         final User user = validatePassword(userId, currentPassword);
+        
+        if (user.isWithdrawnUser()) {
+            throw new BadRequestException(ExceptionCode.ALREADY_WITHDRAWN_USER);
+        }
 
         userRepository.delete(user);
     }
