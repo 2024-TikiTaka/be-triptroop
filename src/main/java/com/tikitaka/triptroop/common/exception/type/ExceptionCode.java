@@ -34,6 +34,8 @@ public enum ExceptionCode {
     NOT_FOUND_REPORT(404, "신고 내역이 존재하지 않습니다."),
     NOT_FOUND_BLOCK(404, "차단 내역이 존재하지 않습니다."),
     NOT_FOUND_COMMENT(404, "댓글이 존재 하지 않습니다."),
+    NOT_FOUND_SCHEDULE(2008, "해당 일정이 존재하지 않습니다."),
+    NOT_FOUND_SCHEDULE_ITEM(2009, "해당 계획이 존재하지 않습니다."),
 
     ALREADY_EXISTS_EMAIL(409, "이미 존재하는 이메일입니다."),
     ALREADY_EXISTS_REVIEW(409, "후기 작성내역이 존재합니다."),
