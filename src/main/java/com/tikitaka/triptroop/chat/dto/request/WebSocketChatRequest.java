@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ChatRequest {
+public class WebSocketChatRequest {
 
     private Long id;
     private Long roomId;

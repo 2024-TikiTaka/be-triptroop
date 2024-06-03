@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Document(collection = "chat_room")
@@ -39,5 +40,27 @@ public class ChatRoom {
     private String url;
 
     private LocalDateTime lastMessageAt;
+
+    // 정적 팩토리 메서드
+    public static ChatRoom of(String roomName, String type, String creator, String member) {
+        return new ChatRoom(
+                LocalDateTime.now(),
+                roomName,
+                ChatRoomType.valueOf(type),
+                creator,
+                Collections.singletonList(member),
+                null // 초기 lastMessageAt 값은 null
+        );
+    }
+
+    // 생성자
+    private ChatRoom(LocalDateTime createdAt, String roomName, ChatRoomType type, String creator, List<String> member, LocalDateTime lastMessageAt) {
+        this.createdAt = createdAt;
+        this.roomName = roomName;
+        this.type = type;
+        this.creator = creator;
+        this.member = member;
+        this.lastMessageAt = lastMessageAt;
+    }
 
 }

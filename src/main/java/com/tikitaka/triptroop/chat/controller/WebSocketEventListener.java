@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.chat.controller;
 
-import com.tikitaka.triptroop.chat.dto.request.ChatRequest;
+import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
+import com.tikitaka.triptroop.chat.dto.request.WebSocketChatRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -36,7 +37,7 @@ public class WebSocketEventListener {
         if (username != null) {
             log.info("User Disconnected : " + username);
 
-            ChatRequest message = new ChatRequest();
+            WebSocketChatRequest message = new WebSocketChatRequest();
 //            message.setType(Message.MessageType.LEAVE);
             message.setSender(username);
 
