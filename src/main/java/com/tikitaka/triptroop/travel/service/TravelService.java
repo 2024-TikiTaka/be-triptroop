@@ -13,7 +13,6 @@ import com.tikitaka.triptroop.place.domain.entity.Place;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.place.dto.response.PlaceResponse;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
-import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
 import com.tikitaka.triptroop.travel.domain.repository.TravelCommentRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepositoryImpl;
@@ -22,10 +21,10 @@ import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
-import com.tikitaka.triptroop.user.domain.entity.Profile;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
+import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
+import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +51,9 @@ public class TravelService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
+    private final ProfileService profileService;
+    private final TravelCommentService travelCommentService;
+    /* 페이징 처리 */
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("id").descending());
@@ -158,25 +160,21 @@ public class TravelService {
         Travel travel = travelRepository.findById(travelId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
         List<Image> images = imageRepository.findByTravelId(travelId);
         List<ImageResponse> image = ImageResponse.from(images);
-        List<TravelComment> travelComments = travelCommentRepository.findByTravelId(travelId);
-        List<TravelCommentResponse> travelComment = TravelCommentResponse.from(travelComments);
         Place place = placeRepository.findById(travel.getPlaceId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
-        User user = userRepository.findById(travel.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-        Profile profile = profileRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        UserProfileResponse userProfile = profileService.findUserProfileByUserId(travel.getUserId());
 
+        Page<TravelCommentResponse> travelComment = travelCommentService.findAll(1, travelId);
 
         TravelDetailResponse travelDetailResponse = TravelDetailResponse.of(
                 travel.getTitle(),
                 travel.getContent(),
-                travelComment,
-                image,
                 PlaceResponse.from(place),
-                profile.getProfileImage(),
-                profile.getNickname()
+                userProfile,
+                image,
+                travelComment
         );
 
         return travelDetailResponse;
-
     }
 
 
