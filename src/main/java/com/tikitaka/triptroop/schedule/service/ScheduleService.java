@@ -18,6 +18,7 @@ import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
@@ -177,6 +178,17 @@ public class ScheduleService {
                 scheduleUpdateRequest.getEndDate(),
                 scheduleUpdateRequest.getStartDate()
         );
+    }
+
+    public void updateItem(ScheduleItemUpdateRequest scheduleItemUpdateRequests, Long scheduleItemId) {
+        ScheduleItem scheduleItems = scheduleItemRepository.findById(scheduleItemId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE_ITEM));
+        scheduleItems.update(
+                scheduleItemUpdateRequests.getContent(),
+                scheduleItemUpdateRequests.getCost(),
+                scheduleItemUpdateRequests.getKind(),
+                scheduleItemUpdateRequests.getPlanDate()
+        );
+
     }
 }
 
