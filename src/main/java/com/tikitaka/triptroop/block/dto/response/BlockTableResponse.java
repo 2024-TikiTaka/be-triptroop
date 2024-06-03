@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.block.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tikitaka.triptroop.block.domain.entity.Block;
 import com.tikitaka.triptroop.block.domain.type.BlockStatus;
 import lombok.AccessLevel;
@@ -34,8 +33,8 @@ public class BlockTableResponse {
     public static BlockTableResponse from(final Block block) {
         return new BlockTableResponse(
                 block.getId(),
-                block.getBlocked().getId(),
-                block.getBlocker().getId(),
+                block.getBlockedId(),
+                block.getBlockerId(),
                 block.getStatus(),
                 block.getBlockedAt(),
                 block.getModifiedAt(),
