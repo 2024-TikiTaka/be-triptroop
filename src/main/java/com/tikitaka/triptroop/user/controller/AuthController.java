@@ -32,6 +32,7 @@ public class AuthController {
      */
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
+
         userService.signup(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
@@ -43,6 +44,7 @@ public class AuthController {
      */
     @PostMapping("/signup/email-check")
     public ResponseEntity<ApiResponse<Void>> checkDuplicateEmail(String email) {
+
         userService.existsByEmail(email);
         return ResponseEntity.ok(ApiResponse.success());
     }
@@ -54,6 +56,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal CustomUser loginUser) {
+
         authService.updateRefreshToken(loginUser.getUsername(), null);
         return ResponseEntity.noContent().build();
     }

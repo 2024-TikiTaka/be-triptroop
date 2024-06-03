@@ -22,6 +22,8 @@ import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
+import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
+import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -154,9 +156,6 @@ public class ScheduleService {
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
         List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
         return profileService.findByUserIdIn(reviewerIds);
-        //        return convertToUserProfileResponseList(profiles);
     }
-
-
 }
 
