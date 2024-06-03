@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.FAIL_TO_DELETE_FILE;
 import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.FAIL_TO_UPLOAD_FILE;
@@ -18,9 +19,20 @@ import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.FAIL_TO
 
 public class FileUploadUtils {
 
-    public static String uploadFile(String uploadDir, String fileName, MultipartFile multipartFile) {
+    public static String getFullPath(Image image) {
+        return image.getPath() + image.getUuid();
+    }
 
-        try (InputStream inputStream = multipartFile.getInputStream()) {
+    public static String getRandomFilename() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    /**
+     * 파일 업로드
+     */
+    public static String uploadFile(String uploadDir, MultipartFile file) {
+
+        try (InputStream inputStream = file.getInputStream()) {
             Path uploadPath = Paths.get(uploadDir);
 
             /* 업로드 경로가 존재하지 않을 시 경로 먼저 생성 */
@@ -28,23 +40,23 @@ public class FileUploadUtils {
                 Files.createDirectories(uploadPath);
 
             /* 파일명 생성 */
-            String replaceFileName = fileName + "." + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+            String filename = getRandomFilename();
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            String newFilename = filename + "." + extension;
 
             /* 파일 저장 */
-            Path filePath = uploadPath.resolve(replaceFileName);
+            Path filePath = uploadPath.resolve(newFilename);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return replaceFileName;
-
+            return newFilename;
         } catch (IOException e) {
             throw new ServerInternalException(FAIL_TO_UPLOAD_FILE);
         }
     }
 
-    public static String getFullPath(Image image) {
-        return image.getPath() + image.getUuid();
-    }
-
+    /**
+     * 파일 삭제
+     */
     public static void deleteFile(String uploadDir, String fileName) {
 
         try {
@@ -52,12 +64,9 @@ public class FileUploadUtils {
             Path filePath = uploadPath.resolve(fileName);
             Files.delete(filePath);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ServerInternalException(FAIL_TO_DELETE_FILE);
         }
     }
-
-
 }
 
 

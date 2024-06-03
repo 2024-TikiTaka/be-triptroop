@@ -1,13 +1,34 @@
 package com.tikitaka.triptroop.chat.dto.response;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.tikitaka.triptroop.chat.domain.entity.ChatRoom;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
-public class ChatResponse { //<- 무슨 응답인지 알수 있게 Response 앞에 명시해주세요. ( ex) 프로필 응답 일때 -> ProfileResponse )
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+public class ChatResponse {
+    private final String id;
 
-    /* 응답시 사용할 필드명을 입력해주세요. */
+    private final String roomName;
 
+    private final String creator;
 
+    private List<String> member;
+
+    private String type;
+
+    private String createdAt;
+
+    private String url;
+
+    private String lastMessageAt;
+
+    public static ChatResponse from(final ChatRoom chatRoom) {
+        return new ChatResponse(
+                chatRoom.getId().toHexString(),
+                chatRoom.getRoomName(),
+                chatRoom.getCreator()
+        );
+    }
 }
