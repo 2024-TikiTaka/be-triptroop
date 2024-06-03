@@ -36,20 +36,20 @@ public class TravelComment extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-//    public TravelComment(Long travel, User user, String content) {
-//        this.travelId = travel;
-//        this.userId = user;
-//        this.content = content;
-//        this.isDeleted = false;
-//    }
+    public TravelComment(Long travelId, User user, String content) {
+        this.travelId = travelId;
+        this.userId = user;
+        this.content = content;
+        this.isDeleted = false;
+    }
 
 
-//    public static TravelComment of(final Long travelId, final User userId, final String content) {
-//
-//        return new TravelComment(
-//                travelId,
-//                userId,
-//                content
-//        );
-//    }
+    public static TravelComment of(final Long travelId, final User userId, final String content) {
+
+        return new TravelComment(
+                travelId,
+                userId,
+                content
+        );
+    }
 }
