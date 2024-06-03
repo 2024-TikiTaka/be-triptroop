@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,5 +36,19 @@ public class ProfileService {
         return UserProfileResponse.from(user, profile);
     }
 
+    @Transactional(readOnly = true)
+    public List<UserProfileResponse> findByUserIdIn(List<Long> userIds) {
 
+        final List<User> users = userRepository.findByIdIn(userIds);
+        final List<Profile> profiles = profileRepository.findByUserIdIn(userIds);
+
+        List<UserProfileResponse> userProfiles = new ArrayList<>();
+        for (Profile profile : profiles) {
+            for (User user : users) {
+                userProfiles.add(UserProfileResponse.from(user, profile));
+            }
+        }
+
+        return userProfiles;
+    }
 }

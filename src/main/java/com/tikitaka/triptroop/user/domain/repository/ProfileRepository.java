@@ -8,9 +8,10 @@ import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
-
     Optional<Profile> findByUserId(Long userId);
 
-    List<Profile> findByUserIdIn(List<Long> reviewerIds);
+    /* 다솔 - 신고 목록 닉네임 조회 테스트 */
+    Profile findByNickname(String nickname);
 
+    List<Profile> findByUserIdIn(List<Long> userIds);
 }

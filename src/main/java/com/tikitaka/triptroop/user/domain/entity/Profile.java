@@ -18,11 +18,7 @@ public class Profile extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
 
-//
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
     private String nickname;
 

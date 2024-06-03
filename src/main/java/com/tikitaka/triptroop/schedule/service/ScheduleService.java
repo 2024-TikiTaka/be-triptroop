@@ -22,7 +22,6 @@ import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
-import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
@@ -160,20 +159,10 @@ public class ScheduleService {
     public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
         List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
-        List<Profile> profiles = profileRepository.findByUserIdIn(reviewerIds);
-        return convertToUserProfileResponseList(profiles);
+        return profileService.findByUserIdIn(reviewerIds);
+//        return convertToUserProfileResponseList(profiles);
     }
 
-    private List<UserProfileResponse> convertToUserProfileResponseList(List<Profile> profiles) {
-        List<UserProfileResponse> userProfileResponses = new ArrayList<>();
-        for (Profile profile : profiles) {
-            userProfileResponses.add(convertToUserProfileResponse(profile));
-        }
-        return userProfileResponses;
-    }
 
-    private UserProfileResponse convertToUserProfileResponse(Profile profile) {
-        return UserProfileResponse.from(profile.getUser(), profile);
-    }
 }
 
