@@ -44,8 +44,6 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final ProfileRepository profileRepository;
-
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
     private final ScheduleParticipantRepository scheduleParticipantRepository;
@@ -53,8 +51,6 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
-
-    private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
 
@@ -116,7 +112,6 @@ public class ScheduleService {
                 userProfile,
                 scheduleItem,
                 scheduleParticipant
-
         );
 
         return scheduleDetailResponse;
