@@ -49,8 +49,9 @@ public class Schedule extends BaseTimeEntity {
     private Integer views = 0;
 
     @OneToMany
-    @JoinColumn(name = "scheduleId")
+    @JoinColumn(name = "schedule_Id")
     private List<Image> images;
+
 
     private Schedule(String title, Integer count, Long userId, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;

@@ -19,7 +19,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    // EntityGraph
     @Override
     public List<Schedule> findSchedulesByKeyword(Visibility visibility, String keyword, String sort, Long area) {
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
@@ -47,7 +46,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 case "latest": // 최신 순
                     query.orderBy(schedule.createdAt.desc());
                     break;
-
                 // 기본은 최신 순으로 설정
                 default:
                     query.orderBy(schedule.createdAt.desc());
@@ -61,6 +59,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         // 쿼리 수행 후 결과 반환
         return query.fetch();
     }
+
+//    @Override
+//    public List<ScheduleItem> findScheduleItemById(Long scheduleId) {
+//        return queryFactory
+//                .selectFrom(scheduleItem)
+//                .leftJoin(schedule.scheduleItem, scheduleItem) // scheduleItem 필드를 사용하여 조인
+//                .where(schedule.id.eq(scheduleId)) // scheduleId에 해당하는 일정만 가져옵니다.
+//                .fetch();
+//    }
 
 
 }
