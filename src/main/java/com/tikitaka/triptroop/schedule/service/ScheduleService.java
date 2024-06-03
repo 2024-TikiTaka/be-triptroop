@@ -23,9 +23,10 @@ import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
+import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
+import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -53,6 +55,8 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
+
+    private final ProfileService profileService;
 
     private Pageable getPageable(final Integer page, final String sort) {
         return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
@@ -92,11 +96,14 @@ public class ScheduleService {
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
         List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
 
-        User user = userRepository.findById(schedule.getUserId()).orElseThrow();
-        Profile profile = profileRepository.findById(user.getId()).orElseThrow();
-
+//        User user = userRepository.findById(schedule.getUserId()).orElseThrow();
+//        Profile profile = profileRepository.findById(user.getId()).orElseThrow();
+        UserProfileResponse userProfile = profileService.findByUserId(schedule.getUserId());
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants);
+
+        List<UserProfileResponse> userInfos = getReviewerProfilesByScheduleId(scheduleId);
+
+        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants, userInfos);
 
         ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
                 schedule.getTitle(),
@@ -106,8 +113,7 @@ public class ScheduleService {
                 schedule.getEndDate(),
                 schedule.getViews(),
                 ImageResponse.from(image),
-                profile.getNickname(),
-                profile.getProfileImage(),
+                userProfile,
                 scheduleItem,
                 scheduleParticipant
 
@@ -145,6 +151,29 @@ public class ScheduleService {
         return scheduleItem.getId();
     }
 
+    public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
+        return scheduleParticipants.stream()
+                .map(ScheduleParticipant::getReviewerId)
+                .collect(Collectors.toList());
+    }
 
+    public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
+        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+        List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
+        List<Profile> profiles = profileRepository.findByUserIdIn(reviewerIds);
+        return convertToUserProfileResponseList(profiles);
+    }
+
+    private List<UserProfileResponse> convertToUserProfileResponseList(List<Profile> profiles) {
+        List<UserProfileResponse> userProfileResponses = new ArrayList<>();
+        for (Profile profile : profiles) {
+            userProfileResponses.add(convertToUserProfileResponse(profile));
+        }
+        return userProfileResponses;
+    }
+
+    private UserProfileResponse convertToUserProfileResponse(Profile profile) {
+        return UserProfileResponse.from(profile.getUser(), profile);
+    }
 }
 

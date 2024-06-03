@@ -27,6 +27,16 @@ public class UserProfileResponse {
 
     private final ProfileResponse profile;
 
+    public UserProfileResponse(Long userId, String ageRange, String gender, int godo, Profile profile) {
+        this.userId = userId;
+        this.ageRange = ageRange;
+        this.gender = gender;
+        this.godo = godo;
+        this.profile = ProfileResponse.of(profile);
+
+    }
+
+
     public static UserProfileResponse from(User user, Profile profile) {
         return new UserProfileResponse(
                 user.getId(),
@@ -37,8 +47,11 @@ public class UserProfileResponse {
         );
     }
 
+
     private static String calculateAgeRange(LocalDate birth) {
         int age = Period.between(birth, LocalDate.now()).getYears();
         return String.valueOf(Math.floor((age / 10)));
     }
+
+
 }

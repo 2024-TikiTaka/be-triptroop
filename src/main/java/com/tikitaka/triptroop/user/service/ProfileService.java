@@ -25,11 +25,13 @@ public class ProfileService {
     public UserProfileResponse findByUserId(Long userId) {
 
         final User user = userRepository.findById(userId)
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
 
         final Profile profile = profileRepository.findByUserId(userId)
-                                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
         return UserProfileResponse.from(user, profile);
     }
+
+
 }
