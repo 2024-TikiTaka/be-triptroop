@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.schedule.domain.entity;
 
 import com.tikitaka.triptroop.common.domain.BaseTimeEntity;
+import com.tikitaka.triptroop.place.domain.entity.Place;
 import com.tikitaka.triptroop.schedule.domain.type.ScheduleItemKind;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,7 +24,9 @@ public class ScheduleItem extends BaseTimeEntity {
 
     private Long scheduleId;
 
-    private Long placeId;
+    @ManyToOne
+    @JoinColumn(name = "place_id")
+    private Place place;
 
     private LocalDate planDate;
 
@@ -37,6 +40,7 @@ public class ScheduleItem extends BaseTimeEntity {
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
+
 
     private ScheduleItem(Long id, String content, Integer cost, LocalDate planDate, ScheduleItemKind
             kind) {

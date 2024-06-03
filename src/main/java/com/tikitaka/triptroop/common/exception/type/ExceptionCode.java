@@ -20,7 +20,7 @@ public enum ExceptionCode {
     UNAUTHORIZED(401, "인증 되지 않은 요청입니다."),
     INVALID_CREDENTIALS(401, "아이디 또는 비밀번호가 잘못되었습니다."),
     INVALID_PASSWORD(401, "비밀번호가 올바르지 않습니다."),
-    INVALID_REFRESH_TOKEN(404, "리프레시 토큰이 유효하지 않습니다."),
+    INVALID_REFRESH_TOKEN(401, "리프레시 토큰이 유효하지 않습니다."),
 
     ACCESS_DENIED(403, "허가 되지 않은 요청입니다."),
 
@@ -34,6 +34,8 @@ public enum ExceptionCode {
     NOT_FOUND_REPORT(404, "신고 내역이 존재하지 않습니다."),
     NOT_FOUND_BLOCK(404, "차단 내역이 존재하지 않습니다."),
     NOT_FOUND_COMMENT(404, "댓글이 존재 하지 않습니다."),
+    NOT_FOUND_SCHEDULE(2008, "해당 일정이 존재하지 않습니다."),
+    NOT_FOUND_SCHEDULE_ITEM(2009, "해당 계획이 존재하지 않습니다."),
 
     ALREADY_EXISTS_EMAIL(409, "이미 존재하는 이메일입니다."),
     ALREADY_EXISTS_REVIEW(409, "후기 작성내역이 존재합니다."),
