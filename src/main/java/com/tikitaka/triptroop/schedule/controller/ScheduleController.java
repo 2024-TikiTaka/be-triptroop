@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.schedule.controller;
 
+import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.common.page.PageResponse;
 import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
@@ -50,25 +51,36 @@ public class ScheduleController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody @Valid final ScheduleCreateRequest scheduleRequest
+    public ResponseEntity<ApiResponse<Void>> save(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+                                                  @RequestPart final MultipartFile image
             /* @AuthenticationPrincipal final */) {
         final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
+        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
     @PostMapping("/{scheduleId}/item")
     public ResponseEntity<Void> saveItem(@RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
-                                         @PathVariable final Long scheduleId) {
+                                         @PathVariable final Long scheduleId
+    ) {
 
         scheduleService.saveItem(scheduleItemRequest, scheduleId);
+
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-    @PostMapping("/{scheduleId}/upload")
-    public ResponseEntity<Void> uploadImage(@RequestPart final MultipartFile image,
-                                            @PathVariable final Long scheduleId) {
+//    @PostMapping("/{scheduleId}/upload")
+//    public ResponseEntity<Void> uploadImage(@RequestPart final MultipartFile image,
+//                                            @PathVariable final Long scheduleId) {
+//
+//        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+//        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+//    }
 
-        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
-    }
+//    @PutMapping("/{scheduleId}")
+//    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
+//                                                   @RequestBody @Valid final ScheduleCreateRequest scheduleCreateRequest) {
+//
+//    }
 }
