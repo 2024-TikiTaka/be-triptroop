@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.report.controller;
 
+import com.tikitaka.triptroop.report.dto.response.ReportDetailResponse;
 import com.tikitaka.triptroop.report.dto.response.ReportTableResponse;
 import com.tikitaka.triptroop.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,14 @@ public class ReportController {
         final List<ReportTableResponse> reportResponse = reportService.getReport(nickname, kind);
 
         return ResponseEntity.ok(reportResponse);
+    }
+
+    /* 2. 신고 상세 조회 Test */
+    @GetMapping("/{reportId}")
+    public ResponseEntity<ReportDetailResponse> getReportDetail(@PathVariable final Long reportId) {
+
+        final ReportDetailResponse reportDetailResponse = reportService.getReportDetail(reportId);
+
+        return ResponseEntity.ok(reportDetailResponse);
     }
 }

@@ -31,9 +31,10 @@ public enum ExceptionCode {
     NOT_FOUND_PLACE(404, "해당 장소가 존재하지 않습니다."),
     NOT_FOUND_IMAGE(404, "해당 이미지가 존재하지 않습니다."),
     NOT_FOUND_TRAVEL(404, "해당 여행지 소개글이 없습니다."),
+    NOT_FOUND_COMPANION(404, "해당 동행글이 존재하지 않습니다."),
     NOT_FOUND_REPORT(404, "신고 내역이 존재하지 않습니다."),
     NOT_FOUND_BLOCK(404, "차단 내역이 존재하지 않습니다."),
-    NOT_FOUND_COMMENT(404, "댓글이 존재 하지 않습니다."),
+    NOT_FOUND_COMMENT(404, "댓글이 존재하지 않습니다."),
     NOT_FOUND_SCHEDULE(2008, "해당 일정이 존재하지 않습니다."),
     NOT_FOUND_SCHEDULE_ITEM(2009, "해당 계획이 존재하지 않습니다."),
 
