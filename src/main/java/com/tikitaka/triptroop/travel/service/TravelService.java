@@ -161,7 +161,7 @@ public class TravelService {
         List<Image> images = imageRepository.findByTravelId(travelId);
         List<ImageResponse> image = ImageResponse.from(images);
         Place place = placeRepository.findById(travel.getPlaceId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
-        UserProfileResponse userProfile = profileService.findByUserId(travel.getUserId());
+        UserProfileResponse userProfile = profileService.findUserProfileByUserId(travel.getUserId());
 
         Page<TravelCommentResponse> travelComment = travelCommentService.findAll(1, travelId);
 
