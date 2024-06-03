@@ -1,14 +1,13 @@
 package com.tikitaka.triptroop.travel.service;
 
 
-import com.tikitaka.triptroop.common.exception.NotFoundException;
-import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
 import com.tikitaka.triptroop.travel.domain.repository.TravelCommentRepository;
+import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.dto.request.TravelCommentRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
+import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @Transactional
@@ -25,6 +25,9 @@ public class TravelCommentService {
     private final TravelCommentRepository travelCommentRepository;
 
     private final UserRepository userRepository;
+    private final ProfileService profileService;
+    private final TravelRepository travelRepository;
+
 
     /* 페이징 처리 */
     private Pageable getPageable(final Integer page) {
@@ -34,12 +37,10 @@ public class TravelCommentService {
     /* 댓글 등록 */
     public Long save(TravelCommentRequest commentRequest) {
 
-        User user = userRepository.findById(commentRequest.getUserId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
 
         final TravelComment newComment = TravelComment.of(
                 commentRequest.getTravelId(),
-                user,
+                commentRequest.getUserId(),
                 commentRequest.getContent()
         );
 
@@ -51,10 +52,10 @@ public class TravelCommentService {
     /* 댓글 조회 */
     @Transactional(readOnly = true)
     public Page<TravelCommentResponse> findAll(final Integer page, final Long travelId) {
-        Page<TravelComment> travelComments = travelCommentRepository.findByTravelId(getPageable(page), travelId);
 
-//        return TravelCommentResponse.from(travelComments);
-        return null;
+        return travelCommentRepository.findByTravelId(getPageable(page), travelId);
+
+
     }
 
 

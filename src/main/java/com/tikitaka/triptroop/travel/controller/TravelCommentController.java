@@ -37,7 +37,7 @@ public class TravelCommentController {
     @GetMapping("/{travelId}/comment")
     public ResponseEntity<ApiResponse<PageResponse>> findComments(
             @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final Long travelId
+            @PathVariable final Long travelId
 
     ) {
         final Page<TravelCommentResponse> travelComment = commentService.findAll(page, travelId);
@@ -45,7 +45,6 @@ public class TravelCommentController {
         final PageResponse pageResponse = PageResponse.of(travelComment.getContent(), pagingButtonInfo);
 
         return ResponseEntity.ok(ApiResponse.success(pageResponse));
-
 
     }
 
