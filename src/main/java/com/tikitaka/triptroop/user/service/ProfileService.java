@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -45,6 +48,22 @@ public class ProfileService {
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
         return UserProfileResponse.of(user, profile);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserProfileResponse> findByUserIdIn(List<Long> userIds) {
+
+        final List<User> users = userRepository.findByIdIn(userIds);
+        final List<Profile> profiles = profileRepository.findByUserIdIn(userIds);
+
+        List<UserProfileResponse> userProfiles = new ArrayList<>();
+        for (Profile profile : profiles) {
+            for (User user : users) {
+                userProfiles.add(UserProfileResponse.of(user, profile));
+            }
+        }
+
+        return userProfiles;
     }
 
     public UserProfileResponse findUserProfileByNickname(String nickname) {
