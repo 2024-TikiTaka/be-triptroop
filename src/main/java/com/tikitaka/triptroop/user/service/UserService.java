@@ -3,18 +3,14 @@ package com.tikitaka.triptroop.user.service;
 import com.tikitaka.triptroop.common.exception.ConflictException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.common.security.dto.LoginDto;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.request.SignUpRequest;
-import com.tikitaka.triptroop.user.dto.response.UserDetailResponse;
+import com.tikitaka.triptroop.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.tikitaka.triptroop.common.exception.type.ExceptionCode.NOT_FOUND_REFRESH_TOKEN;
 
 @Service
 @Transactional
@@ -25,6 +21,9 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 이메일 가입 여부
+     */
     @Transactional(readOnly = true)
     public void existsByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
@@ -32,26 +31,32 @@ public class UserService {
         }
     }
 
+    /**
+     * 회원 번호로 조회
+     */
     @Transactional(readOnly = true)
-    public UserDetailResponse findById(Long userId) {
-        final User foundUser = userRepository.findById(userId)
-                                             .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-        return UserDetailResponse.of(foundUser);
+    public UserResponse findById(Long userId) {
+
+        return UserResponse.from(
+                userRepository.findById(userId)
+                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER))
+        );
     }
 
+    /**
+     * 이메일로 조회
+     */
     @Transactional(readOnly = true)
-    public LoginDto findByEmail(String email) {
-        final User foundUser = userRepository.findByEmail(email)
-                                             .orElseThrow(() -> new UsernameNotFoundException("해당 아이디가 존재하지 않습니다."));
-        return LoginDto.from(foundUser);
+    public UserResponse findByEmail(String email) {
+        return UserResponse.from(
+                userRepository.findByEmail(email)
+                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER))
+        );
     }
 
-    public LoginDto findByRefreshToken(String refreshToken) {
-        final User foundUser = userRepository.findByRefreshToken(refreshToken)
-                                             .orElseThrow(() -> new NotFoundException(NOT_FOUND_REFRESH_TOKEN));
-        return LoginDto.from(foundUser);
-    }
-
+    /**
+     * 회원 가입
+     */
     @Transactional
     public void signup(final SignUpRequest userRequest) {
 
@@ -68,11 +73,6 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public void updateRefreshToken(String email, String refreshToken) {
-        final User user = userRepository.findByEmail(email)
-                                        .orElseThrow(() -> new UsernameNotFoundException("해당 아이디가 존재하지 않습니다."));
-        user.updateRefreshToken(refreshToken);
-    }
 
     private String encode(String password) {
         return passwordEncoder.encode(password);
