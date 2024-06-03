@@ -29,7 +29,7 @@ public class UserProfileResponse {
 
     private final ProfileResponse profile;
 
-    public static UserProfileResponse from(User user, Profile profile) {
+    public static UserProfileResponse of(User user, Profile profile) {
         return new UserProfileResponse(
                 user.getId(),
                 calculateAgeRange(user.getBirth()),

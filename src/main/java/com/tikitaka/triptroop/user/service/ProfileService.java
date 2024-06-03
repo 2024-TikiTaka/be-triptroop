@@ -37,7 +37,7 @@ public class ProfileService {
         final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
-        return UserProfileResponse.from(user, profile);
+        return UserProfileResponse.of(user, profile);
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +49,7 @@ public class ProfileService {
         List<UserProfileResponse> userProfiles = new ArrayList<>();
         for (Profile profile : profiles) {
             for (User user : users) {
-                userProfiles.add(UserProfileResponse.from(user, profile));
+                userProfiles.add(UserProfileResponse.of(user, profile));
             }
         }
 

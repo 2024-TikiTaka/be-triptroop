@@ -34,19 +34,15 @@ public class ScheduleParticipantsResponse {
     }
 
     public static List<ScheduleParticipantsResponse> from(List<ScheduleParticipant> scheduleParticipants, List<UserProfileResponse> userInfos) {
-//
-//        List<ScheduleParticipantsResponse> scheduleParticipants
-//                = scheduleParticipants.stream()
-//                .map(ScheduleParticipantsResponse::from)
-//                .collect(Collectors.toList());
-//    }
+
         Map<Long, UserProfileResponse> userInfoMap = userInfos.stream()
-                .collect(Collectors.toMap(UserProfileResponse::getUserId, userInfo -> userInfo));
+                                                              .collect(Collectors.toMap(UserProfileResponse::getUserId, userInfo -> userInfo));
+
         return scheduleParticipants.stream()
-                .map(participant -> {
-                    UserProfileResponse userProfile = userInfoMap.get(participant.getReviewerId());
-                    return ScheduleParticipantsResponse.from(participant, userProfile);
-                })
-                .collect(Collectors.toList());
+                                   .map(participant -> {
+                                       UserProfileResponse userProfile = userInfoMap.get(participant.getReviewerId());
+                                       return ScheduleParticipantsResponse.from(participant, userProfile);
+                                   })
+                                   .collect(Collectors.toList());
     }
 }
