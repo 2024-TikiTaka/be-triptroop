@@ -3,6 +3,7 @@ package com.tikitaka.triptroop.user.controller;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import com.tikitaka.triptroop.user.dto.request.ProfileSaveRequest;
+import com.tikitaka.triptroop.user.dto.response.ProfileResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,12 @@ public class ProfileController {
      * @return UserProfileResponse 성별, 나이(구간), 고도, 프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI
      */
     // TODO: 성향, 친구여부, 차단여부, 채팅 링크
-    @GetMapping("/users/profile")
-    public ResponseEntity<ApiResponse> getProfile(String nickname) {
-        
-        return ResponseEntity.ok(ApiResponse.success());
+    @GetMapping("/profiles")
+    public ResponseEntity<ApiResponse> getProfileByNickname(@AuthenticationPrincipal CustomUser loginUser, String nickname) {
+
+        return ResponseEntity.ok(
+                ApiResponse.success(profileService.findUserProfileByNickname(nickname))
+        );
     }
 
     /**
@@ -40,9 +43,11 @@ public class ProfileController {
      * @return ProfileResponse 프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI, 고도
      */
     @GetMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse> getMyProfile(@AuthenticationPrincipal CustomUser loginUser) {
+    public ResponseEntity<ApiResponse> getProfile(@AuthenticationPrincipal CustomUser loginUser) {
 
-        return ResponseEntity.ok(ApiResponse.success());
+        return ResponseEntity.ok(
+                ApiResponse.success(profileService.findUserProfileByUserId(loginUser.getUserId()))
+        );
     }
 
     /**
@@ -52,9 +57,11 @@ public class ProfileController {
      * @param profileRequest 닉네임, 자기소개, MBTI
      */
     @PostMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse<Void>> createMyProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                             @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
+    public ResponseEntity<ApiResponse<Void>> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
+                                                         @RequestPart @Valid ProfileSaveRequest profileRequest,
+                                                         @RequestPart MultipartFile profileImage) {
 
+        final ProfileResponse profile = profileService.save(loginUser.getUserId(), profileRequest, profileImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
 
@@ -65,9 +72,9 @@ public class ProfileController {
      * @param profileRequest 닉네임, 자기소개, MBTI
      */
     @PutMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse> updateMyProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                       @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
-
+    public ResponseEntity<ApiResponse> updateProfile(@AuthenticationPrincipal CustomUser loginUser,
+                                                     @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
+        profileService.update(profileRequest);
         return ResponseEntity.ok(ApiResponse.success());
     }
 
@@ -78,9 +85,9 @@ public class ProfileController {
      * @param profileImage 닉네임, 자기소개, MBTI
      */
     @PutMapping("/users/me/profile/upload")
-    public ResponseEntity<ApiResponse> uploadMyProfileImage(@AuthenticationPrincipal CustomUser loginUser,
-                                                            @RequestBody MultipartFile profileImage) {
-
+    public ResponseEntity<ApiResponse> uploadProfileImage(@AuthenticationPrincipal CustomUser loginUser,
+                                                          @RequestBody MultipartFile profileImage) {
+        profileService.uploadImage(loginUser.getUserId(), profileImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
 
@@ -90,8 +97,9 @@ public class ProfileController {
      * @param loginUser 로그인 정보
      */
     @DeleteMapping("/users/me/profile/upload")
-    public ResponseEntity<ApiResponse<Void>> deleteMyProfileImage(@AuthenticationPrincipal CustomUser loginUser) {
+    public ResponseEntity<ApiResponse<Void>> deleteProfileImage(@AuthenticationPrincipal CustomUser loginUser) {
 
+        profileService.deleteImage(loginUser.getUserId());
         return ResponseEntity.noContent().build();
     }
 }
