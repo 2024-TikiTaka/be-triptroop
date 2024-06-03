@@ -2,14 +2,19 @@ package com.tikitaka.triptroop.report.service;
 
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.companion.domain.repository.CompanionRepository;
+import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.repository.ReportRepository;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.dto.response.ReportDetailResponse;
 import com.tikitaka.triptroop.report.dto.response.ReportTableResponse;
+import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
+import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
@@ -55,29 +60,45 @@ public class ReportService {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REPORT));
 
-        Long reporterId = report.getReporterId();
         Long scheduleId = null;
         Long reporteeId = null;
         Long travelId = null;
         Long companionId = null;
+        String titleOrNickname = null;
 
         ReportKind kind = report.getKind();
         switch (kind) {
-            case SCHEDULE -> scheduleId = report.getScheduleId();
-            case USER -> reporteeId = report.getReporteeId();
-            case TRAVEL -> travelId = report.getTravelId();
-            case COMPANION -> companionId = report.getCompanionId();
+            case SCHEDULE -> {
+                scheduleId = report.getScheduleId();
+                Schedule schedule = scheduleRepository.findById(scheduleId)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+                titleOrNickname = schedule.getTitle();
+            }
+            case USER -> {
+                reporteeId = report.getReporteeId();
+                Profile profile = profileRepository.findByUserId(reporteeId)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+                titleOrNickname = profile.getNickname();
+            }
+            case TRAVEL -> {
+                travelId = report.getTravelId();
+                Travel travel = travelRepository.findById(travelId)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+                titleOrNickname = travel.getTitle();
+            }
+            case COMPANION -> {
+                companionId = report.getCompanionId();
+                Companion companion = companionRepository.findById(companionId)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMPANION));
+                titleOrNickname = companion.getTitle();
+            }
         }
 
-//        Schedule schedule = scheduleRepository.findById(scheduleId);
-//        Profile profile = profileRepository.findById(reporteeId);
-//        Travel travel = travelRepository.findById(travelId);
-//        Companion companion = companionRepository.findById(companionId);
-//
-//        List<Image> images = imageRepository.findByReportId(reportId);
-//        List<ImageResponse> imageResponses = ImageResponse.from(images);
-//
-//        return ReportDetailResponse.from(report, imageResponses, schedule, profile, travel, companion);
-        return null;
+        List<Image> images = imageRepository.findByReportId(reportId);
+        List<ImageResponse> imageResponses = ImageResponse.from(images);
+
+        return ReportDetailResponse.from(report, imageResponses, titleOrNickname);
     }
+
+
 }

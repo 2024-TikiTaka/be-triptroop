@@ -23,10 +23,12 @@ public class ReportDetailResponse {
     private final LocalDateTime processedAt;
     private final ReportKind kind;
     private final Long reporterId;
-    private final Long scheduleId;
-    private final Long reporteeId;
-    private final Long travelId;
-    private final Long companionId;
+//    private final Long scheduleId;
+//    private final Long reporteeId;
+//    private final Long travelId;
+//    private final Long companionId;
+    private final String titleOrNickname;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime reportedAt;
     private final ReportType type;
@@ -34,7 +36,8 @@ public class ReportDetailResponse {
     private final List<String> imageNames;
     private final List<String> imageExtensions;
 
-    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, Long scheduleId, Long reporteeId, Long travelId, Long companionId) {
+    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, String titleOrNickname) {
+//    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, Long scheduleId, Long reporteeId, Long travelId, Long companionId) {
         List<String> imageNames = imageResponses.stream()
                 .map(imageResponse -> {
                     String fullPath = imageResponse.getFullPath();
@@ -58,10 +61,12 @@ public class ReportDetailResponse {
                 report.getProcessedAt(),
                 report.getKind(),
                 report.getReporterId(),
-                scheduleId,
-                reporteeId,
-                travelId,
-                companionId,
+//                scheduleId,
+//                reporteeId,
+//                travelId,
+//                companionId,
+                titleOrNickname,
+
                 report.getReportedAt(),
                 report.getType(),
                 report.getContent(),
