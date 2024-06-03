@@ -7,6 +7,7 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
@@ -42,9 +43,9 @@ public class ScheduleController {
         return ResponseEntity.ok(pagingResponse);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> findByScheduleId(@PathVariable(name = "id") final Long scheduleId) {
-        final ScheduleResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleDetailResponse> findByScheduleId(@PathVariable(name = "scheduleId") final Long scheduleId) {
+        final ScheduleDetailResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
         return ResponseEntity.ok(scheduleDetailResponse);
     }
 
@@ -63,11 +64,11 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-    @PostMapping("/{imageId}/upload")
+    @PostMapping("/{scheduleId}/upload")
     public ResponseEntity<Void> uploadImage(@RequestPart final MultipartFile image,
-                                            @PathVariable final Long imageId) {
+                                            @PathVariable final Long scheduleId) {
 
-        imageService.save(ImageKind.SCHEDULE, imageId, image);
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + imageId)).build();
+        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 }

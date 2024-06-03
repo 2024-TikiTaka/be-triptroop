@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ScheduleRepositoryCustom {
     List<Schedule> findSchedulesByKeyword(Visibility visibility, String keyword, String sort, Long areaId);
+
+//    List<ScheduleItem> findScheduleItemById(Long scheduleId);
 }

@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.user.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import lombok.AccessLevel;
@@ -12,11 +11,10 @@ import java.time.Period;
 
 /**
  * 회원 프로필 정보
- * 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, mbti
+ * 나이 구간, 성별, 고도, 닉네임, 프로필이미지, 설명, mbti
  */
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfileResponse {
 
     private final Long userId;
@@ -29,7 +27,26 @@ public class UserProfileResponse {
 
     private final ProfileResponse profile;
 
+    public UserProfileResponse(Long userId, String ageRange, String gender, int godo, Profile profile) {
+        this.userId = userId;
+        this.ageRange = ageRange;
+        this.gender = gender;
+        this.godo = godo;
+        this.profile = ProfileResponse.of(profile);
+
+    }
+
     public static UserProfileResponse of(User user, Profile profile) {
+        return new UserProfileResponse(
+                user.getId(),
+                calculateAgeRange(user.getBirth()),
+                user.getGender().toString(),
+                user.getGodo(),
+                ProfileResponse.from(profile)
+        );
+    }
+
+    public static UserProfileResponse from(User user, Profile profile) {
         return new UserProfileResponse(
                 user.getId(),
                 calculateAgeRange(user.getBirth()),
@@ -41,6 +58,6 @@ public class UserProfileResponse {
 
     private static String calculateAgeRange(LocalDate birth) {
         int age = Period.between(birth, LocalDate.now()).getYears();
-        return String.valueOf((double) ((age / 10) * 10));
+        return String.valueOf(Math.floor((age / 10)));
     }
 }

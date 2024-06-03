@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class TravelCommentsDto {
 
-    private final Long Id;
-    private final Long userId;
-    private final String content;
+//    private final Long Id;
+//    private final Long userId;
+//    private final String content;
 
 }
