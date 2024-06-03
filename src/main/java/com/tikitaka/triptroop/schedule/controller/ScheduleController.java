@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.schedule.controller;
 
+import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.common.page.PageResponse;
 import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
@@ -7,6 +8,8 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
@@ -28,6 +31,7 @@ public class ScheduleController {
 
     private final ImageService imageService;
 
+    // TODO 일정 리스트 조회,조건 조회
     @GetMapping()
     public ResponseEntity<PageResponse> findAllSchedules(
             @RequestParam(defaultValue = "1", name = "page") final Integer page,
@@ -43,32 +47,55 @@ public class ScheduleController {
         return ResponseEntity.ok(pagingResponse);
     }
 
+    // TODO 일정 상세 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ScheduleDetailResponse> findByScheduleId(@PathVariable(name = "scheduleId") final Long scheduleId) {
         final ScheduleDetailResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
         return ResponseEntity.ok(scheduleDetailResponse);
     }
 
+    // TODO 일정 등록
     @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody @Valid final ScheduleCreateRequest scheduleRequest
+    public ResponseEntity<ApiResponse<Void>> save(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+                                                  @RequestPart final MultipartFile image
             /* @AuthenticationPrincipal final */) {
         final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
+        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
+    // TODO 일정 수정
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
+                                                   @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+                                                   @RequestPart final MultipartFile image) {
+        scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, 2L);
+        imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
+    }
+
+    // TODO 일정 계획 등록
     @PostMapping("/{scheduleId}/item")
     public ResponseEntity<Void> saveItem(@RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
-                                         @PathVariable final Long scheduleId) {
+                                         @PathVariable final Long scheduleId
+    ) {
 
         scheduleService.saveItem(scheduleItemRequest, scheduleId);
+
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-    @PostMapping("/{scheduleId}/upload")
-    public ResponseEntity<Void> uploadImage(@RequestPart final MultipartFile image,
-                                            @PathVariable final Long scheduleId) {
+    // TODO 일정 계획 수정
+    @PutMapping("/{scheduleItemId}/item")
+    public ResponseEntity<Void> updateItem(@RequestBody @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
+                                           @PathVariable final Long scheduleItemId
+    ) {
 
-        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+        scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId);
+
+        return ResponseEntity.created(URI.create("/api/v1/schedule/")).build();
     }
+
+
 }
