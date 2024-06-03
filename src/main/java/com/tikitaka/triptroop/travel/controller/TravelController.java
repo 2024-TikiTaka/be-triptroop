@@ -8,7 +8,7 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.TravelCommentUserResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
 import jakarta.persistence.EntityManager;
@@ -61,33 +61,42 @@ public class TravelController {
 
 
     /* 여행 소개 등록 */
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<ApiResponse<Void>> save(
-            @RequestBody @Valid final TravelRequest travelRequest) {
-        // @RequestPart final MultipartFile image) {
+            @RequestPart @Valid final TravelRequest travelRequest,
+            @RequestPart final MultipartFile image) {
 
         final Long travelId = travelService.save(travelRequest, 2L);
-        //imageService.save(ImageKind.TRAVEL, travelId, image);
+        imageService.save(ImageKind.TRAVEL, travelId, image);
 
         return ResponseEntity.created(URI.create("/api/v1/travels/" + travelId)).build();
     }
 
 
-    @PostMapping(value = "/{travelId}/upload")
-    public ResponseEntity<Void> saveImage(@RequestPart final MultipartFile image,
-                                          @PathVariable final Long travelId) {
-
-        imageService.save(ImageKind.TRAVEL, travelId, image);
-        return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
-    }
+//    @PostMapping(value = "/{travelId}/upload")
+//    public ResponseEntity<Void> saveImage(@RequestPart final MultipartFile image,
+//                                          @PathVariable final Long travelId) {
+//
+//        imageService.save(ImageKind.TRAVEL, travelId, image);
+//        return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
+//    }
 
     /* 게시글 상세 조회 (된거)*/
-    @GetMapping("/travel/{travelId}")
-    public ResponseEntity<TravelCommentUserResponse> getTravelCommentUser(
+//    @GetMapping("/travel/{travelId}")
+//    public ResponseEntity<TravelCommentUserResponse> getTravelCommentUser(
+//            @PathVariable final Long travelId
+//    ) {
+//        TravelCommentUserResponse travelCommentUserResponse = travelService.getTravelCommentUser(travelId);
+//        return ResponseEntity.ok(travelCommentUserResponse);
+//    }
+
+    /* 게시글 상세 조회 (수정본) */
+    @GetMapping("/{travelId}")
+    public ResponseEntity<TravelDetailResponse> findTravelDetail(
             @PathVariable final Long travelId
     ) {
-        TravelCommentUserResponse travelCommentUserResponse = travelService.getTravelCommentUser(travelId);
-        return ResponseEntity.ok(travelCommentUserResponse);
+        TravelDetailResponse travelDetailResponse = travelService.findTravelDetail(travelId);
+        return ResponseEntity.ok(travelDetailResponse);
     }
 
     /* 게시글 수정 */

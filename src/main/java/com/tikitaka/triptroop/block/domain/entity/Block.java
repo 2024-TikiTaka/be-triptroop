@@ -1,7 +1,6 @@
 package com.tikitaka.triptroop.block.domain.entity;
 
 import com.tikitaka.triptroop.block.domain.type.BlockStatus;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,16 +20,18 @@ public class Block {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "block_id")
+    @Column(name = "block_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "blocked_id")
-    private User blocked;
+    //    @ManyToOne
+//    @JoinColumn(name = "blocked_id")
+//    private User blocked;
+    private Long blockedId;
 
-    @ManyToOne
-    @JoinColumn(name = "blocker_id")
-    private User blocker;
+    //    @ManyToOne
+//    @JoinColumn(name = "blocker_id")
+//    private User blocker;
+    private Long blockerId;
 
     @Enumerated(value = EnumType.STRING)
     private BlockStatus status;

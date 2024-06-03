@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class TravelCommentResponse {
@@ -16,9 +19,15 @@ public class TravelCommentResponse {
     public static TravelCommentResponse from(TravelComment comment) {
         return new TravelCommentResponse(
                 comment.getId(),
-                comment.getUser().getId(),
+                comment.getUserId().getId(),
                 comment.getContent()
         );
+    }
+
+    public static List<TravelCommentResponse> from(List<TravelComment> comments) {
+        return comments.stream()
+                .map(TravelCommentResponse::from)
+                .collect(Collectors.toList());
     }
 
 }
