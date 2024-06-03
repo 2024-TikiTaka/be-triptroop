@@ -14,7 +14,7 @@ import java.time.Period;
  * 나이 구간, 성별, 고도, 닉네임, 프로필이미지, 설명, mbti
  */
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserProfileResponse {
 
     private final Long userId;
@@ -26,25 +26,6 @@ public class UserProfileResponse {
     private final int godo;
 
     private final ProfileResponse profile;
-
-    public UserProfileResponse(Long userId, String ageRange, String gender, int godo, Profile profile) {
-        this.userId = userId;
-        this.ageRange = ageRange;
-        this.gender = gender;
-        this.godo = godo;
-        this.profile = ProfileResponse.of(profile);
-
-    }
-
-    public static UserProfileResponse of(User user, Profile profile) {
-        return new UserProfileResponse(
-                user.getId(),
-                calculateAgeRange(user.getBirth()),
-                user.getGender().toString(),
-                user.getGodo(),
-                ProfileResponse.from(profile)
-        );
-    }
 
     public static UserProfileResponse from(User user, Profile profile) {
         return new UserProfileResponse(

@@ -22,8 +22,6 @@ import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
-import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
-import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +41,14 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ProfileRepository profileRepository;
 
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
+
     private final ScheduleParticipantRepository scheduleParticipantRepository;
 
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
-    private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
 
@@ -88,20 +85,18 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
 
-        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
+                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
 
-        Image image = imageRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+        Image image = imageRepository.findById(scheduleId)
+                                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
 
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
         List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
+        UserProfileResponse userProfile = profileService.findUserProfileByUserId(schedule.getUserId());
 
-//        User user = userRepository.findById(schedule.getUserId()).orElseThrow();
-//        Profile profile = profileRepository.findById(user.getId()).orElseThrow();
-        UserProfileResponse userProfile = profileService.findByUserId(schedule.getUserId());
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-
         List<UserProfileResponse> userInfos = getReviewerProfilesByScheduleId(scheduleId);
-
         List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants, userInfos);
 
         ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
@@ -115,7 +110,6 @@ public class ScheduleService {
                 userProfile,
                 scheduleItem,
                 scheduleParticipant
-
         );
 
         return scheduleDetailResponse;
@@ -124,7 +118,7 @@ public class ScheduleService {
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -152,15 +146,15 @@ public class ScheduleService {
 
     public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
         return scheduleParticipants.stream()
-                .map(ScheduleParticipant::getReviewerId)
-                .collect(Collectors.toList());
+                                   .map(ScheduleParticipant::getReviewerId)
+                                   .collect(Collectors.toList());
     }
 
     public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
         List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
         return profileService.findByUserIdIn(reviewerIds);
-//        return convertToUserProfileResponseList(profiles);
+        //        return convertToUserProfileResponseList(profiles);
     }
 
 
