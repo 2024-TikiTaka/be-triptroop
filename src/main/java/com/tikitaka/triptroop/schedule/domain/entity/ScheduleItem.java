@@ -56,4 +56,13 @@ public class ScheduleItem extends BaseTimeEntity {
                 id, content, cost, planDate, kind
         );
     }
+
+
+    public void update(String content, Integer cost, ScheduleItemKind kind, LocalDate planDate) {
+
+        this.content = content;
+        this.cost = cost;
+        this.planDate = planDate;
+        this.kind = kind;
+    }
 }

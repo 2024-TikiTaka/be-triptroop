@@ -67,4 +67,13 @@ public class Schedule extends BaseTimeEntity {
                 title, count, userId, area, endDate, startDate
         );
     }
+
+    public void update(Long userId, String title, Integer count, Area area, LocalDate endDate, LocalDate startDate) {
+        this.title = title;
+        this.count = count;
+        this.userId = userId;
+        this.area = area;
+        this.endDate = endDate;
+        this.startDate = startDate;
+    }
 }
