@@ -8,6 +8,7 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
@@ -70,17 +71,12 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
     }
 
-//    @PostMapping("/{scheduleId}/upload")
-//    public ResponseEntity<Void> uploadImage(@RequestPart final MultipartFile image,
-//                                            @PathVariable final Long scheduleId) {
-//
-//        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-//        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
-//    }
-
-//    @PutMapping("/{scheduleId}")
-//    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
-//                                                   @RequestBody @Valid final ScheduleCreateRequest scheduleCreateRequest) {
-//
-//    }
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
+                                                   @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+                                                   @RequestPart final MultipartFile image) {
+        scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, 2L);
+        imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
+    }
 }

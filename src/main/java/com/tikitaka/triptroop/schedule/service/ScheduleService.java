@@ -18,6 +18,7 @@ import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
@@ -164,5 +165,18 @@ public class ScheduleService {
     }
 
 
+    public void updateSchedule(Long scheduleId, ScheduleUpdateRequest scheduleUpdateRequest, Long userId) {
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+        Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+        schedule.update(
+                userId,
+                scheduleUpdateRequest.getTitle(),
+                scheduleUpdateRequest.getCount(),
+                area,
+                scheduleUpdateRequest.getEndDate(),
+                scheduleUpdateRequest.getStartDate()
+        );
+    }
 }
 
