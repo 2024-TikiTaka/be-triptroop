@@ -53,4 +53,11 @@ public class TravelComment extends BaseTimeEntity {
                 content
         );
     }
+
+    public void update(Long travelId, Long userId, String content) {
+
+        this.travelId = travelId;
+        this.userId = userId;
+        this.content = content;
+    }
 }

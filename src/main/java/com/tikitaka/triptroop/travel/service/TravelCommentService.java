@@ -1,6 +1,8 @@
 package com.tikitaka.triptroop.travel.service;
 
 
+import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
 import com.tikitaka.triptroop.travel.domain.repository.TravelCommentRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
@@ -58,5 +60,25 @@ public class TravelCommentService {
 
     }
 
+    /* 댓글 수정 */
+    public void updateComment(/*Long userId,*/ Long commentId, TravelCommentRequest commentRequest) {
 
+        TravelComment comment = travelCommentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
+
+        comment.update(
+                commentRequest.getTravelId(),
+                commentRequest.getUserId(),
+                commentRequest.getContent()
+        );
+
+
+    }
+
+    /* 댓글 삭제 */
+    public void deleteTravelComment(Long commentId) {
+
+        travelCommentRepository.deleteById(commentId);
+
+    }
 }
