@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET status = 'SUSPENDED' WHERE email = ?")
+@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN' WHERE user_id = ?")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -74,6 +74,26 @@ public class User extends BaseTimeEntity {
                 birth,
                 gender
         );
+    }
+
+    public boolean isActiveUser() {
+        return UserStatus.ACTIVE.equals(status);
+    }
+
+    public boolean isSuspendedUser() {
+        return UserStatus.SUSPENDED.equals(status);
+    }
+
+    public boolean isWithdrawnUser() {
+        return UserStatus.WITHDRAWN.equals(status);
+    }
+
+    public void updateUser(String phone) {
+        this.phone = phone;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
     public void updateRefreshToken(String refreshToken) {
