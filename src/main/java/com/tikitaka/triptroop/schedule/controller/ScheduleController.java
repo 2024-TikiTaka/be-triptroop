@@ -50,7 +50,10 @@ public class ScheduleController {
     // TODO 일정 상세 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ScheduleDetailResponse> findByScheduleId(@PathVariable(name = "scheduleId") final Long scheduleId) {
-        final ScheduleDetailResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+//        final ScheduleDetailResponse scheduleDetailResponse =
+//                scheduleService.getFindByScheduleId(scheduleId);
+        final ScheduleDetailResponse scheduleDetailResponse =
+                scheduleService.getFindByScheduleId(scheduleId);
         return ResponseEntity.ok(scheduleDetailResponse);
     }
 

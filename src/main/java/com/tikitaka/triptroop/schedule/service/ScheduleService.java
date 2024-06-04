@@ -8,7 +8,6 @@ import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
-import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
@@ -21,8 +20,8 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleInformationResponse;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantProfileResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
@@ -90,37 +89,53 @@ public class ScheduleService {
     // TODO : 상세 조회
     @Transactional(readOnly = true)
     public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
-
-        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
-
-        Image image = imageRepository.findById(scheduleId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
-
-        List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
-        List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
-        UserProfileResponse userProfile = profileService.findUserProfileByUserId(schedule.getUserId());
-
-        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-        List<UserProfileResponse> userInfos = getReviewerProfilesByScheduleId(scheduleId);
-        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants, userInfos);
-
-        ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
-                schedule.getTitle(),
-                schedule.getArea().getSido(),
-                schedule.getCount(),
-                schedule.getStartDate(),
-                schedule.getEndDate(),
-                schedule.getViews(),
-                ImageResponse.from(image),
-                userProfile,
-                scheduleItem,
-                scheduleParticipant
-
+        List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = getParticipantsProfilesAndReviewsByScheduleId(scheduleId);
+        ScheduleInformationResponse scheduleInformationResponses = getScheduleInformationByScheduleId(scheduleId);
+//        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+//
+//        Image image = imageRepository.findById(scheduleId)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+//
+//        List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
+//        List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
+//        UserProfileResponse userProfile = profileService.findUserProfileByUserId(schedule.getUserId());
+//
+//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+//        List<UserProfileResponse> userInfos = getReviewerProfilesByScheduleId(scheduleId);
+//        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants, userInfos);
+//        ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
+//                schedule.getTitle(),
+//                schedule.getArea().getSido(),
+//                schedule.getCount(),
+//                schedule.getStartDate(),
+//                schedule.getEndDate(),
+//                schedule.getViews(),
+//                ImageResponse.from(image),
+//                userProfile,
+//                scheduleItem,
+//                scheduleParticipant
+//
+//        );
+//
+//        return scheduleDetailResponse;
+        ScheduleDetailResponse scheduleDetailResponses = ScheduleDetailResponse.of(
+                scheduleInformationResponses,
+                scheduleParticipantProfileResponse
         );
-
-        return scheduleDetailResponse;
+        return scheduleDetailResponses;
     }
+
+    // TODO 일정 참여자 리스트
+    public List<ScheduleParticipantProfileResponse> getParticipantsProfilesAndReviewsByScheduleId(Long scheduleId) {
+        return scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
+    }
+
+    // TODO 일정 정보
+    public ScheduleInformationResponse getScheduleInformationByScheduleId(Long scheduleId) {
+        return scheduleRepositoryImpl.findScheduleById(scheduleId);
+    }
+
 
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
