@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SQLDelete(sql = "UPDATE schedules SET is_deleted ='1' WHERE schedule_id = ?")
 public class Schedule extends BaseTimeEntity {
 
     @Id
