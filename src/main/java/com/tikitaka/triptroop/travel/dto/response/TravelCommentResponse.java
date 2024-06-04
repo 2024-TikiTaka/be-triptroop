@@ -1,33 +1,23 @@
 package com.tikitaka.triptroop.travel.dto.response;
 
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
-import lombok.AccessLevel;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class TravelCommentResponse {
 
     private final Long id;
-    private final Long userId;
     private final String content;
+    private final String nickname;
+    private final String profileImage;
 
-    public static TravelCommentResponse from(TravelComment comment) {
-        return new TravelCommentResponse(
-                comment.getId(),
-                comment.getUserId().getId(),
-                comment.getContent()
-        );
+    public TravelCommentResponse(TravelComment travelComment, Profile profile) {
+        this.id = travelComment.getId();
+        this.content = travelComment.getContent();
+        this.nickname = profile.getNickname();
+        this.profileImage = profile.getProfileImage();
     }
 
-    public static List<TravelCommentResponse> from(List<TravelComment> comments) {
-        return comments.stream()
-                .map(TravelCommentResponse::from)
-                .collect(Collectors.toList());
-    }
 
 }

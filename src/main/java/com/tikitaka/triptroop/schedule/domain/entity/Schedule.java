@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SQLDelete(sql = "UPDATE schedules SET is_deleted ='1' WHERE schedule_id = ?")
 public class Schedule extends BaseTimeEntity {
 
     @Id
@@ -66,5 +68,14 @@ public class Schedule extends BaseTimeEntity {
         return new Schedule(
                 title, count, userId, area, endDate, startDate
         );
+    }
+
+    public void update(Long userId, String title, Integer count, Area area, LocalDate endDate, LocalDate startDate) {
+        this.title = title;
+        this.count = count;
+        this.userId = userId;
+        this.area = area;
+        this.endDate = endDate;
+        this.startDate = startDate;
     }
 }

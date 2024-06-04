@@ -18,6 +18,8 @@ import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleItemResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantsResponse;
@@ -43,6 +45,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ProfileRepository profileRepository;
 
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
@@ -51,6 +54,7 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
+    private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
 
@@ -88,10 +92,10 @@ public class ScheduleService {
     public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
 
         Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
-                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
 
         Image image = imageRepository.findById(scheduleId)
-                                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
 
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
         List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
@@ -112,6 +116,7 @@ public class ScheduleService {
                 userProfile,
                 scheduleItem,
                 scheduleParticipant
+
         );
 
         return scheduleDetailResponse;
@@ -120,7 +125,7 @@ public class ScheduleService {
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -148,14 +153,49 @@ public class ScheduleService {
 
     public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
         return scheduleParticipants.stream()
-                                   .map(ScheduleParticipant::getReviewerId)
-                                   .collect(Collectors.toList());
+                .map(ScheduleParticipant::getReviewerId)
+                .collect(Collectors.toList());
     }
 
     public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
         List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
         List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
         return profileService.findByUserIdIn(reviewerIds);
+    }
+
+
+    public void updateSchedule(Long scheduleId, ScheduleUpdateRequest scheduleUpdateRequest, Long userId) {
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+        Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+        schedule.update(
+                userId,
+                scheduleUpdateRequest.getTitle(),
+                scheduleUpdateRequest.getCount(),
+                area,
+                scheduleUpdateRequest.getEndDate(),
+                scheduleUpdateRequest.getStartDate()
+        );
+    }
+
+    public void updateItem(ScheduleItemUpdateRequest scheduleItemUpdateRequests, Long scheduleItemId) {
+        ScheduleItem scheduleItems = scheduleItemRepository.findById(scheduleItemId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE_ITEM));
+        scheduleItems.update(
+                scheduleItemUpdateRequests.getContent(),
+                scheduleItemUpdateRequests.getCost(),
+                scheduleItemUpdateRequests.getKind(),
+                scheduleItemUpdateRequests.getPlanDate()
+        );
+
+    }
+
+    public void removeSchedule(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
+    }
+
+    public void removeItem(Long scheduleItemId) {
+        scheduleItemRepository.deleteById(scheduleItemId);
+
     }
 }
 
