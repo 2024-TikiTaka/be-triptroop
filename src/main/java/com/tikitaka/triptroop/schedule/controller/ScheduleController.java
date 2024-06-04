@@ -126,5 +126,21 @@ public class ScheduleController {
 
     }
 
+    // TODO 일정 신청 승인
+    @PutMapping("/{scheduleParticipantId}/accept")
+    public ResponseEntity<Void> acceptSchedule(@PathVariable final Long scheduleParticipantId,
+                                               @RequestBody @Valid final ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest) {
 
+        scheduleParticipantService.accept(scheduleParticipantAcceptRequest, scheduleParticipantId);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleParticipantId)).build();
+    }
+
+    // TODO 일정 신청 반려
+    @PutMapping("/{scheduleParticipantId}/rejected")
+    public ResponseEntity<Void> rejectedSchedule(@PathVariable final Long scheduleParticipantId,
+                                                 @RequestBody @Valid final ScheduleParticipantRejectedRequest scheduleParticipantRejectedRequest) {
+
+        scheduleParticipantService.reject(scheduleParticipantRejectedRequest, scheduleParticipantId);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleParticipantId)).build();
+    }
 }

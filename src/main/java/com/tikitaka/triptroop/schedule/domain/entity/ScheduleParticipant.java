@@ -57,4 +57,15 @@ public class ScheduleParticipant {
                 createdAt
         );
     }
+
+    public void update(RequestStatus status, LocalDateTime processedAt) {
+        this.status = status;
+        this.processedAt = processedAt;
+    }
+
+    public void rejected(RequestStatus status, LocalDateTime processedAt, String cause) {
+        this.status = status;
+        this.processedAt = processedAt;
+        this.cause = cause;
+    }
 }

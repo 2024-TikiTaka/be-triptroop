@@ -1,8 +1,12 @@
 package com.tikitaka.triptroop.schedule.service;
 
 
+import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantAcceptRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRejectedRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +35,26 @@ public class ScheduleParticipantService {
         final ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.save(newScheduleParticipants);
 
         return scheduleParticipant.getId();
+    }
+
+    public void accept(ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest, Long scheduleParticipantId) {
+
+        ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        scheduleParticipant.update(
+                scheduleParticipantAcceptRequest.getStatus(),
+                scheduleParticipantAcceptRequest.getProcessedAt()
+        );
+    }
+
+    public void reject(ScheduleParticipantRejectedRequest scheduleParticipantRejectedRequest, Long scheduleParticipantId) {
+        ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        scheduleParticipant.rejected(
+                scheduleParticipantRejectedRequest.getStatus(),
+                scheduleParticipantRejectedRequest.getProcessedAt(),
+                scheduleParticipantRejectedRequest.getCause()
+        );
     }
 }
 
