@@ -61,7 +61,6 @@ public class ScheduleItem extends BaseTimeEntity {
 
 
     public void update(String content, Integer cost, ScheduleItemKind kind, LocalDate planDate) {
-
         this.content = content;
         this.cost = cost;
         this.planDate = planDate;
