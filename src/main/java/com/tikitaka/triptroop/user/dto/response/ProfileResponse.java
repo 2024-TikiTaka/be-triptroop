@@ -2,12 +2,11 @@ package com.tikitaka.triptroop.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileResponse {
 
@@ -23,7 +22,7 @@ public class ProfileResponse {
 
     public static ProfileResponse from(Profile profile) {
         return new ProfileResponse(
-                profile.getProfileId(),
+                profile.getId(),
                 profile.getNickname(),
                 profile.getIntroduction(),
                 profile.getProfileImage(),

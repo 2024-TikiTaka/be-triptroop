@@ -2,8 +2,10 @@ package com.tikitaka.triptroop.travel.dto.response;
 
 import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.place.dto.response.PlaceResponse;
+import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,24 +15,22 @@ public class TravelDetailResponse {
 
     private String title;
     private String content;
-    private List<TravelCommentResponse> travelComments;
-    private List<ImageResponse> image;
+    private UserProfileResponse writer;
     private PlaceResponse place;
-    private String profileImage;
-    private String nickname;
+    private List<ImageResponse> image;
+
+    private Page<TravelCommentResponse> travelComments;
 
 
-    public static TravelDetailResponse of(String title, String content, List<TravelCommentResponse> travelComments, List<ImageResponse> image, PlaceResponse place, String profileImage, String nickname) {
+    public static TravelDetailResponse of(String title, String content, PlaceResponse place, UserProfileResponse userProfile, List<ImageResponse> image, Page<TravelCommentResponse> travelComments) {
 
         return new TravelDetailResponse(
                 title,
                 content,
-                travelComments,
-                image,
+                userProfile,
                 place,
-                profileImage,
-                nickname
-
+                image,
+                travelComments
         );
     }
 }

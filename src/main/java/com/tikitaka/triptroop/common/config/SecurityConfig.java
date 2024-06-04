@@ -48,8 +48,10 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET,
-                                         "/images/**", "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/api/v1/signup/**", "/api/v1/login").permitAll();
+                                         "/images/**", "/api/v1/check/**", "/api/v1/find/**",
+                                         "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,
+                                         "/api/v1/signup/**", "/api/v1/login", "/api/v1/find/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
