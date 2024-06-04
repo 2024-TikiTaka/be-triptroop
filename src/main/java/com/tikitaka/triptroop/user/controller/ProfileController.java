@@ -92,10 +92,10 @@ public class ProfileController {
      */
     @PutMapping("/users/me/profile")
     public ResponseEntity<ApiResponse> updateProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                     @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
+                                                     @RequestBody @Valid ProfileSaveRequest profileRequest) {
 
-        profileService.update(loginUser.getUserId(), profileRequest);
-        return ResponseEntity.ok(ApiResponse.success());
+        final ProfileResponse profile = profileService.updateProfile(loginUser.getUserId(), profileRequest);
+        return ResponseEntity.ok(ApiResponse.success("프로필 수정이 완료되었습니다.", profile));
     }
 
     /**

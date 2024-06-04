@@ -94,7 +94,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public void update(Long userId, ProfileSaveRequest profileRequest) {
+    public ProfileResponse updateProfile(Long userId, ProfileSaveRequest profileRequest) {
 
         if (existsByNickname(profileRequest.getNickname())) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
@@ -104,6 +104,8 @@ public class ProfileService {
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
         profile.updateProfile(profileRequest.getNickname(), profileRequest.getIntroduction(), profileRequest.getMbti());
+
+        return ProfileResponse.from(profile);
     }
 
     @Transactional

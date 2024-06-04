@@ -59,7 +59,7 @@ public class UserController {
                                                   @ModelAttribute @Valid UserSaveRequest userRequest) {
 
         final UserResponse user = userService.updateUser(loginUser.getUserId(), userRequest);
-        return ResponseEntity.ok(ApiResponse.success(user));
+        return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다.", user));
     }
 
     /**

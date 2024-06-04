@@ -31,19 +31,22 @@ import java.util.stream.Collectors;
 public class ReportService {
 
     private final ReportRepository reportRepository;
+
     private final ProfileRepository profileRepository;
+
     private final ScheduleRepository scheduleRepository;
+
     private final TravelRepository travelRepository;
+
     private final CompanionRepository companionRepository;
+
     private final ImageRepository imageRepository;
 
     /* 1. 신고 목록 조회 Test */
     @Transactional(readOnly = true)
     public List<ReportTableResponse> getReport(final String nickname, String kind) {
-        Profile profile = profileRepository.findByNickname(nickname);
-        if (profile == null) {
-            throw new NotFoundException(ExceptionCode.NOT_FOUND_USER);
-        }
+        Profile profile = profileRepository.findByNickname(nickname)
+                                           .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
         Long reporterId = profile.getUserId();
         ReportKind reportKind = ReportKind.valueOf(kind.toUpperCase());
@@ -58,7 +61,7 @@ public class ReportService {
     /* 2. 신고 상세 조회 Test */
     public ReportDetailResponse getReportDetail(Long reportId) {
         Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REPORT));
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REPORT));
 
         Long scheduleId = null;
         Long reporteeId = null;
@@ -71,25 +74,25 @@ public class ReportService {
             case SCHEDULE -> {
                 scheduleId = report.getScheduleId();
                 Schedule schedule = scheduleRepository.findById(scheduleId)
-                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+                                                      .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
                 titleOrNickname = schedule.getTitle();
             }
             case USER -> {
                 reporteeId = report.getReporteeId();
                 Profile profile = profileRepository.findByUserId(reporteeId)
-                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+                                                   .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
                 titleOrNickname = profile.getNickname();
             }
             case TRAVEL -> {
                 travelId = report.getTravelId();
                 Travel travel = travelRepository.findById(travelId)
-                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+                                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
                 titleOrNickname = travel.getTitle();
             }
             case COMPANION -> {
                 companionId = report.getCompanionId();
                 Companion companion = companionRepository.findById(companionId)
-                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMPANION));
+                                                         .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMPANION));
                 titleOrNickname = companion.getTitle();
             }
         }
