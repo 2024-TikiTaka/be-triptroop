@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -34,20 +34,9 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
 
         userService.signup(signUpRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입이 완료되었습니다."));
     }
 
-    /**
-     * 이메일 중복 여부
-     *
-     * @param email 이메일
-     */
-    @PostMapping("/signup/email-check")
-    public ResponseEntity<ApiResponse<Void>> checkDuplicateEmail(String email) {
-
-        userService.existsByEmail(email);
-        return ResponseEntity.ok(ApiResponse.success());
-    }
 
     /**
      * 로그아웃

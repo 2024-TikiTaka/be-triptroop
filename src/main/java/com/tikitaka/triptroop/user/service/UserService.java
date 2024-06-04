@@ -24,10 +24,6 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * 이메일 가입 여부
-     */
-    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
@@ -46,6 +42,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse findByEmail(String email) {
         return UserResponse.from(findUserByEmail(email));
+    }
+
+    /**
+     * 이메일 가입 여부
+     */
+    public void checkEmailDuplicate(String email) {
+        if (existsByEmail(email)) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_EMAIL);
+        }
     }
 
     /**
@@ -72,7 +77,6 @@ public class UserService {
     /**
      * 비밀번호 변경
      */
-    @Transactional
     public void changePassword(Long userId, PasswordRequest passwordRequest) {
 
         final User user = validatePassword(userId, passwordRequest.getCurrentPassword());

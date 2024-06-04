@@ -39,6 +39,8 @@ public enum ExceptionCode {
     NOT_FOUND_SCHEDULE_ITEM(2009, "해당 계획이 존재하지 않습니다."),
 
     ALREADY_EXISTS_EMAIL(409, "이미 존재하는 이메일입니다."),
+    ALREADY_EXISTS_PROFILE(409, "이미 프로필이 존재합니다."),
+    ALREADY_EXISTS_NICKNAME(409, "이미 존재하는 닉네임입니다."),
     ALREADY_EXISTS_REVIEW(409, "후기 작성내역이 존재합니다."),
     ALREADY_WITHDRAWN_USER(409, "이미 탈퇴한 회원입니다."),
 
