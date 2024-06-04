@@ -3,7 +3,6 @@ package com.tikitaka.triptroop.user.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +14,7 @@ import java.time.Period;
  * 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, mbti
  */
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
 
@@ -28,6 +27,14 @@ public class UserProfileResponse {
     private final int godo;
 
     private final ProfileResponse profile;
+
+    public UserProfileResponse(User user, Profile profile) {
+        this.userId = user.getId();
+        this.ageRange = calculateAgeRange(user.getBirth());
+        this.gender = user.getGender().toString();
+        this.godo = user.getGodo();
+        this.profile = ProfileResponse.from(profile);
+    }
 
     public static UserProfileResponse of(User user, Profile profile) {
         return new UserProfileResponse(
