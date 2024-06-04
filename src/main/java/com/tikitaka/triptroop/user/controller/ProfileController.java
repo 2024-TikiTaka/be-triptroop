@@ -1,9 +1,12 @@
 package com.tikitaka.triptroop.user.controller;
 
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import com.tikitaka.triptroop.common.exception.ConflictException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import com.tikitaka.triptroop.user.dto.request.ProfileSaveRequest;
 import com.tikitaka.triptroop.user.dto.response.ProfileResponse;
+import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +18,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
+
+    /**
+     * 닉네임 중복 여부
+     *
+     * @param nickname 닉네임
+     */
+    @GetMapping("/check/nickname")
+    public ResponseEntity<ApiResponse> checkDuplicateNickname(String nickname) {
+
+        profileService.checkNicknameDuplicate(nickname);
+        return ResponseEntity.ok(ApiResponse.success("사용 가능한 닉네임입니다."));
+    }
 
     /**
      * 닉네임으로 프로필 조회
@@ -31,9 +46,8 @@ public class ProfileController {
     @GetMapping("/profiles")
     public ResponseEntity<ApiResponse> getProfileByNickname(@AuthenticationPrincipal CustomUser loginUser, String nickname) {
 
-        return ResponseEntity.ok(
-                ApiResponse.success(profileService.findUserProfileByNickname(nickname))
-        );
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(nickname);
+        return ResponseEntity.ok(ApiResponse.success(userProfile));
     }
 
     /**
@@ -45,9 +59,8 @@ public class ProfileController {
     @GetMapping("/users/me/profile")
     public ResponseEntity<ApiResponse> getProfile(@AuthenticationPrincipal CustomUser loginUser) {
 
-        return ResponseEntity.ok(
-                ApiResponse.success(profileService.findUserProfileByUserId(loginUser.getUserId()))
-        );
+        final UserProfileResponse userProfile = profileService.findUserProfileByUserId(loginUser.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(userProfile));
     }
 
     /**
@@ -57,12 +70,18 @@ public class ProfileController {
      * @param profileRequest 닉네임, 자기소개, MBTI
      */
     @PostMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse<Void>> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                         @RequestPart @Valid ProfileSaveRequest profileRequest,
-                                                         @RequestPart MultipartFile profileImage) {
+    public ResponseEntity<ApiResponse> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
+                                                   @RequestPart @Valid ProfileSaveRequest profileRequest,
+                                                   @RequestPart MultipartFile profileImage) {
 
-        final ProfileResponse profile = profileService.save(loginUser.getUserId(), profileRequest, profileImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
+        Long userId = loginUser.getUserId();
+
+        if (profileService.existsProfileByUserId(userId)) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_PROFILE);
+        }
+
+        final ProfileResponse profile = profileService.save(userId, profileRequest, profileImage);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(profile));
     }
 
     /**
@@ -74,7 +93,8 @@ public class ProfileController {
     @PutMapping("/users/me/profile")
     public ResponseEntity<ApiResponse> updateProfile(@AuthenticationPrincipal CustomUser loginUser,
                                                      @ModelAttribute @Valid ProfileSaveRequest profileRequest) {
-        profileService.update(profileRequest);
+
+        profileService.update(loginUser.getUserId(), profileRequest);
         return ResponseEntity.ok(ApiResponse.success());
     }
 
@@ -84,9 +104,10 @@ public class ProfileController {
      * @param loginUser    로그인 정보
      * @param profileImage 닉네임, 자기소개, MBTI
      */
-    @PutMapping("/users/me/profile/upload")
+    @PostMapping("/users/me/profile/upload")
     public ResponseEntity<ApiResponse> uploadProfileImage(@AuthenticationPrincipal CustomUser loginUser,
                                                           @RequestBody MultipartFile profileImage) {
+
         profileService.uploadImage(loginUser.getUserId(), profileImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
     }
@@ -103,9 +124,3 @@ public class ProfileController {
         return ResponseEntity.noContent().build();
     }
 }
-
-
-
-
-
-

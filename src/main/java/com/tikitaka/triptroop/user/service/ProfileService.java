@@ -1,11 +1,11 @@
 package com.tikitaka.triptroop.user.service;
 
+import com.tikitaka.triptroop.common.exception.ConflictException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.image.util.FileUploadUtils;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
-import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.request.ProfileSaveRequest;
 import com.tikitaka.triptroop.user.dto.response.ProfileResponse;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,64 +30,109 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
 
-    private final UserRepository userRepository;
+    public boolean existsProfileByUserId(Long userId) {
+        return profileRepository.existsProfileByUserId(userId);
+    }
+
+    public boolean existsByNickname(String nickname) {
+        return profileRepository.existsByNickname(nickname);
+    }
+
+    public void checkNicknameDuplicate(String nickname) {
+        if (existsByNickname(nickname)) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
+        }
+    }
 
     /**
      * 회원 번호로 프로필 정보 조회
      *
-     * @return UserProfileResponse (회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI)
+     * @return UserProfileResponse 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI
      */
     @Transactional(readOnly = true)
     public UserProfileResponse findUserProfileByUserId(Long userId) {
 
-        final User user = userRepository.findById(userId)
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        return profileRepository.findUserProfileByUserId(userId)
+                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+    }
 
-        final Profile profile = profileRepository.findByUserId(userId)
-                                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+    /**
+     * 닉네임으로 프로필 정보 조회
+     *
+     * @return UserProfileResponse 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI
+     */
+    @Transactional(readOnly = true)
+    public UserProfileResponse findUserProfileByNickname(String nickname) {
 
-        return UserProfileResponse.of(user, profile);
+        return profileRepository.findUserProfileByNickname(nickname)
+                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
     }
 
     @Transactional(readOnly = true)
     public List<UserProfileResponse> findByUserIdIn(List<Long> userIds) {
-
-        final List<User> users = userRepository.findByIdIn(userIds);
-        final List<Profile> profiles = profileRepository.findByUserIdIn(userIds);
-
-        List<UserProfileResponse> userProfiles = new ArrayList<>();
-        for (Profile profile : profiles) {
-            for (User user : users) {
-                userProfiles.add(UserProfileResponse.of(user, profile));
-            }
-        }
-
-        return userProfiles;
+        return profileRepository.findUserProfileListByUserId(userIds);
     }
 
-    public UserProfileResponse findUserProfileByNickname(String nickname) {
 
-        // TODO: Optional 체크
-        final Profile profile = profileRepository.findByNickname(nickname);
-        if (profile == null) {
-            throw new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE);
-        }
-
-        final User user = userRepository.findById(profile.getUserId())
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-
-        return UserProfileResponse.of(user, profile);
-    }
-
+    @Transactional
     public ProfileResponse save(Long userId, ProfileSaveRequest profileRequest, MultipartFile profileImage) {
-        return null;
+
+        if (existsByNickname(profileRequest.getNickname())) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
+        }
+
+        String profileImageUrl = FileUploadUtils.uploadFile(imageDir, profileImage);
+        final Profile newProfile = Profile.of(userId,
+                                              profileRequest.getNickname(),
+                                              imageUrl + profileImageUrl,
+                                              profileRequest.getIntroduction(),
+                                              profileRequest.getMbti());
+
+        profileRepository.save(newProfile);
+
+        return ProfileResponse.from(newProfile);
     }
 
+    @Transactional
+    public void update(Long userId, ProfileSaveRequest profileRequest) {
 
-    public void update(ProfileSaveRequest profileRequest) { }
+        if (existsByNickname(profileRequest.getNickname())) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
+        }
 
-    public void uploadImage(Long userId, MultipartFile profileImage) { }
+        final Profile profile = profileRepository.findProfileByUserId(userId)
+                                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
-    public void deleteImage(Long userId) { }
+        profile.updateProfile(profileRequest.getNickname(), profileRequest.getIntroduction(), profileRequest.getMbti());
+    }
 
+    @Transactional
+    public void uploadImage(Long userId, MultipartFile image) {
+
+        final Profile profile = findProfileByUserId(userId);
+        String profileImag = FileUploadUtils.uploadFile(imageDir, image);
+        String storedProfileImage = imageUrl + profileImag;
+
+        profile.updateProfileImage(storedProfileImage);
+    }
+
+    @Transactional
+    public void deleteImage(Long userId) {
+
+        final Profile profile = findProfileByUserId(userId);
+        if (profile.getProfileImage() == null) {
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE);
+        }
+
+        String storedFilename = profile.getProfileImage().replaceAll(imageUrl, "");
+        FileUploadUtils.deleteFile(imageDir, storedFilename);
+
+        profile.deleteProfileImage();
+    }
+
+    private Profile findProfileByUserId(Long userId) {
+
+        return profileRepository.findProfileByUserId(userId)
+                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+    }
 }
