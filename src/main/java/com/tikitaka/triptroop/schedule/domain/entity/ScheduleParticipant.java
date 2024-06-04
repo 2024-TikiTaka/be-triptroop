@@ -23,9 +23,7 @@ public class ScheduleParticipant {
 
     private Long reviewerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    private Long scheduleId;
 
     private Double reviewPoint;
 
@@ -41,4 +39,22 @@ public class ScheduleParticipant {
 
     private LocalDateTime processedAt;
 
+    public ScheduleParticipant(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status, LocalDateTime createdAt) {
+        this.scheduleId = scheduleId;
+        this.reviewerId = userId;
+        this.processedAt = processedAt;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
+
+
+    public static ScheduleParticipant of(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status, LocalDateTime createdAt) {
+        return new ScheduleParticipant(
+                scheduleId,
+                userId,
+                processedAt,
+                status,
+                createdAt
+        );
+    }
 }
