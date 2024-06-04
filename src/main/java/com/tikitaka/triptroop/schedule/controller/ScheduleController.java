@@ -56,8 +56,8 @@ public class ScheduleController {
 
     // TODO 일정 등록
     @PostMapping()
-    public ResponseEntity<ApiResponse<Void>> save(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
-                                                  @RequestPart final MultipartFile image
+    public ResponseEntity<ApiResponse<Void>> saveSchedule(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+                                                          @RequestPart final MultipartFile image
             /* @AuthenticationPrincipal final */) {
         final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
         imageService.save(ImageKind.SCHEDULE, scheduleId, image);
@@ -67,12 +67,20 @@ public class ScheduleController {
 
     // TODO 일정 수정
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
-                                                   @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
-                                                   @RequestPart final MultipartFile image) {
+    public ResponseEntity<Void> updateSchedule(@PathVariable final Long scheduleId,
+                                               @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+                                               @RequestPart final MultipartFile image) {
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, 2L);
         imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
         return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
+    }
+
+    // TODO 일정 삭제
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> removeSchedule(@PathVariable final Long scheduleId) {
+        scheduleService.removeSchedule(scheduleId);
+        return ResponseEntity.noContent().build();
+
     }
 
     // TODO 일정 계획 등록
@@ -97,5 +105,12 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedule/")).build();
     }
 
+    // TODO 일정 계획 삭제
+    @DeleteMapping("/{scheduleItemId}/item")
+    public ResponseEntity<Void> removeItem(@PathVariable final Long scheduleItemId) {
+        scheduleService.removeItem(scheduleItemId);
+        return ResponseEntity.noContent().build();
+
+    }
 
 }
