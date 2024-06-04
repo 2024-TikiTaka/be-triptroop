@@ -36,10 +36,10 @@ public class AuthService implements UserDetailsService {
         final User user = userRepository.findByEmail(email)
                                         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        // if(!user.isActiveUser())
         return new CustomUser(user.getId(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
+    
     /**
      * RefreshToken 으로 조회
      */
