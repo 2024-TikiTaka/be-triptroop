@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "schedule_items")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE schedule_items SET is_deleted ='1' WHERE schedule_item_id = ?")
+@SQLDelete(sql = "UPDATE schedule_items SET is_deleted ='1',deleted_at = current_timestamp() WHERE schedule_item_id = ?")
 public class ScheduleItem extends BaseTimeEntity {
 
     @Id
