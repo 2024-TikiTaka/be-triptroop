@@ -187,7 +187,7 @@ public class TravelService {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
         }
 
-        Travel travel = travelRepository.findByIdAndVisibility(travelId, Visibility.PUBLIC)
+        Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
 
         travel.update(
@@ -195,24 +195,11 @@ public class TravelService {
                 travelRequest.getAreaId(),
                 travelRequest.getPlaceId(),
                 travelRequest.getTitle(),
-                travelRequest.getContent()
+                travelRequest.getContent(),
+                Visibility.valueOf(travelRequest.getStatus())
         );
 
-        // 상태 변경 로직 추가
-        if (travelRequest.getStatus() != null) {
-            switch (travelRequest.getStatus().toUpperCase()) {
-                case "PUBLIC":
-                    travel.updateStatus(Visibility.PUBLIC);
-                    break;
-                case "PRIVATE":
-                    travel.updateStatus(Visibility.PRIVATE);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid visibility status: " + travelRequest.getStatus());
-            }
-        }
 
-        travelRepository.save(travel); // 변경 사항 저장
     }
 
     /* 게시글을 삭제합시다.♩♪*/
