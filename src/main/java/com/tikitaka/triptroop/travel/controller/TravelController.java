@@ -132,7 +132,7 @@ public class TravelController {
         imageService.updateImage(ImageKind.TRAVEL, travelId, image);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+                .body(ApiResponse.success("여행 정보가 수정되었습니다."));
     }
 
     /* 게시글을 삭제해주세요~ ♬ */
