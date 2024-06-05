@@ -4,13 +4,15 @@ package com.tikitaka.triptroop.schedule.service;
 import com.tikitaka.triptroop.area.domain.entity.Area;
 import com.tikitaka.triptroop.area.repository.AreaRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
+import com.tikitaka.triptroop.common.exception.ForbiddenException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.domain.type.ImageKind;
+import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
-import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
@@ -19,23 +21,17 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleInformationResponse;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantProfileResponse;
-import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
-import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
-import com.tikitaka.triptroop.user.domain.repository.UserRepository;
-import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
+import com.tikitaka.triptroop.schedule.dto.response.*;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,7 +40,6 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ProfileRepository profileRepository;
 
     private final ScheduleRepositoryImpl scheduleRepositoryImpl;
 
@@ -53,9 +48,9 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     private final AreaRepository areaRepository;
-    private final UserRepository userRepository;
 
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     private final ProfileService profileService;
 
@@ -88,9 +83,10 @@ public class ScheduleService {
 
     // TODO : 상세 조회
     @Transactional(readOnly = true)
-    public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
-        List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = getParticipantsProfilesAndReviewsByScheduleId(scheduleId);
-        ScheduleInformationResponse scheduleInformationResponses = getScheduleInformationByScheduleId(scheduleId);
+    public ScheduleDetailResponse findByScheduleId(Long scheduleId) {
+        List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
+        ScheduleInformationResponse scheduleInformationResponses = scheduleRepositoryImpl.findScheduleById(scheduleId);
+        List<ScheduleItemInfoResponse> scheduleItemInfoResponse = scheduleRepositoryImpl.findScheduleItemByScheduleId(scheduleId);
 //        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
 //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
 //
@@ -121,19 +117,10 @@ public class ScheduleService {
 //        return scheduleDetailResponse;
         ScheduleDetailResponse scheduleDetailResponses = ScheduleDetailResponse.of(
                 scheduleInformationResponses,
-                scheduleParticipantProfileResponse
+                scheduleParticipantProfileResponse,
+                scheduleItemInfoResponse
         );
         return scheduleDetailResponses;
-    }
-
-    // TODO 일정 참여자 리스트
-    public List<ScheduleParticipantProfileResponse> getParticipantsProfilesAndReviewsByScheduleId(Long scheduleId) {
-        return scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
-    }
-
-    // TODO 일정 정보
-    public ScheduleInformationResponse getScheduleInformationByScheduleId(Long scheduleId) {
-        return scheduleRepositoryImpl.findScheduleById(scheduleId);
     }
 
 
@@ -153,6 +140,43 @@ public class ScheduleService {
         return schedule.getId();
     }
 
+    // TODO 일정 수정
+    public void updateSchedule(Long scheduleId, ScheduleUpdateRequest scheduleUpdateRequest, Long userId) {
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+        if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        }
+
+        Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+
+
+        schedule.update(
+                scheduleUpdateRequest.getTitle(),
+                scheduleUpdateRequest.getCount(),
+                area,
+                scheduleUpdateRequest.getEndDate(),
+                scheduleUpdateRequest.getStartDate()
+        );
+    }
+
+    // TODO 일정 썸네일 수정
+    public void updateThumbnail(Long userId, Long scheduleId, MultipartFile image) {
+        if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+    }
+
+    // TODO 일정 삭제
+    public void removeSchedule(Long scheduleId, Long userId) {
+        if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        }
+        scheduleRepository.deleteById(scheduleId);
+    }
+
     // TODO : 일정 계획 등록
     public Long saveItem(ScheduleItemCreateRequest scheduleItemRequest, Long id) {
         final ScheduleItem newItem = ScheduleItem.of(
@@ -166,34 +190,11 @@ public class ScheduleService {
         return scheduleItem.getId();
     }
 
-    public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
-        return scheduleParticipants.stream()
-                .map(ScheduleParticipant::getReviewerId)
-                .collect(Collectors.toList());
-    }
-
-    public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
-        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-        List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
-        return profileService.findByUserIdIn(reviewerIds);
-    }
-
-
-    public void updateSchedule(Long scheduleId, ScheduleUpdateRequest scheduleUpdateRequest, Long userId) {
-        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
-        Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
-        schedule.update(
-                userId,
-                scheduleUpdateRequest.getTitle(),
-                scheduleUpdateRequest.getCount(),
-                area,
-                scheduleUpdateRequest.getEndDate(),
-                scheduleUpdateRequest.getStartDate()
-        );
-    }
-
-    public void updateItem(ScheduleItemUpdateRequest scheduleItemUpdateRequests, Long scheduleItemId) {
+    // TODO 일정 계획 수정
+    public void updateItem(ScheduleItemUpdateRequest scheduleItemUpdateRequests, Long scheduleItemId, Long userId) {
+//        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
+//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+//        }
         ScheduleItem scheduleItems = scheduleItemRepository.findById(scheduleItemId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE_ITEM));
         scheduleItems.update(
                 scheduleItemUpdateRequests.getContent(),
@@ -204,13 +205,28 @@ public class ScheduleService {
 
     }
 
-    public void removeSchedule(Long scheduleId) {
-        scheduleRepository.deleteById(scheduleId);
-    }
-
-    public void removeItem(Long scheduleItemId) {
+    // TODO 일정 계획 삭제
+    public void removeItem(Long scheduleItemId, Long userId) {
+//        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
+//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+//        }
         scheduleItemRepository.deleteById(scheduleItemId);
 
     }
+
+
+//
+//    public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
+//        return scheduleParticipants.stream()
+//                .map(ScheduleParticipant::getReviewerId)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
+//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+//        List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
+//        return profileService.findByUserIdIn(reviewerIds);
+//    }
+
 }
 

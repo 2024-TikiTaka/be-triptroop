@@ -51,11 +51,13 @@ public class ScheduleDetailResponse {
 //    }
     private List<ScheduleParticipantProfileResponse> participantProfile;
     private ScheduleInformationResponse information;
+    private List<ScheduleItemInfoResponse> scheduleItemInfoResponse;
 
 
-    public ScheduleDetailResponse(List<ScheduleParticipantProfileResponse> participantProfiles, ScheduleInformationResponse scheduleInformation) {
+    public ScheduleDetailResponse(List<ScheduleParticipantProfileResponse> participantProfiles, ScheduleInformationResponse scheduleInformation, List<ScheduleItemInfoResponse> scheduleItemInfoResponse) {
         this.participantProfile = participantProfiles;
         this.information = scheduleInformation;
+        this.scheduleItemInfoResponse = scheduleItemInfoResponse;
     }
 
     //    public static List<ScheduleDetailResponse> of(
@@ -77,9 +79,10 @@ public class ScheduleDetailResponse {
 //    }
     public static ScheduleDetailResponse of(
             ScheduleInformationResponse scheduleInformation,
-            List<ScheduleParticipantProfileResponse> participantProfiles) {
+            List<ScheduleParticipantProfileResponse> participantProfiles,
+            List<ScheduleItemInfoResponse> scheduleItemInfoResponse) {
 
-        return new ScheduleDetailResponse(participantProfiles, scheduleInformation);
+        return new ScheduleDetailResponse(participantProfiles, scheduleInformation, scheduleItemInfoResponse);
     }
 
 
