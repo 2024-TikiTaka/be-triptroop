@@ -70,10 +70,9 @@ public class Schedule extends BaseTimeEntity {
         );
     }
 
-    public void update(Long userId, String title, Integer count, Area area, LocalDate endDate, LocalDate startDate) {
+    public void update(String title, Integer count, Area area, LocalDate endDate, LocalDate startDate) {
         this.title = title;
         this.count = count;
-        this.userId = userId;
         this.area = area;
         this.endDate = endDate;
         this.startDate = startDate;

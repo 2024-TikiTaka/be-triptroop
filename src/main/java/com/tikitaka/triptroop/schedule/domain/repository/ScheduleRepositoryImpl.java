@@ -6,12 +6,19 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
+import com.tikitaka.triptroop.schedule.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.tikitaka.triptroop.image.domain.entity.QImage.image;
+import static com.tikitaka.triptroop.place.domain.entity.QPlace.place;
 import static com.tikitaka.triptroop.schedule.domain.entity.QSchedule.schedule;
+import static com.tikitaka.triptroop.schedule.domain.entity.QScheduleItem.scheduleItem;
+import static com.tikitaka.triptroop.schedule.domain.entity.QScheduleParticipant.scheduleParticipant;
+import static com.tikitaka.triptroop.user.domain.entity.QProfile.profile;
+import static com.tikitaka.triptroop.user.domain.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,6 +66,69 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         // 쿼리 수행 후 결과 반환
         return query.fetch();
     }
+
+    @Override
+    public List<ScheduleParticipantProfileResponse> findParticipantsProfilesByScheduleId(Long scheduleId) {
+        return queryFactory
+                .select(new QScheduleParticipantProfileResponse(
+                        scheduleParticipant.id,
+                        user.id,
+                        profile.nickname,
+                        profile.profileImage,
+                        profile.mbti,
+                        scheduleParticipant.reviewContent,
+                        scheduleParticipant.reviewPoint
+
+                ))
+                .from(scheduleParticipant)
+                .join(user).on(user.id.eq(scheduleParticipant.reviewerId))
+                .join(schedule).on(schedule.id.eq(scheduleParticipant.schedule.id))
+                .join(profile).on(profile.userId.eq(user.id))
+                .where(schedule.id.eq(scheduleId))
+                .fetch();
+    }
+
+    @Override
+    public ScheduleInformationResponse findScheduleById(Long scheduleId) {
+        return queryFactory
+                .select(new QScheduleInformationResponse(
+                        schedule.id,
+                        image.path,
+                        user.id,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.title,
+                        schedule.count,
+                        schedule.views,
+                        profile.nickname,
+                        profile.mbti,
+                        profile.profileImage
+                ))
+                .from(schedule)
+                .join(user).on(schedule.userId.eq(user.id))  // user 엔티티와의 조인 추가
+                .leftJoin(image).on(schedule.id.eq(image.scheduleId))
+                .leftJoin(profile).on(profile.userId.eq(user.id))
+                .where(schedule.id.eq(scheduleId).and(schedule.visibility.eq(Visibility.PUBLIC)).and(schedule.isDeleted.eq(false)))
+                .fetchFirst();// 첫 번째 결과만 가져옴
+    }
+
+    @Override
+    public List<ScheduleItemInfoResponse> findScheduleItemByScheduleId(Long scheduleId) {
+        return queryFactory
+                .select(new QScheduleItemInfoResponse(
+                        place.name,
+                        place.address,
+                        scheduleItem.planDate,
+                        scheduleItem.kind,
+                        scheduleItem.cost,
+                        scheduleItem.content
+                ))
+                .from(scheduleItem)
+                .join(schedule).on(schedule.id.eq(scheduleItem.scheduleId))
+                .where(schedule.id.eq(scheduleId))
+                .fetch();
+    }
+
 
 //    @Override
 //    public List<ScheduleItem> findScheduleItemById(Long scheduleId) {

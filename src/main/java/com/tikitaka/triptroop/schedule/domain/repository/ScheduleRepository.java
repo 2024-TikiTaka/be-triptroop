@@ -10,4 +10,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     // TODO: 일정 상세 조회
     Optional<Schedule> findByIdAndVisibility(Long scheduleId, Visibility visibility);
 
+    Optional<Schedule> findByUserId(Long userId);
+
+    Boolean existsByUserIdAndId(Long userId, Long scheduleId);
+
 }
