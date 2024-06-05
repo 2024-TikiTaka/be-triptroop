@@ -39,8 +39,6 @@ public class ScheduleController {
             @RequestParam(required = false, name = "keyword") final String keyword,
             @RequestParam(required = false, name = "sort") final String sort,
             @RequestParam(required = false, name = "area") final Long area
-
-
     ) {
         final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, keyword, sort, area);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
@@ -51,16 +49,22 @@ public class ScheduleController {
     // TODO 일정 상세 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ScheduleDetailResponse> findByScheduleId(@PathVariable(name = "scheduleId") final Long scheduleId) {
-        final ScheduleDetailResponse scheduleDetailResponse = scheduleService.getFindByScheduleId(scheduleId);
+//        final ScheduleDetailResponse scheduleDetailResponse =
+//                scheduleService.getFindByScheduleId(scheduleId);
+        final ScheduleDetailResponse scheduleDetailResponse =
+                scheduleService.findByScheduleId(scheduleId);
         return ResponseEntity.ok(scheduleDetailResponse);
     }
 
     // TODO 일정 등록
     @PostMapping()
-    public ResponseEntity<ApiResponse<Void>> saveSchedule(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
-                                                          @RequestPart final MultipartFile image
-            /* @AuthenticationPrincipal final */) {
-        final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
+    public ResponseEntity<ApiResponse<Void>> saveSchedule(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+            @RequestPart final MultipartFile image
+    ) {
+        Long userId = loginUser.getUserId();
+        final Long scheduleId = scheduleService.save(scheduleRequest, userId);
         imageService.save(ImageKind.SCHEDULE, scheduleId, image);
 
         return ResponseEntity.created(URI.create("/api/v1/schedules/" + scheduleId)).build();
@@ -68,18 +72,37 @@ public class ScheduleController {
 
     // TODO 일정 수정
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<Void> updateSchedule(@PathVariable final Long scheduleId,
-                                               @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
-                                               @RequestPart final MultipartFile image) {
-        scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, 2L);
-        imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+    public ResponseEntity<Void> updateSchedule(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, userId);
+
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
+    }
+
+    // TODO 일정 썸네일 수정
+    @PutMapping("/{scheduleId}/thumbnail")
+    public ResponseEntity<Void> updateScheduleThumbnail(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestPart final MultipartFile image) {
+
+        Long userId = loginUser.getUserId();
+        scheduleService.updateThumbnail(userId, scheduleId, image);
+
         return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
     }
 
     // TODO 일정 삭제
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> removeSchedule(@PathVariable final Long scheduleId) {
-        scheduleService.removeSchedule(scheduleId);
+    public ResponseEntity<Void> removeSchedule(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId) {
+        Long userId = loginUser.getUserId();
+        scheduleService.removeSchedule(scheduleId, userId);
         return ResponseEntity.noContent().build();
 
     }
@@ -97,19 +120,24 @@ public class ScheduleController {
 
     // TODO 일정 계획 수정
     @PutMapping("/{scheduleItemId}/item")
-    public ResponseEntity<Void> updateItem(@RequestBody @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
-                                           @PathVariable final Long scheduleItemId
+    public ResponseEntity<Void> updateItem(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @RequestBody @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
+            @PathVariable final Long scheduleItemId
     ) {
-
-        scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId);
+        Long userId = loginUser.getUserId();
+        scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId, userId);
 
         return ResponseEntity.created(URI.create("/api/v1/schedules/")).build();
     }
 
     // TODO 일정 계획 삭제
     @DeleteMapping("/{scheduleItemId}/item")
-    public ResponseEntity<Void> removeItem(@PathVariable final Long scheduleItemId) {
-        scheduleService.removeItem(scheduleItemId);
+    public ResponseEntity<Void> removeItem(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleItemId) {
+        Long userId = loginUser.getUserId();
+        scheduleService.removeItem(scheduleItemId, userId);
         return ResponseEntity.noContent().build();
 
     }
