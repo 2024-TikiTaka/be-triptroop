@@ -77,4 +77,8 @@ public class Schedule extends BaseTimeEntity {
         this.endDate = endDate;
         this.startDate = startDate;
     }
+
+    public void changeStatus(Visibility visibility) {
+        this.visibility = visibility;
+    }
 }
