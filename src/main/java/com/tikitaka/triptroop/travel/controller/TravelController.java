@@ -8,7 +8,7 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
 import jakarta.persistence.EntityManager;
@@ -21,6 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 
+/**
+ * @AuthenticationPrincipal CustomUser loginUser
+ * => 현재 로그인한 회원의 정보를 받아와서 아이디 넘겨주기(아이디는 PK 값 말하는 것)
+ * => loginUser.getUserId()
+ */
 @RestController
 @RequestMapping("/api/v1/travels")
 @RequiredArgsConstructor
@@ -63,6 +68,7 @@ public class TravelController {
     /* 여행 소개 등록 */
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> save(
+
             @RequestPart @Valid final TravelRequest travelRequest,
             @RequestPart final MultipartFile image) {
 
@@ -91,13 +97,33 @@ public class TravelController {
 //    }
 
     /* 게시글 상세 조회 (수정본) */
+//    @GetMapping("/{travelId}")
+//    public ResponseEntity<TravelDetailResponse> findTravelDetail(
+//            @PathVariable final Long travelId
+//    ) {
+//        TravelDetailResponse travelDetailResponse = travelService.findTravelDetail(travelId);
+//        return ResponseEntity.ok(travelDetailResponse);
+//    }
+
     @GetMapping("/{travelId}")
-    public ResponseEntity<TravelDetailResponse> findTravelDetail(
+    public ResponseEntity<TravelResponse> findTravel(
             @PathVariable final Long travelId
+
     ) {
-        TravelDetailResponse travelDetailResponse = travelService.findTravelDetail(travelId);
-        return ResponseEntity.ok(travelDetailResponse);
+        TravelResponse travelResponse = travelService.getTravelInfo(travelId);
+        return ResponseEntity.ok(travelResponse);
     }
+
+    /* 게시글 상세 조회 (하는중)*/
+//    @GetMapping("/{travelId}")
+//    public ResponseEntity<Optional<TravelResponse>> findTravel(
+//            @PathVariable final Long travelId) {
+//
+//        Optional<TravelResponse> travelResponse = travelService.findTravel(travelId, Visibility.PUBLIC);
+//
+//        return ResponseEntity.ok(travelResponse);
+//    }
+
 
     /* 게시글 수정 */
     @PutMapping("/{travelId}")
@@ -105,6 +131,7 @@ public class TravelController {
             @PathVariable final Long travelId,
             @RequestPart @Valid final TravelUpdateRequest travelRequest,
             @RequestPart(required = false) final MultipartFile image
+
     ) {
 
         travelService.updateTravel(travelId, travelRequest, 1L);

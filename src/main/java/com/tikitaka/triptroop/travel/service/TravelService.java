@@ -20,6 +20,7 @@ import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
@@ -76,6 +77,15 @@ public class TravelService {
 
 
         return travels.map(TravelsResponse::from);
+    }
+
+    /* 상세조회 (JPQL) */
+    public TravelResponse getTravelInfo(Long travelId) {
+//
+//        List<Image> images = imageRepository.findByTravelId(travelId);
+//        List<ImageResponse> imageList = ImageResponse.from(images);
+
+        return travelRepositoryImpl.findDetailedTravelByIdAndVisibility(travelId);
     }
 
     /* 여행지 소개 상세 조회*/
@@ -162,7 +172,6 @@ public class TravelService {
         List<ImageResponse> image = ImageResponse.from(images);
         Place place = placeRepository.findById(travel.getPlaceId()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
         UserProfileResponse userProfile = profileService.findUserProfileByUserId(travel.getUserId());
-
         Page<TravelCommentResponse> travelComment = travelCommentService.findAll(1, travelId);
 
         TravelDetailResponse travelDetailResponse = TravelDetailResponse.of(
@@ -177,13 +186,19 @@ public class TravelService {
         return travelDetailResponse;
     }
 
+//    /* 여행 상세 페이지 (하는중) */
+//    @Transactional(readOnly = true)
+//    public Optional<TravelResponse> findTravel(Long travelId, Visibility visibility) {
+//
+//        return travelRepository.findByIdAndVisibility(travelId, visibility);
+//    }
+
 
     /* 게시글 수정 */
     public void updateTravel(Long travelId, TravelUpdateRequest travelRequest, Long userId) {
 
         Travel travel = travelRepository.findByIdAndVisibility(travelId, Visibility.PUBLIC)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-
 
         travel.update(
                 userId,
@@ -200,5 +215,4 @@ public class TravelService {
 
         travelRepository.deleteById(travelId);
     }
-
 }

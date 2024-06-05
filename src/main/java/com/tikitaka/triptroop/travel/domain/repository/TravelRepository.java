@@ -38,6 +38,14 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     @EntityGraph(attributePaths = "images")
     Optional<Travel> findByIdAndVisibility(Long id, Visibility visibility);
+//
+//    @Query("select new com.tikitaka.triptroop.travel.dto.response.TravelResponse(t,p, u)" +
+//            " from Travel t join  User u on t.userId = u.id " +
+//            " join Profile p on u.id = p.userId " +
+//            " where t.id = :id" +
+//            " and t.visibility = 'PUBLIC' "
+//    )
+//    Optional<TravelResponse> findByIdAndVisibility(Long travelId, Visibility visibility);
 
 
 }
