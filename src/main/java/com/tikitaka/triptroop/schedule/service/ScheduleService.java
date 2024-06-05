@@ -92,10 +92,10 @@ public class ScheduleService {
     public ScheduleDetailResponse getFindByScheduleId(Long scheduleId) {
 
         Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
-                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
 
         Image image = imageRepository.findById(scheduleId)
-                                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
 
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
         List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
@@ -125,7 +125,7 @@ public class ScheduleService {
     // TODO : 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -153,8 +153,8 @@ public class ScheduleService {
 
     public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
         return scheduleParticipants.stream()
-                                   .map(ScheduleParticipant::getReviewerId)
-                                   .collect(Collectors.toList());
+                .map(ScheduleParticipant::getReviewerId)
+                .collect(Collectors.toList());
     }
 
     public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
@@ -186,6 +186,15 @@ public class ScheduleService {
                 scheduleItemUpdateRequests.getKind(),
                 scheduleItemUpdateRequests.getPlanDate()
         );
+
+    }
+
+    public void removeSchedule(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
+    }
+
+    public void removeItem(Long scheduleItemId) {
+        scheduleItemRepository.deleteById(scheduleItemId);
 
     }
 }

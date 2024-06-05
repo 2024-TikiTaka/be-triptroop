@@ -6,17 +6,17 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleCreateRequest;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
+import com.tikitaka.triptroop.schedule.dto.request.*;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
+import com.tikitaka.triptroop.schedule.service.ScheduleParticipantService;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
+import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +28,7 @@ import java.net.URI;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final ScheduleParticipantService scheduleParticipantService;
 
     private final ImageService imageService;
 
@@ -56,23 +57,31 @@ public class ScheduleController {
 
     // TODO 일정 등록
     @PostMapping()
-    public ResponseEntity<ApiResponse<Void>> save(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
-                                                  @RequestPart final MultipartFile image
+    public ResponseEntity<ApiResponse<Void>> saveSchedule(@RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+                                                          @RequestPart final MultipartFile image
             /* @AuthenticationPrincipal final */) {
         final Long scheduleId = scheduleService.save(scheduleRequest, 2L); // TODO: userId 받기
         imageService.save(ImageKind.SCHEDULE, scheduleId, image);
 
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+        return ResponseEntity.created(URI.create("/api/v1/schedules/" + scheduleId)).build();
     }
 
     // TODO 일정 수정
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<Void> updateByScheduleId(@PathVariable final Long scheduleId,
-                                                   @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
-                                                   @RequestPart final MultipartFile image) {
+    public ResponseEntity<Void> updateSchedule(@PathVariable final Long scheduleId,
+                                               @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+                                               @RequestPart final MultipartFile image) {
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, 2L);
         imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
         return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleId)).build();
+    }
+
+    // TODO 일정 삭제
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> removeSchedule(@PathVariable final Long scheduleId) {
+        scheduleService.removeSchedule(scheduleId);
+        return ResponseEntity.noContent().build();
+
     }
 
     // TODO 일정 계획 등록
@@ -83,7 +92,7 @@ public class ScheduleController {
 
         scheduleService.saveItem(scheduleItemRequest, scheduleId);
 
-        return ResponseEntity.created(URI.create("/api/v1/schedule/" + scheduleId)).build();
+        return ResponseEntity.created(URI.create("/api/v1/schedules/" + scheduleId)).build();
     }
 
     // TODO 일정 계획 수정
@@ -94,8 +103,44 @@ public class ScheduleController {
 
         scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId);
 
-        return ResponseEntity.created(URI.create("/api/v1/schedule/")).build();
+        return ResponseEntity.created(URI.create("/api/v1/schedules/")).build();
     }
 
+    // TODO 일정 계획 삭제
+    @DeleteMapping("/{scheduleItemId}/item")
+    public ResponseEntity<Void> removeItem(@PathVariable final Long scheduleItemId) {
+        scheduleService.removeItem(scheduleItemId);
+        return ResponseEntity.noContent().build();
 
+    }
+
+    // TODO 일정 신청
+    @PostMapping("/{scheduleId}/apply")
+    public ResponseEntity<Void> applySchedule(@PathVariable final Long scheduleId,
+                                              @AuthenticationPrincipal CustomUser loginUser,
+                                              @RequestBody @Valid final ScheduleParticipantRequest scheduleParticipantRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        final Long scheduleParticipantId = scheduleParticipantService.save(scheduleParticipantRequest, scheduleId, userId);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleParticipantId)).build();
+
+    }
+
+    // TODO 일정 신청 승인
+    @PutMapping("/{scheduleParticipantId}/accept")
+    public ResponseEntity<Void> acceptSchedule(@PathVariable final Long scheduleParticipantId,
+                                               @RequestBody @Valid final ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest) {
+
+        scheduleParticipantService.accept(scheduleParticipantAcceptRequest, scheduleParticipantId);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleParticipantId)).build();
+    }
+
+    // TODO 일정 신청 반려
+    @PutMapping("/{scheduleParticipantId}/rejected")
+    public ResponseEntity<Void> rejectedSchedule(@PathVariable final Long scheduleParticipantId,
+                                                 @RequestBody @Valid final ScheduleParticipantRejectedRequest scheduleParticipantRejectedRequest) {
+
+        scheduleParticipantService.reject(scheduleParticipantRejectedRequest, scheduleParticipantId);
+        return ResponseEntity.created(URI.create("/api/v1/schedules" + scheduleParticipantId)).build();
+    }
 }
