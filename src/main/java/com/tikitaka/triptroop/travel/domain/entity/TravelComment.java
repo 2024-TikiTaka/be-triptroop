@@ -47,7 +47,10 @@ public class TravelComment extends BaseTimeEntity {
     }
 
 
-    public static TravelComment of(final Long travelId, final Long userId, final String content) {
+    public static TravelComment of(
+            final Long travelId,
+            final Long userId,
+            final String content) {
 
         return new TravelComment(
                 travelId,
@@ -56,10 +59,9 @@ public class TravelComment extends BaseTimeEntity {
         );
     }
 
-    public void update(Long travelId, Long userId, String content) {
+    public void update(Long travelId, String content) {
 
         this.travelId = travelId;
-        this.userId = userId;
         this.content = content;
     }
 }

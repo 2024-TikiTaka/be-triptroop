@@ -14,7 +14,6 @@ import java.util.List;
 import static com.tikitaka.triptroop.image.domain.entity.QImage.image;
 import static com.tikitaka.triptroop.place.domain.entity.QPlace.place;
 import static com.tikitaka.triptroop.travel.domain.entity.QTravel.travel;
-import static com.tikitaka.triptroop.travel.domain.entity.QTravelComment.travelComment;
 import static com.tikitaka.triptroop.user.domain.entity.QProfile.profile;
 import static com.tikitaka.triptroop.user.domain.entity.QUser.user;
 
@@ -35,14 +34,14 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
                         place.address,
                         place.name,
                         profile.nickname,
-                        profile.profileImage,
-                        travelComment.content
+                        profile.profileImage
+//                        travelComment.content
                 ))
                 .from(travel)
                 .join(user).on(travel.userId.eq(user.id))
                 .leftJoin(place).on(travel.placeId.eq(place.id))
                 .leftJoin(profile).on(profile.userId.eq(user.id))
-                .leftJoin(travelComment).on(travel.id.eq(travelComment.travelId))
+//                .leftJoin(travelComment).on(travel.id.eq(travelComment.travelId))
 //                .leftJoin(travel.place, place)
 //                .leftJoin(travel.profile, profile)
 //                .leftJoin(travel.comments, travelComment)

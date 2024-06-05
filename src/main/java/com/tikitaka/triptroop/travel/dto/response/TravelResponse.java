@@ -12,18 +12,18 @@ public class TravelResponse {
     private final String name;
     private final String nickname;
     private final String profileImage;
-    private final String commentContent;
+
 
     //private final List<ImageResponse> images;
 
     @QueryProjection
-    public TravelResponse(String title, String content, String address, String name, String nickname, String profileImage, String commentContent) {
+    public TravelResponse(String title, String content, String address, String name, String nickname, String profileImage) {
         this.title = title;
         this.content = content;
         this.address = address;
         this.name = name;
         this.nickname = nickname;
         this.profileImage = profileImage;
-        this.commentContent = commentContent;
+
     }
 }

@@ -209,7 +209,12 @@ public class TravelService {
     }
 
     /* 게시글을 삭제합시다.♩♪*/
-    public void deleteTravel(Long travelId) {
+    public void deleteTravel(Long travelId, Long userId) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+
+        }
 
         travelRepository.deleteById(travelId);
     }

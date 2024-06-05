@@ -55,17 +55,6 @@ public class TravelController {
         return ResponseEntity.ok(ApiResponse.success(pagingResponse));
     }
 
-//    /* 상세 게시글 조회 */
-//    @GetMapping("/{travelId}")
-//    public ResponseEntity<ApiResponse<TravelResponse>> findTravelId(
-//            @PathVariable final Long travelId) {
-//
-//
-//        final TravelResponse travelResponse = travelService.findByTravelId(travelId);
-//
-//        return ResponseEntity.ok(ApiResponse.success(travelResponse));
-//    }
-
 
     /* 여행 소개 등록 */
     @PostMapping()
@@ -107,6 +96,7 @@ public class TravelController {
 //        return ResponseEntity.ok(travelDetailResponse);
 //    }
 
+    /* 게시글 상세 조회 (최종 수정본) */
     @GetMapping("/{travelId}")
     public ResponseEntity<TravelInfoResponse> findTravel(
             @PathVariable final Long travelId
@@ -149,7 +139,7 @@ public class TravelController {
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long travelId) {
 
-        travelService.deleteTravel(travelId);
+        travelService.deleteTravel(travelId, loginUser.getUserId());
 
         return ResponseEntity.noContent().build();
 

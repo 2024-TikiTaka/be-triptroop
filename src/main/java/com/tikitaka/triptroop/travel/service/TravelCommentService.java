@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.travel.service;
 
 
+import com.tikitaka.triptroop.common.exception.ForbiddenException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.travel.domain.entity.TravelComment;
@@ -37,12 +38,12 @@ public class TravelCommentService {
     }
 
     /* 댓글 등록 */
-    public Long save(TravelCommentRequest commentRequest) {
+    public Long save(TravelCommentRequest commentRequest, Long userId) {
 
 
         final TravelComment newComment = TravelComment.of(
                 commentRequest.getTravelId(),
-                commentRequest.getUserId(),
+                userId,
                 commentRequest.getContent()
         );
 
@@ -61,14 +62,18 @@ public class TravelCommentService {
     }
 
     /* 댓글 수정 */
-    public void updateComment(/*Long userId,*/ Long commentId, TravelCommentRequest commentRequest) {
+    public void updateComment(Long userId, Long commentId, TravelCommentRequest commentRequest) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, commentId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+
+        }
 
         TravelComment comment = travelCommentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_COMMENT));
 
         comment.update(
                 commentRequest.getTravelId(),
-                commentRequest.getUserId(),
                 commentRequest.getContent()
         );
 
@@ -76,7 +81,12 @@ public class TravelCommentService {
     }
 
     /* 댓글 삭제 */
-    public void deleteTravelComment(Long commentId) {
+    public void deleteTravelComment(Long userId, Long commentId) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, commentId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+
+        }
 
         travelCommentRepository.deleteById(commentId);
 
