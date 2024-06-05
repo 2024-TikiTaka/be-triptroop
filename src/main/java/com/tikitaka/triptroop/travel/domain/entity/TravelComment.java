@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@SQLDelete(sql = "UPDATE  travel_comments SET is_deleted = '1' WHERE travel_comment_id = ?")
 public class TravelComment extends BaseTimeEntity {
 
     @Id
@@ -33,7 +35,7 @@ public class TravelComment extends BaseTimeEntity {
 
     private String content;
 
-    private boolean isDeleted;
+    private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
 
@@ -45,12 +47,21 @@ public class TravelComment extends BaseTimeEntity {
     }
 
 
-    public static TravelComment of(final Long travelId, final Long userId, final String content) {
+    public static TravelComment of(
+            final Long travelId,
+            final Long userId,
+            final String content) {
 
         return new TravelComment(
                 travelId,
                 userId,
                 content
         );
+    }
+
+    public void update(Long travelId, String content) {
+
+        this.travelId = travelId;
+        this.content = content;
     }
 }

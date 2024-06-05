@@ -18,7 +18,6 @@ public class TravelDetailResponse {
     private UserProfileResponse writer;
     private PlaceResponse place;
     private List<ImageResponse> image;
-
     private Page<TravelCommentResponse> travelComments;
 
 

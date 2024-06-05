@@ -23,6 +23,7 @@ public enum ExceptionCode {
     INVALID_REFRESH_TOKEN(401, "리프레시 토큰이 유효하지 않습니다."),
 
     ACCESS_DENIED(403, "허가 되지 않은 요청입니다."),
+    ACCESS_DENIED_POST(403, "내가 쓴 게시글이 아닙니다."),
 
     NOT_FOUND_USER(404, "회원 정보를 찾을 수 없습니다."),
     NOT_FOUND_USER_PROFILE(404, "회원의 프로필 정보를 찾을 수 없습니다."),
