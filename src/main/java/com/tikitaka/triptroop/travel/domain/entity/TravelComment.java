@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@SQLDelete(sql = "UPDATE  travel_comments SET is_deleted = '1' WHERE travel_comment_id = ?")
+@SQLDelete(sql = "UPDATE  travel_comments SET is_deleted = '1',deleted_at = current_timestamp() WHERE travel_comment_id = ?")
 public class TravelComment extends BaseTimeEntity {
 
     @Id

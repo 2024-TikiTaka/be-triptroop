@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@SQLDelete(sql = "UPDATE travels SET is_deleted = '1' WHERE travel_id = ?")
+@SQLDelete(sql = "UPDATE travels SET is_deleted = '1',deleted_at = current_timestamp() WHERE travel_id = ?")
 public class Travel extends BaseTimeEntity {
 
     @Id
@@ -54,6 +54,10 @@ public class Travel extends BaseTimeEntity {
 
     public void increaseViews() {
         this.views++;
+    }
+
+    public void updateStatus(Visibility visibility) {
+        this.visibility = visibility;
     }
 
 
