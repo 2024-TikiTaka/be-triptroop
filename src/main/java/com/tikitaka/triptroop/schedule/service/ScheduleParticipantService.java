@@ -44,7 +44,7 @@ public class ScheduleParticipantService {
         } else if (applyDate.isAfter(startDate)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_DATE);
         }
-
+        
         final ScheduleParticipant newScheduleParticipants = ScheduleParticipant.of(
                 scheduleId,
                 userId,
