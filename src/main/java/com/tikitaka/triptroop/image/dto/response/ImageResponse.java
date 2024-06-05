@@ -28,17 +28,4 @@ public class ImageResponse {
                 .collect(Collectors.toList());
     }
 
-    /* 다솔 추가 메서드 */
-    public String getName() {
-        String[] parts = fullPath.split("/");
-        String fileName = parts[parts.length - 1];
-        return fileName.substring(0, fileName.lastIndexOf('.'));
-    }
-
-    public String getExtension() {
-        String[] parts = fullPath.split("/");
-        String fileName = parts[parts.length - 1];
-        return fileName.substring(fileName.lastIndexOf('.') + 1);
-    }
-
 }
