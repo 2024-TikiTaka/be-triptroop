@@ -8,14 +8,16 @@ import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelInfoResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
+import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,11 +70,11 @@ public class TravelController {
     /* 여행 소개 등록 */
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> save(
-
+            @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart @Valid final TravelRequest travelRequest,
             @RequestPart final MultipartFile image) {
 
-        final Long travelId = travelService.save(travelRequest, 2L);
+        final Long travelId = travelService.save(travelRequest, loginUser.getUserId());
         imageService.save(ImageKind.TRAVEL, travelId, image);
 
         return ResponseEntity.created(URI.create("/api/v1/travels/" + travelId)).build();
@@ -106,12 +108,12 @@ public class TravelController {
 //    }
 
     @GetMapping("/{travelId}")
-    public ResponseEntity<TravelResponse> findTravel(
+    public ResponseEntity<TravelInfoResponse> findTravel(
             @PathVariable final Long travelId
 
     ) {
-        TravelResponse travelResponse = travelService.getTravelInfo(travelId);
-        return ResponseEntity.ok(travelResponse);
+        TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
+        return ResponseEntity.ok(travelInfo);
     }
 
     /* 게시글 상세 조회 (하는중)*/
@@ -128,13 +130,14 @@ public class TravelController {
     /* 게시글 수정 */
     @PutMapping("/{travelId}")
     public ResponseEntity<Void> updateTravel(
+            @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long travelId,
             @RequestPart @Valid final TravelUpdateRequest travelRequest,
             @RequestPart(required = false) final MultipartFile image
 
     ) {
 
-        travelService.updateTravel(travelId, travelRequest, 1L);
+        travelService.updateTravel(travelId, travelRequest, loginUser.getUserId());
         imageService.updateImage(ImageKind.TRAVEL, travelId, image);
 
         return ResponseEntity.created(URI.create("/api/v1/travels/" + travelId)).build();
@@ -142,7 +145,9 @@ public class TravelController {
 
     /* 게시글을 삭제해주세요~ ♬ */
     @DeleteMapping("/{travelId}")
-    public ResponseEntity<Void> deleteTravel(@PathVariable final Long travelId) {
+    public ResponseEntity<Void> deleteTravel(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long travelId) {
 
         travelService.deleteTravel(travelId);
 

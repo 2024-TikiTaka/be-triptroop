@@ -2,10 +2,14 @@ package com.tikitaka.triptroop.travel.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
+import com.tikitaka.triptroop.travel.dto.response.ImageTravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.QImageTravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.QTravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static com.tikitaka.triptroop.image.domain.entity.QImage.image;
 import static com.tikitaka.triptroop.place.domain.entity.QPlace.place;
@@ -28,7 +32,6 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
                 .select(new QTravelResponse(
                         travel.title,
                         travel.content,
-                        image.path,
                         place.address,
                         place.name,
                         profile.nickname,
@@ -36,7 +39,6 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
                         travelComment.content
                 ))
                 .from(travel)
-                .leftJoin(image).on(travel.id.eq(image.travelId))
                 .join(user).on(travel.userId.eq(user.id))
                 .leftJoin(place).on(travel.placeId.eq(place.id))
                 .leftJoin(profile).on(profile.userId.eq(user.id))
@@ -50,6 +52,23 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
                                 .and(travel.isDeleted.eq(false))
                 )
                 .fetchFirst();
+    }
+
+    @Override
+    public List<ImageTravelResponse> findImagesByTravelId(Long id) {
+        return queryFactory
+                .select(new QImageTravelResponse(
+                        image.id,
+                        image.path,
+                        image.uuid
+                ))
+                .from(image)
+                .leftJoin(image).on(travel.id.eq(image.travelId))
+                .where(
+                        image.travelId.eq(id)
+
+                )
+                .fetch();
     }
 
 

@@ -4,6 +4,7 @@ package com.tikitaka.triptroop.travel.service;
 import com.tikitaka.triptroop.area.repository.AreaRepository;
 import com.tikitaka.triptroop.category.domain.repository.CategoryRepository;
 import com.tikitaka.triptroop.common.domain.type.Visibility;
+import com.tikitaka.triptroop.common.exception.ForbiddenException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
@@ -18,10 +19,7 @@ import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepositoryImpl;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
-import com.tikitaka.triptroop.travel.dto.response.TravelDetailResponse;
-import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
-import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
+import com.tikitaka.triptroop.travel.dto.response.*;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
@@ -54,8 +52,8 @@ public class TravelService {
 
     private final ProfileService profileService;
     private final TravelCommentService travelCommentService;
-    /* 페이징 처리 */
 
+    /* 페이징 처리 */
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("id").descending());
     }
@@ -80,12 +78,15 @@ public class TravelService {
     }
 
     /* 상세조회 (JPQL) */
-    public TravelResponse getTravelInfo(Long travelId) {
-//
-//        List<Image> images = imageRepository.findByTravelId(travelId);
-//        List<ImageResponse> imageList = ImageResponse.from(images);
+    public TravelInfoResponse getTravelInfo(Long travelId) {
 
-        return travelRepositoryImpl.findDetailedTravelByIdAndVisibility(travelId);
+        TravelResponse travelResponse = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(travelId);
+        List<ImageTravelResponse> imageTravelResponses = travelRepositoryImpl.findImagesByTravelId(travelId);
+        TravelInfoResponse travelInfoResponse = TravelInfoResponse.of(
+                travelResponse,
+                imageTravelResponses
+        );
+        return travelInfoResponse;
     }
 
     /* 여행지 소개 상세 조회*/
@@ -186,22 +187,19 @@ public class TravelService {
         return travelDetailResponse;
     }
 
-//    /* 여행 상세 페이지 (하는중) */
-//    @Transactional(readOnly = true)
-//    public Optional<TravelResponse> findTravel(Long travelId, Visibility visibility) {
-//
-//        return travelRepository.findByIdAndVisibility(travelId, visibility);
-//    }
-
 
     /* 게시글 수정 */
     public void updateTravel(Long travelId, TravelUpdateRequest travelRequest, Long userId) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+
+        }
 
         Travel travel = travelRepository.findByIdAndVisibility(travelId, Visibility.PUBLIC)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
 
         travel.update(
-                userId,
                 travelRequest.getCategoryId(),
                 travelRequest.getAreaId(),
                 travelRequest.getPlaceId(),
