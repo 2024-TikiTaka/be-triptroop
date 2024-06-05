@@ -44,10 +44,10 @@ public class ReportController {
     @PostMapping()
     public ResponseEntity<ApiResponse<Long>> saveReport(
             @RequestPart @Valid final ReportRequest reportRequest,
-            @RequestPart final MultipartFile image
+            @RequestPart final List<MultipartFile> images
     ) {
 
-        final Long reportId = reportService.save(reportRequest, 6L);
+        final Long reportId = reportService.save(reportRequest, 6L, images);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("신고가 접수되었습니다.", reportId));
     }
