@@ -46,7 +46,9 @@ public enum ExceptionCode {
     ALREADY_WITHDRAWN_USER(409, "이미 탈퇴한 회원입니다."),
 
     FAIL_TO_UPLOAD_FILE(500, "파일 저장에 실패하였습니다."),
-    FAIL_TO_DELETE_FILE(500, "파일 삭제에 실패하였습니다.");
+    FAIL_TO_DELETE_FILE(500, "파일 삭제에 실패하였습니다."),
+    ACCESS_DENIED_COUNT(403, "모집인원이 마감되었습니다."),
+    ACCESS_DENIED_DATE(403, "날짜를 다시 확인 해주세요");
 
     private final int code;
 
