@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@SQLDelete(sql = "UPDATE schedules SET is_deleted ='1' WHERE schedule_id = ?")
+@SQLDelete(sql = "UPDATE schedules SET is_deleted ='1',deleted_at = current_timestamp() WHERE schedule_id = ?")
 public class Schedule extends BaseTimeEntity {
 
     @Id
@@ -80,5 +80,9 @@ public class Schedule extends BaseTimeEntity {
 
     public void changeStatus(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public void countUp(int count) {
+        this.count += count;
     }
 }

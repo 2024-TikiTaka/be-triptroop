@@ -109,8 +109,9 @@ public class ScheduleController {
 
     // TODO 일정 계획 등록
     @PostMapping("/{scheduleId}/item")
-    public ResponseEntity<Void> saveItem(@RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
-                                         @PathVariable final Long scheduleId
+    public ResponseEntity<Void> saveItem(
+            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
+            @PathVariable final Long scheduleId
     ) {
 
         scheduleService.saveItem(scheduleItemRequest, scheduleId);
@@ -132,7 +133,7 @@ public class ScheduleController {
     }
 
     // TODO 일정 공개 여부 변경
-    @PatchMapping("/{scheduleId}")
+    @PutMapping("/{scheduleId}/status")
     public ResponseEntity<Void> changeStatus(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,
