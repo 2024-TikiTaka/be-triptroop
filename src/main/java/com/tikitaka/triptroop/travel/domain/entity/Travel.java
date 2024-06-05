@@ -52,6 +52,11 @@ public class Travel extends BaseTimeEntity {
     private List<Image> images;
 
 
+    public void increaseViews() {
+        this.views++;
+    }
+
+
     private Travel(Long userId,
                    Long categoryId,
                    Long areaId,
@@ -84,12 +89,9 @@ public class Travel extends BaseTimeEntity {
         );
     }
 
-    public void increaseViews() {
-        this.views++;
-    }
 
-    public void update(Long userId, Long categoryId, Long areaId, Long placeId, String title, String content) {
-        this.userId = userId;
+    public void update(Long categoryId, Long areaId, Long placeId, String title, String content) {
+
         this.categoryId = categoryId;
         this.areaId = areaId;
         this.placeId = placeId;

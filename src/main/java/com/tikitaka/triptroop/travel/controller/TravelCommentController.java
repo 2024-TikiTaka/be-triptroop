@@ -8,10 +8,12 @@ import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.travel.dto.request.TravelCommentRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelCommentResponse;
 import com.tikitaka.triptroop.travel.service.TravelCommentService;
+import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,13 +24,15 @@ import java.net.URI;
 public class TravelCommentController {
 
     private final TravelCommentService commentService;
+    private final TravelCommentService travelCommentService;
 
     /* 댓글 등록 */
     @PostMapping("/{travelId}/comment")
     public ResponseEntity<ApiResponse<Void>> addComment(
+            @AuthenticationPrincipal CustomUser loginUser,
             @RequestBody @Valid final TravelCommentRequest commentRequest) {
 
-        final Long commentId = commentService.save(commentRequest);
+        final Long commentId = commentService.save(commentRequest, loginUser.getUserId());
 
         return ResponseEntity.created(URI.create("/api/v1/travels/comment/" + commentId)).build();
     }
@@ -47,5 +51,30 @@ public class TravelCommentController {
         return ResponseEntity.ok(ApiResponse.success(pageResponse));
 
     }
+
+    /* 댓글 수정 */
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long commentId,
+            @RequestBody @Valid final TravelCommentRequest commentRequest
+    ) {
+        travelCommentService.updateComment(loginUser.getUserId(), commentId, commentRequest);
+
+        return ResponseEntity.created(URI.create("/api/v1/travels/comment/" + commentId)).build();
+
+    }
+
+    /* 댓글 삭제 */
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long commentId) {
+
+        travelCommentService.deleteTravelComment(commentId, loginUser.getUserId());
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

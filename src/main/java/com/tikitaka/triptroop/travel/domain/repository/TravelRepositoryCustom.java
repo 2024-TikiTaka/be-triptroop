@@ -1,10 +1,14 @@
 package com.tikitaka.triptroop.travel.domain.repository;
 
-import com.tikitaka.triptroop.common.domain.type.Visibility;
-import com.tikitaka.triptroop.travel.domain.entity.Travel;
+import com.tikitaka.triptroop.travel.dto.response.ImageTravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface TravelRepositoryCustom {
-    Optional<Travel> findDetailedTravelByIdAndVisibility(Long id, Visibility visibility);
+    /* 게시글 조회 */
+    TravelResponse findDetailedTravelByIdAndVisibility(Long id);
+
+    /* 이미지 조회*/
+    List<ImageTravelResponse> findImagesByTravelId(Long id);
 }
