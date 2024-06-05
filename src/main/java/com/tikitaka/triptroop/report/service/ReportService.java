@@ -6,7 +6,9 @@ import com.tikitaka.triptroop.companion.domain.entity.Companion;
 import com.tikitaka.triptroop.companion.domain.repository.CompanionRepository;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.repository.ReportRepository;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
@@ -24,6 +26,7 @@ import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +48,7 @@ public class ReportService {
 
     private final ImageRepository imageRepository;
 
-//    private final ImageService imageService;
+    private final ImageService imageService;
 
     /* 1. 신고 목록 조회 Test */
     @Transactional(readOnly = true)
@@ -109,7 +112,7 @@ public class ReportService {
     }
 
     @Transactional
-    public Long save(final ReportRequest reportRequest, final Long reporterId) {
+    public Long save(final ReportRequest reportRequest, final Long reporterId, List<MultipartFile> images) {
 
         final Report newReport = Report.of(
                 reporterId,
@@ -123,8 +126,8 @@ public class ReportService {
                 ReportProcessStatus.valueOf(reportRequest.getStatus())
         );
 
-//        imageService.save(ImageKind.REPORT, reportId, image);
         final Report report = reportRepository.save(newReport);
+        imageService.saveAll(ImageKind.REPORT, report.getId(), images);
 
         return report.getId();
     }
