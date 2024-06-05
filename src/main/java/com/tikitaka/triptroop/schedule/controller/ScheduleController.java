@@ -131,6 +131,19 @@ public class ScheduleController {
         return ResponseEntity.created(URI.create("/api/v1/schedules/")).build();
     }
 
+    // TODO 일정 공개 여부 변경
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<Void> changeStatus(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestParam String status
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleService.changeStatus(scheduleId, userId, status);
+
+        return ResponseEntity.created(URI.create("/api/v1/schedules/" + scheduleId)).build();
+    }
+
     // TODO 일정 계획 삭제
     @DeleteMapping("/{scheduleItemId}/item")
     public ResponseEntity<Void> removeItem(

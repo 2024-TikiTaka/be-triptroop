@@ -169,6 +169,24 @@ public class ScheduleService {
         imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
     }
 
+
+    // TODO 일정 공개 여부 변경
+    public void changeStatus(Long scheduleId, Long userId, String status) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+        if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        }
+        switch (status) {
+            case "PUBLIC":
+                schedule.changeStatus(Visibility.PUBLIC);
+                break;
+            case "PRIVATE":
+                schedule.changeStatus(Visibility.PRIVATE);
+                break;
+        }
+
+    }
+
     // TODO 일정 삭제
     public void removeSchedule(Long scheduleId, Long userId) {
         if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {

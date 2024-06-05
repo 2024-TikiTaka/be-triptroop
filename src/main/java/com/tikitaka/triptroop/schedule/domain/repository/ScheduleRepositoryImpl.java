@@ -82,7 +82,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 ))
                 .from(scheduleParticipant)
                 .join(user).on(user.id.eq(scheduleParticipant.reviewerId))
-                .join(schedule).on(schedule.id.eq(scheduleParticipant.schedule.id))
+                .join(schedule).on(schedule.id.eq(scheduleParticipant.scheduleId))
                 .join(profile).on(profile.userId.eq(user.id))
                 .where(schedule.id.eq(scheduleId))
                 .fetch();
