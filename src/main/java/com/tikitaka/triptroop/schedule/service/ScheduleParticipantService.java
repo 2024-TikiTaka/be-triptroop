@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.schedule.service;
 
 
+import com.tikitaka.triptroop.common.domain.type.RequestStatus;
 import com.tikitaka.triptroop.common.exception.ForbiddenException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
@@ -11,6 +12,7 @@ import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantAcceptRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRejectedRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRequest;
+import com.tikitaka.triptroop.schedule.dto.request.ScheduleReviewRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +46,7 @@ public class ScheduleParticipantService {
         } else if (applyDate.isAfter(startDate)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_DATE);
         }
-        
+
         final ScheduleParticipant newScheduleParticipants = ScheduleParticipant.of(
                 scheduleId,
                 userId,
@@ -79,6 +81,21 @@ public class ScheduleParticipantService {
                 scheduleParticipantRejectedRequest.getProcessedAt(),
                 scheduleParticipantRejectedRequest.getCause()
         );
+    }
+
+    public void writeReview(Long scheduleId, Long userId, ScheduleReviewRequest scheduleReviewRequest) {
+
+        ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findByScheduleIdAndReviewerId(scheduleId, userId);
+
+        if (scheduleParticipant.getStatus() != RequestStatus.ACCEPTED) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        scheduleParticipant.writeReview(
+                scheduleReviewRequest.getReviewPoint(),
+                scheduleReviewRequest.getReviewContent()
+        );
+
     }
 }
 

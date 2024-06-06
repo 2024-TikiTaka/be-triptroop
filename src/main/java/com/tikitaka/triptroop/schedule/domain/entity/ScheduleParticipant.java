@@ -68,4 +68,9 @@ public class ScheduleParticipant {
         this.processedAt = processedAt;
         this.cause = cause;
     }
+
+    public void writeReview(Double reviewPoint, String reviewContent) {
+        this.reviewPoint = reviewPoint;
+        this.reviewContent = reviewContent;
+    }
 }

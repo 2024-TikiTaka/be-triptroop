@@ -30,7 +30,6 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final ScheduleParticipantService scheduleParticipantService;
-
     private final ImageService imageService;
 
     // TODO 일정 리스트 조회,조건 조회
@@ -190,4 +189,29 @@ public class ScheduleController {
         scheduleParticipantService.reject(scheduleParticipantRejectedRequest, scheduleParticipantId);
         return ResponseEntity.ok(ApiResponse.success(("일정 신청이 거절되었습니다.")));
     }
+
+    // TODO 일정 리뷰 등록
+    @PostMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> writeReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.writeReview(scheduleId, userId, scheduleReviewRequest);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰 작성이 완료되었습니다.")));
+
+    }
+//    // TODO 일정 리뷰 수정
+//    @PutMapping("/{scheduleId}/review")
+//    public ResponseEntity<ApiResponse> updateReview(
+//            @AuthenticationPrincipal CustomUser loginUser,
+//            @PathVariable final Long scheduleId,
+//            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
+//    ) {
+//        Long userId = loginUser.getUserId();
+//        scheduleParticipantService.writeReview(scheduleId,userId,scheduleReviewRequest);
+//        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰 작성이 완료되었습니다.")));
+//
+//    }
 }
