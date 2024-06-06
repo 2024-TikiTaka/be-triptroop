@@ -46,7 +46,7 @@ public class ScheduleParticipantService {
         } else if (applyDate.isAfter(startDate)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_DATE);
         }
-        
+
         final ScheduleParticipant newScheduleParticipants = ScheduleParticipant.of(
                 scheduleId,
                 userId,
@@ -96,6 +96,20 @@ public class ScheduleParticipantService {
                 scheduleReviewRequest.getReviewContent()
         );
 
+    }
+
+    public void updateReview(Long scheduleId, Long userId, ScheduleReviewRequest scheduleReviewRequest) {
+
+        ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findByScheduleIdAndReviewerId(scheduleId, userId);
+
+        if (scheduleParticipant.getStatus() != RequestStatus.ACCEPTED) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        scheduleParticipant.updateReview(
+                scheduleReviewRequest.getReviewPoint(),
+                scheduleReviewRequest.getReviewContent()
+        );
     }
 }
 

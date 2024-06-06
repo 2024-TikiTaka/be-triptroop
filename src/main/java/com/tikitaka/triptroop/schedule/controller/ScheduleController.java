@@ -202,16 +202,17 @@ public class ScheduleController {
         return ResponseEntity.ok(ApiResponse.success(("일정 리뷰 작성이 완료되었습니다.")));
 
     }
-//    // TODO 일정 리뷰 수정
-//    @PutMapping("/{scheduleId}/review")
-//    public ResponseEntity<ApiResponse> updateReview(
-//            @AuthenticationPrincipal CustomUser loginUser,
-//            @PathVariable final Long scheduleId,
-//            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
-//    ) {
-//        Long userId = loginUser.getUserId();
-//        scheduleParticipantService.writeReview(scheduleId,userId,scheduleReviewRequest);
-//        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰 작성이 완료되었습니다.")));
-//
-//    }
+
+    // TODO 일정 리뷰 수정
+    @PutMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> updateReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.updateReview(scheduleId, userId, scheduleReviewRequest);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰가 수정되었습니다.")));
+
+    }
 }

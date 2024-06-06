@@ -73,4 +73,9 @@ public class ScheduleParticipant {
         this.reviewPoint = reviewPoint;
         this.reviewContent = reviewContent;
     }
+
+    public void updateReview(Double reviewPoint, String reviewContent) {
+        this.reviewPoint = reviewPoint;
+        this.reviewContent = reviewContent;
+    }
 }
