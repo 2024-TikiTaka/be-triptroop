@@ -30,7 +30,6 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final ScheduleParticipantService scheduleParticipantService;
-
     private final ImageService imageService;
 
     // TODO 일정 리스트 조회,조건 조회
@@ -76,10 +75,12 @@ public class ScheduleController {
     public ResponseEntity<ApiResponse> updateSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,
-            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest
+            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+            @RequestParam String status
     ) {
         Long userId = loginUser.getUserId();
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, userId);
+        scheduleService.changeStatus(scheduleId, userId, status);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
@@ -189,5 +190,43 @@ public class ScheduleController {
 
         scheduleParticipantService.reject(scheduleParticipantRejectedRequest, scheduleParticipantId);
         return ResponseEntity.ok(ApiResponse.success(("일정 신청이 거절되었습니다.")));
+    }
+
+    // TODO 일정 리뷰 등록
+    @PostMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> writeReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.writeReview(scheduleId, userId, scheduleReviewRequest);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰 작성이 완료되었습니다.")));
+
+    }
+
+    // TODO 일정 리뷰 수정
+    @PutMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> updateReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId,
+            @RequestBody @Valid final ScheduleReviewRequest scheduleReviewRequest
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.updateReview(scheduleId, userId, scheduleReviewRequest);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰가 수정되었습니다.")));
+
+    }
+
+    // TODO 일정 리뷰 삭제
+    @DeleteMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> removeReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.removeReview(scheduleId, userId);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰가 삭제되었습니다.")));
+
     }
 }
