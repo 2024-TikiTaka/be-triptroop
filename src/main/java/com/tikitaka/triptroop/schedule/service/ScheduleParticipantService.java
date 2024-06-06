@@ -111,5 +111,12 @@ public class ScheduleParticipantService {
                 scheduleReviewRequest.getReviewContent()
         );
     }
+
+    public void removeReview(Long scheduleId, Long userId) {
+        ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findByScheduleIdAndReviewerId(scheduleId, userId);
+        Long participantId = scheduleParticipant.getId();
+        scheduleParticipantRepository.deleteById(participantId);
+
+    }
 }
 

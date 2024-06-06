@@ -20,4 +20,5 @@ public interface ScheduleParticipantRepository extends JpaRepository<SchedulePar
 
 
     ScheduleParticipant findByScheduleIdAndReviewerId(Long scheduleId, Long userId);
+
 }

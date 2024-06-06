@@ -75,10 +75,12 @@ public class ScheduleController {
     public ResponseEntity<ApiResponse> updateSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,
-            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest
+            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+            @RequestParam String status
     ) {
         Long userId = loginUser.getUserId();
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, userId);
+        scheduleService.changeStatus(scheduleId, userId, status);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
@@ -213,6 +215,18 @@ public class ScheduleController {
         Long userId = loginUser.getUserId();
         scheduleParticipantService.updateReview(scheduleId, userId, scheduleReviewRequest);
         return ResponseEntity.ok(ApiResponse.success(("일정 리뷰가 수정되었습니다.")));
+
+    }
+
+    // TODO 일정 리뷰 삭제
+    @DeleteMapping("/{scheduleId}/review")
+    public ResponseEntity<ApiResponse> removeReview(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long scheduleId
+    ) {
+        Long userId = loginUser.getUserId();
+        scheduleParticipantService.removeReview(scheduleId, userId);
+        return ResponseEntity.ok(ApiResponse.success(("일정 리뷰가 삭제되었습니다.")));
 
     }
 }
