@@ -53,35 +53,6 @@ public class AdminUserResponse {
         this.godo = user.getGodo();
     }
 
-    //    List<ImageResponse> imageResponses, String titleOrNickname
-//    public static AdminUserResponse of(User user, SocialUser socialUser, UserReview userReview, Profile profile) {
-//
-//        return new AdminUserResponse(
-//                user.getId(),
-//                user.getEmail(),
-//                profile.getNickname(),
-//                user.getRole(),
-//                user.getCreatedAt(),
-//                user.getName(),
-//                user.getGender(),
-//                user.getStatus(),
-//                user.getBirth(),
-//                user.getPhone(),
-//                reportCount,
-//                socialUser.getProvider(),
-//                user.getPassword(),
-//                user.getGodo(),
-//                userReview.getReviewPoint(),
-//                profile.getIntroduction(),
-//                interestName,
-//                inquiriesCount,
-//                profile.getMbti(),
-//                contentCount,
-//                friendCount,
-//                loginCountAndLoginTime
-//        );
-//    }
-
 }
 
 
