@@ -20,4 +20,5 @@ public interface TravelCommentRepository extends JpaRepository<TravelComment, Lo
     Page<TravelCommentResponse> findByTravelId(Pageable pageable, Long travelId);
 
 
+    boolean existsByUserIdAndId(Long userId, Long commentId);
 }

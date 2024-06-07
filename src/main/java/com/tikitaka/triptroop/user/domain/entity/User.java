@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN' WHERE user_id = ?")
+@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN', deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -98,5 +98,6 @@ public class User extends BaseTimeEntity {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        //TODO: expiredAt 도 추가하기
     }
 }

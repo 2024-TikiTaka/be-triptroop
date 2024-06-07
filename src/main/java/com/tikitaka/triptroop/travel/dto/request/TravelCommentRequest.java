@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class TravelCommentRequest {
-    @NotNull
-    private final Long userId;
+    //    @NotNull
+//    private final Long userId;
     @NotNull
     private final Long travelId;
     @NotBlank
