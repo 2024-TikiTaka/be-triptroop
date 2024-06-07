@@ -37,16 +37,15 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입이 완료되었습니다."));
     }
 
-
     /**
      * 로그아웃
      *
      * @param loginUser 로그인 정보
      */
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal CustomUser loginUser) {
+    public ResponseEntity<ApiResponse> logout(@AuthenticationPrincipal CustomUser loginUser) {
 
         authService.updateRefreshToken(loginUser.getUsername(), null);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("로그아웃이 완료되었습니다."));
     }
 }
