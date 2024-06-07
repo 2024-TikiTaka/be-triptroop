@@ -18,4 +18,7 @@ public interface ScheduleParticipantRepository extends JpaRepository<SchedulePar
     @Query("SELECT COUNT(sp) FROM ScheduleParticipant sp WHERE sp.scheduleId = :scheduleId AND sp.status = 'ACCEPTED'")
     Long countByScheduleIdAndStatusAccepted(@Param("scheduleId") Long scheduleId);
 
+
+    ScheduleParticipant findByScheduleIdAndReviewerId(Long scheduleId, Long userId);
+
 }
