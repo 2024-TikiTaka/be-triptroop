@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@SQLDelete(sql = "UPDATE travels SET is_deleted = '1' WHERE travel_id = ?")
+@SQLDelete(sql = "UPDATE travels SET is_deleted = '1',deleted_at = current_timestamp() WHERE travel_id = ?")
 public class Travel extends BaseTimeEntity {
 
     @Id
@@ -56,6 +56,10 @@ public class Travel extends BaseTimeEntity {
         this.views++;
     }
 
+    public void updateStatus(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
 
     private Travel(Long userId,
                    Long categoryId,
@@ -90,13 +94,14 @@ public class Travel extends BaseTimeEntity {
     }
 
 
-    public void update(Long categoryId, Long areaId, Long placeId, String title, String content) {
+    public void update(Long categoryId, Long areaId, Long placeId, String title, String content, Visibility visibility) {
 
         this.categoryId = categoryId;
         this.areaId = areaId;
         this.placeId = placeId;
         this.title = title;
         this.content = content;
+        this.visibility = visibility;
 
     }
 }

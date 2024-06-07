@@ -24,6 +24,7 @@ public enum ExceptionCode {
 
     ACCESS_DENIED(403, "허가 되지 않은 요청입니다."),
     ACCESS_DENIED_POST(403, "내가 쓴 게시글이 아닙니다."),
+    ACCESS_DENIED_VISIBILITY(403, "공개상태입니다."),
 
     NOT_FOUND_USER(404, "회원 정보를 찾을 수 없습니다."),
     NOT_FOUND_USER_PROFILE(404, "회원의 프로필 정보를 찾을 수 없습니다."),
