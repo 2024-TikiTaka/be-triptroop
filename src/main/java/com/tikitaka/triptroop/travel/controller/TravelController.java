@@ -126,10 +126,13 @@ public class TravelController {
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long travelId,
             @RequestPart @Valid final TravelUpdateRequest travelRequest,
-            @RequestPart(required = false) final MultipartFile image) {
+            @RequestPart(required = false) final MultipartFile image,
+            @RequestParam String status
+    ) {
 
         travelService.updateTravel(travelId, travelRequest, loginUser.getUserId());
         imageService.updateImage(ImageKind.TRAVEL, travelId, image);
+        travelService.updateStatus(loginUser.getUserId(), travelId, status);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("여행 정보가 수정되었습니다."));
@@ -148,18 +151,18 @@ public class TravelController {
     }
 
     /* 여행지 소개 공개 / 비공개 */
-    @PutMapping("/{travelId}/")
-    public ResponseEntity<ApiResponse> updateStatus(
-            @AuthenticationPrincipal CustomUser loginUser,
-            @PathVariable final Long travelId,
-            @RequestParam String status
-    ) {
-
-        travelService.updateStatus(loginUser.getUserId(), travelId, status);
-
-        return ResponseEntity.ok(ApiResponse.success("공개 상태가 변경되었습니다."));
-
-
-    }
+//    @PutMapping("/{travelId}/")
+//    public ResponseEntity<ApiResponse> updateStatus(
+//            @AuthenticationPrincipal CustomUser loginUser,
+//            @PathVariable final Long travelId,
+//            @RequestParam String status
+//    ) {
+//
+//        travelService.updateStatus(loginUser.getUserId(), travelId, status);
+//
+//        return ResponseEntity.ok(ApiResponse.success("공개 상태가 변경되었습니다."));
+//
+//
+//    }
 
 }

@@ -28,5 +28,6 @@ public class TravelUpdateRequest {
     @NotBlank
     private final String content;
 
+    @NotBlank
     private final String status;
 }
