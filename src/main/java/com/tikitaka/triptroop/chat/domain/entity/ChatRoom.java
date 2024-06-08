@@ -2,6 +2,7 @@ package com.tikitaka.triptroop.chat.domain.entity;
 
 import com.tikitaka.triptroop.chat.domain.type.ChatRoomType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,9 +27,9 @@ public class ChatRoom {
     @Field("room_name")
     private String roomName;
 
-    private String creator;
+    private Long creator;
 
-    private List<String> member;
+    private List<Long> member;
 
     @Field(targetType = FieldType.STRING)
     private ChatRoomType type;
@@ -42,7 +43,7 @@ public class ChatRoom {
     private LocalDateTime lastMessageAt;
 
     // 정적 팩토리 메서드
-    public static ChatRoom of(String roomName, String type, String creator, String member) {
+    public static ChatRoom of(String roomName, String type, Long creator, Long member) {
         return new ChatRoom(
                 LocalDateTime.now(),
                 roomName,
@@ -54,7 +55,7 @@ public class ChatRoom {
     }
 
     // 생성자
-    private ChatRoom(LocalDateTime createdAt, String roomName, ChatRoomType type, String creator, List<String> member, LocalDateTime lastMessageAt) {
+    private ChatRoom(LocalDateTime createdAt, String roomName, ChatRoomType type, Long creator, List<Long> member, LocalDateTime lastMessageAt) {
         this.createdAt = createdAt;
         this.roomName = roomName;
         this.type = type;

@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    public List<ChatResponse> getAllRooms() {
-        List<ChatRoom> chatRoom = chatRoomRepository.findAll();
+    public List<ChatResponse> getUserRooms(Long userId) {
+        List<ChatRoom> chatRoom = chatRoomRepository.findByMemberContaining(userId);
         return chatRoom.stream()
                 .map(ChatResponse::from)
                 .collect(Collectors.toList());
@@ -29,7 +29,7 @@ public class ChatRoomService {
         ChatRoom chatRoom = ChatRoom.of(
                 request.getRoomName(),
                 request.getType(),
-                userDetails.getUsername(), // 로그인 한 사용자 정보 가져오기
+                Long.valueOf(userDetails.getUsername()), // 로그인 한 사용자 정보 가져오기
                 request.getMember()
         );
 

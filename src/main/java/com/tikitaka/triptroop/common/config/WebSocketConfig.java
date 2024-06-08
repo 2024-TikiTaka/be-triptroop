@@ -14,7 +14,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     * '/ws'를 웹 소켓으로 등록하고, SockJs를 사용하여 클라이언트와 연결.*/
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("http://localhost:3000")  // CORS 허용 설정
+                .withSockJS();
     }
 
     /* 메시지 브로커를 설정한다.
