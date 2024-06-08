@@ -2,10 +2,7 @@ package com.tikitaka.triptroop.common.exception.handler;
 
 
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.common.exception.BadRequestException;
-import com.tikitaka.triptroop.common.exception.ConflictException;
-import com.tikitaka.triptroop.common.exception.NotFoundException;
-import com.tikitaka.triptroop.common.exception.ServerInternalException;
+import com.tikitaka.triptroop.common.exception.*;
 import com.tikitaka.triptroop.common.exception.dto.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +22,15 @@ public class GeneralExceptionHandler {
         log.info("BadRequestException : {}", e.getMessage());
         final ErrorResponse errorResponse = ErrorResponse.of(e.getCode(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail(errorResponse));
+    }
+
+    /* 401, AuthException */
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApiResponse> badAuthException(AuthException e) {
+
+        log.info("AuthException : {}", e.getMessage());
+        final ErrorResponse errorResponse = ErrorResponse.of(e.getCode(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail(errorResponse));
     }
 
     /* 404, NotFoundException */
