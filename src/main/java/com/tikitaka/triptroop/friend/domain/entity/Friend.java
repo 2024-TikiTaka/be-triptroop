@@ -18,9 +18,9 @@ public class Friend {
     @Column(name = "friend_id")
     private Long id;
 
-    private Long request_id;
+    private Long requesterId;
 
-    private Long acceptor_id;
+    private Long accepterId;
 
     private String status;
 }

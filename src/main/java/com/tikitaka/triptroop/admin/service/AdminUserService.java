@@ -29,8 +29,7 @@ public class AdminUserService {
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
     @Transactional(readOnly = true)
     public AdminUserDetailResponse findAdminUserDetail(final Long userId) {
-
-        return adminUserRepository.findAdminUserDetailByUserId(userId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-
+        return adminUserRepository.findAdminUserDetailByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
     }
 }
