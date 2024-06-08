@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReportTableResponse {
 
-    private final Long id;
+    private final Long reportId;
     private final ReportKind kind;
     private final ReportType type;
     private final String content;
