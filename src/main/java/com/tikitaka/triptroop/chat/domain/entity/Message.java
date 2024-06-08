@@ -22,7 +22,7 @@ public class Message {
     @Field("room_id")
     private int roomId;
 
-    private String sender;
+    private Long sender;
 
     private String content;
 
