@@ -19,6 +19,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         /* 1. 사용자 헤더에서 refresh token 추출 */
         String refreshToken = TokenUtils.getToken(request.getHeader("Refresh-Token"));
 
@@ -37,8 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
          * */
         String accessToken = TokenUtils.getToken(request.getHeader("Access-Token"));
         if (accessToken != null && TokenUtils.isValidToken(accessToken)) {
-            String memberId = TokenUtils.getEmail(accessToken);
-            authService.saveAuthentication(memberId);
+            String email = TokenUtils.getEmailFromToken(accessToken);
+            authService.saveAuthentication(email);
         }
 
         /* access token을 전달한 경우 다음 필터로 진행
