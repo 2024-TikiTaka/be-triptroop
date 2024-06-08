@@ -15,7 +15,7 @@ public class WebSocketChatRequest {
     private Long roomId;
     private MessageType type;
     private String content;
-    private String sender;
+    private Long sender;
     private LocalDateTime writtenAt;
 
     public enum MessageType {

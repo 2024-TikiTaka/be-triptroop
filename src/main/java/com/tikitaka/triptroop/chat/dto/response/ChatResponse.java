@@ -12,9 +12,9 @@ public class ChatResponse {
 
     private final String roomName;
 
-    private final String creator;
+    private final Long creator;
 
-    private List<String> member;
+    private List<Long> member;
 
     private String type;
 
