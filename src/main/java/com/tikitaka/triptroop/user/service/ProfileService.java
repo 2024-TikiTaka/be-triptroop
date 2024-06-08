@@ -68,12 +68,6 @@ public class ProfileService {
                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
     }
 
-    @Transactional(readOnly = true)
-    public List<UserProfileResponse> findByUserIdIn(List<Long> userIds) {
-        return profileRepository.findUserProfileListByUserId(userIds);
-    }
-
-
     @Transactional
     public ProfileResponse save(Long userId, ProfileSaveRequest profileRequest, MultipartFile profileImage) {
 
@@ -111,7 +105,8 @@ public class ProfileService {
     @Transactional
     public void uploadImage(Long userId, MultipartFile image) {
 
-        final Profile profile = findProfileByUserId(userId);
+        final Profile profile = profileRepository.findProfileByUserId(userId)
+                                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
         String profileImag = FileUploadUtils.uploadFile(imageDir, image);
         String storedProfileImage = imageUrl + profileImag;
 
@@ -121,7 +116,8 @@ public class ProfileService {
     @Transactional
     public void deleteImage(Long userId) {
 
-        final Profile profile = findProfileByUserId(userId);
+        final Profile profile = profileRepository.findProfileByUserId(userId)
+                                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
         if (profile.getProfileImage() == null) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE);
         }
@@ -130,11 +126,5 @@ public class ProfileService {
         FileUploadUtils.deleteFile(imageDir, storedFilename);
 
         profile.deleteProfileImage();
-    }
-
-    private Profile findProfileByUserId(Long userId) {
-
-        return profileRepository.findProfileByUserId(userId)
-                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
     }
 }

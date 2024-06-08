@@ -28,7 +28,7 @@ public class UserController {
      * @param email 이메일
      */
     @GetMapping("/check/email")
-    public ResponseEntity<ApiResponse<Void>> checkDuplicateEmail(String email) {
+    public ResponseEntity<ApiResponse> checkDuplicateEmail(String email) {
 
         userService.checkEmailDuplicate(email);
         return ResponseEntity.ok(ApiResponse.success("사용 가능한 이메일입니다."));
@@ -83,7 +83,7 @@ public class UserController {
      * @param password  비밀번호
      */
     @DeleteMapping("/users/me")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@AuthenticationPrincipal CustomUser loginUser, String password) {
+    public ResponseEntity<ApiResponse> deleteUser(@AuthenticationPrincipal CustomUser loginUser, String password) {
 
         userService.withdrawal(loginUser.getUserId(), password);
         return ResponseEntity.noContent().build();
