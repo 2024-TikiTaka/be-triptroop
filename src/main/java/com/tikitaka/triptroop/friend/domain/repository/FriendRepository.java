@@ -3,9 +3,8 @@ package com.tikitaka.triptroop.friend.domain.repository;
 import com.tikitaka.triptroop.friend.domain.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/* Entity에는 Entity명 적기 */
+import java.util.List;
+
 public interface FriendRepository extends JpaRepository<Friend, Long> {
-
-    /* Repository 앞에 부분을 지우고 본인의 기능 폴더명을 적어주세요. */
-
+    List<Friend> findByStatus(String status);
 }
