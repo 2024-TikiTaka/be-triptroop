@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.admin.service;
 
-import com.tikitaka.triptroop.admin.domain.AdminUserRepository;
+import com.tikitaka.triptroop.admin.domain.repository.AdminUserRepository;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
@@ -29,8 +29,7 @@ public class AdminUserService {
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
     @Transactional(readOnly = true)
     public AdminUserDetailResponse findAdminUserDetail(final Long userId) {
-
-        return adminUserRepository.findAdminUserDetailByUserId(userId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-
+        return adminUserRepository.findAdminUserDetailByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
     }
 }

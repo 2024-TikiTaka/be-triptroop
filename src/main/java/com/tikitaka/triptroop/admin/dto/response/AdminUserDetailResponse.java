@@ -2,12 +2,6 @@ package com.tikitaka.triptroop.admin.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tikitaka.triptroop.interest.domain.entity.Interest;
-import com.tikitaka.triptroop.interest.domain.entity.UserInterest;
-import com.tikitaka.triptroop.review.domain.entity.UserReview;
-import com.tikitaka.triptroop.user.domain.entity.Profile;
-import com.tikitaka.triptroop.user.domain.entity.SocialUser;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
 import com.tikitaka.triptroop.user.domain.type.Provider;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
@@ -36,47 +30,48 @@ public class AdminUserDetailResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private final LocalDate birth;
     private final String phone;
-    private final Integer reportCount;
+    private final Long reportCount;
     private final Provider provider;
     private final String password;
     private final Integer godo;
-    private final Integer reviewPoint;
+    private final Double reviewPoint;
     private final String introduction;
-    private final List<String> interestName;
-    private final Integer inquiriesCount;
+    private final List<String> interestNames;
+    private final Long inquiriesCount;
     private final String mbti;
-    private final Integer contentCount;
-    private final Integer friendCount;
-    private final String loginCountAndLoginTime;
+    private final Long contentCount;
+    private final Long friendCount;
+//    private final Long loginCount;     TODO : 다솔 - 관리자 > 회원관리 > 회원상세조회 - 회원 로그인 횟수 기록 하고 조회해오기
+//    private final Long loginTimeTotal;  TODO : 다솔 - 관리자 > 회원관리 > 회원상세조회 - 회원 로그인 총 시간 기록 하고 조회해오기
 
-    public AdminUserDetailResponse(User user, SocialUser socialUser, UserInterest userInterest, Interest interest, UserReview userReview, Profile profile) {
-        this.userId = user.getId();
-        this.email = user.getEmail();
-        this.nickname = profile != null ? profile.getNickname() : null;
-        this.role = user.getRole();
-        this.createdAt = user.getCreatedAt();
-        this.name = user.getName();
-        this.gender = user.getGender();
-        this.status = user.getStatus();
-        this.birth = user.getBirth();
-        this.phone = user.getPhone();
-        this.reportCount = getReportCount();
-        this.provider = socialUser != null ? socialUser.getProvider() : null;
-        this.password = user.getPassword();
-        this.godo = user.getGodo();
-        this.reviewPoint = userReview != null ? userReview.getReviewPoint() : null;
-        this.introduction = profile != null ? profile.getIntroduction() : null;
-        this.interestName = userInterest != null && interest != null ? List.of(interest.getName()) : null;
-        this.inquiriesCount = getInquiriesCount();
-        this.mbti = profile != null ? profile.getMbti() : null;
-        this.contentCount = getContentCount();
-        this.friendCount = getFriendCount();
-        this.loginCountAndLoginTime = getLoginCountAndLoginTime();
+    public AdminUserDetailResponse(Long userId, String email, String nickname, UserRole role,
+                                   LocalDateTime createdAt, String name, Gender gender, UserStatus status,
+                                   LocalDate birth, String phone, Long reportCount, Provider provider,
+                                   String password, Integer godo, Double reviewPoint, String introduction,
+                                   String interestNames, Long inquiriesCount, String mbti, Long contentCount,
+                                   Long friendCount/*, Long loginCount, Long loginTimeTotal*/) {
+        this.userId = userId;
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.name = name;
+        this.gender = gender;
+        this.status = status;
+        this.birth = birth;
+        this.phone = phone;
+        this.reportCount = reportCount;
+        this.provider = provider;
+        this.password = password;
+        this.godo = godo;
+        this.reviewPoint = reviewPoint;
+        this.introduction = introduction;
+        this.interestNames = interestNames != null ? List.of(interestNames.split(",")) : null;
+        this.inquiriesCount = inquiriesCount;
+        this.mbti = mbti;
+        this.contentCount = contentCount;
+        this.friendCount = friendCount;
+//        this.loginCount = loginCount;
+//        this.loginTimeTotal = loginTimeTotal;
     }
-
-
 }
-
-
-
-
