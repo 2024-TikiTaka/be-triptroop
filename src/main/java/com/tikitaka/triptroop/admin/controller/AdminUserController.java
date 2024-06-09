@@ -26,7 +26,7 @@ public class AdminUserController {
 
         final List<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers();
 
-        return ResponseEntity.ok(ApiResponse.success(adminUserResponses));
+        return ResponseEntity.ok(ApiResponse.success("회원 목록 조회에 성공 하였습니다.", adminUserResponses));
     }
 
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
@@ -35,7 +35,8 @@ public class AdminUserController {
 
         final AdminUserDetailResponse adminUserDetailResponse = adminUserService.findAdminUserDetail(userId);
 
-        return ResponseEntity.ok(ApiResponse.success(adminUserDetailResponse));
+        return ResponseEntity.ok(ApiResponse.success("회원 상세 조회에 성공 하였습니다.", adminUserDetailResponse));
     }
+
 
 }

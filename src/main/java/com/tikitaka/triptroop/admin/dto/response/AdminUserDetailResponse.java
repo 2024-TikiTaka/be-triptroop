@@ -30,24 +30,26 @@ public class AdminUserDetailResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private final LocalDate birth;
     private final String phone;
-    private final Integer reportCount;
+    private final Long reportCount;
     private final Provider provider;
     private final String password;
     private final Integer godo;
-    private final Integer reviewPoint;
+    private final Double reviewPoint;
     private final String introduction;
     private final List<String> interestNames;
-    private final Integer inquiriesCount;
+    private final Long inquiriesCount;
     private final String mbti;
-    private final Integer contentCount;
-    private final Integer friendCount;
+    private final Long contentCount;
+    private final Long friendCount;
+//    private final Long loginCount;     TODO : 다솔 - 관리자 > 회원관리 > 회원상세조회 - 회원 로그인 횟수 기록 하고 조회해오기
+//    private final Long loginTimeTotal;  TODO : 다솔 - 관리자 > 회원관리 > 회원상세조회 - 회원 로그인 총 시간 기록 하고 조회해오기
 
     public AdminUserDetailResponse(Long userId, String email, String nickname, UserRole role,
                                    LocalDateTime createdAt, String name, Gender gender, UserStatus status,
-                                   LocalDate birth, String phone, Integer reportCount, Provider provider,
-                                   String password, Integer godo, Integer reviewPoint, String introduction,
-                                   String interestNames, Integer inquiriesCount, String mbti, Integer contentCount,
-                                   Integer friendCount) {
+                                   LocalDate birth, String phone, Long reportCount, Provider provider,
+                                   String password, Integer godo, Double reviewPoint, String introduction,
+                                   String interestNames, Long inquiriesCount, String mbti, Long contentCount,
+                                   Long friendCount/*, Long loginCount, Long loginTimeTotal*/) {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;
@@ -69,5 +71,7 @@ public class AdminUserDetailResponse {
         this.mbti = mbti;
         this.contentCount = contentCount;
         this.friendCount = friendCount;
+//        this.loginCount = loginCount;
+//        this.loginTimeTotal = loginTimeTotal;
     }
 }
