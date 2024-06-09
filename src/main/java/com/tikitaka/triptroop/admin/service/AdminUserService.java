@@ -1,6 +1,6 @@
 package com.tikitaka.triptroop.admin.service;
 
-import com.tikitaka.triptroop.admin.domain.AdminUserRepository;
+import com.tikitaka.triptroop.admin.domain.repository.AdminUserRepository;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;

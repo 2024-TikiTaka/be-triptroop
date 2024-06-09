@@ -2,9 +2,6 @@ package com.tikitaka.triptroop.admin.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tikitaka.triptroop.user.domain.entity.Profile;
-import com.tikitaka.triptroop.user.domain.entity.SocialUser;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
 import com.tikitaka.triptroop.user.domain.type.Provider;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
@@ -44,32 +41,33 @@ public class AdminUserDetailResponse {
     private final String mbti;
     private final Integer contentCount;
     private final Integer friendCount;
-//    private final String loginCountAndLoginTime;
 
-    public AdminUserDetailResponse(User user, Profile profile, SocialUser socialUser,
-                                   long reviewPoint, long inquiriesCount, long contentCount, long friendCount,
-            /*String loginCountAndLoginTime,*/ String interestName) {
-        this.userId = user.getId();
-        this.email = user.getEmail();
-        this.nickname = profile != null ? profile.getNickname() : null;
-        this.role = user.getRole();
-        this.createdAt = user.getCreatedAt();
-        this.name = user.getName();
-        this.gender = user.getGender();
-        this.status = user.getStatus();
-        this.birth = user.getBirth();
-        this.phone = user.getPhone();
-        this.reportCount = 0;  // 예제에서는 reportCount가 어디에서 오는지 명확하지 않으므로 기본값 0으로 설정
-        this.provider = socialUser != null ? socialUser.getProvider() : null;
-        this.password = user.getPassword();
-        this.godo = user.getGodo();
-        this.reviewPoint = (int) reviewPoint;
-        this.introduction = profile != null ? profile.getIntroduction() : null;
-        this.interestNames = interestName != null ? List.of(interestName) : null;
-        this.inquiriesCount = (int) inquiriesCount;
-        this.mbti = profile != null ? profile.getMbti() : null;
-        this.contentCount = (int) contentCount;
-        this.friendCount = (int) friendCount;
-//        this.loginCountAndLoginTime = loginCountAndLoginTime;
+    public AdminUserDetailResponse(Long userId, String email, String nickname, UserRole role,
+                                   LocalDateTime createdAt, String name, Gender gender, UserStatus status,
+                                   LocalDate birth, String phone, Integer reportCount, Provider provider,
+                                   String password, Integer godo, Integer reviewPoint, String introduction,
+                                   String interestNames, Integer inquiriesCount, String mbti, Integer contentCount,
+                                   Integer friendCount) {
+        this.userId = userId;
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.name = name;
+        this.gender = gender;
+        this.status = status;
+        this.birth = birth;
+        this.phone = phone;
+        this.reportCount = reportCount;
+        this.provider = provider;
+        this.password = password;
+        this.godo = godo;
+        this.reviewPoint = reviewPoint;
+        this.introduction = introduction;
+        this.interestNames = interestNames != null ? List.of(interestNames.split(",")) : null;
+        this.inquiriesCount = inquiriesCount;
+        this.mbti = mbti;
+        this.contentCount = contentCount;
+        this.friendCount = friendCount;
     }
 }
