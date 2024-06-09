@@ -5,11 +5,18 @@ import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.common.exception.*;
 import com.tikitaka.triptroop.common.exception.dto.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -55,10 +62,15 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
 
-        log.info("MethodArgumentNotValidException : {}", e.getMessage());
-        String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
-        final ErrorResponse errorResponse = ErrorResponse.of(400, defaultMessage);
-        return ResponseEntity.badRequest().body(ApiResponse.fail(errorResponse));
+
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        });
+
+        log.info("MethodArgumentNotValidException : {}", errors);
+
+        return ResponseEntity.badRequest().body(ApiResponse.fail("Validation Error!", errors));
     }
 
     /* 500, ServerError */
