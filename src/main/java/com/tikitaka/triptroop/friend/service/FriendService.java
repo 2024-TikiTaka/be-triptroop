@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class FriendService {
     private final FriendRepository friendRepository;
     public List<FriendResponse> getAcceptedFriends(Long userId) {
-        List<Friend> friendList = friendRepository.findByStatusAndAcceptorId("ACCEPTED", userId);
+        List<Friend> friendList = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
         return friendList.stream()
                 .map(FriendResponse::from)
                 .collect(Collectors.toList());
