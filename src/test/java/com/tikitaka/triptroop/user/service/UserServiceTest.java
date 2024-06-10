@@ -30,7 +30,7 @@ class UserServiceTest {
                 "hello@email.com",
                 "hello!234VV",
                 "김아현",
-                LocalDate.parse("1996-05-04"),
+                "19960504",
                 "F"
         );
         userService.signup(newUser);
