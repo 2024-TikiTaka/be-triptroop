@@ -101,16 +101,10 @@ public class User extends BaseTimeEntity {
     }
 
 
-    /* 다솔 추가 */
+    /* 다솔 추가 - 회원 조회 쪽 사용 */
     private User(
-            String email,
-            String password,
-            String name,
-            String phone,
-            Gender gender,
-            UserRole role,
-            UserStatus status,
-            LocalDate birth
+            String email, String password, String name, String phone,
+            Gender gender, UserRole role, UserStatus status, LocalDate birth
     ) {
         this.email = email;
         this.password = password;
@@ -123,25 +117,20 @@ public class User extends BaseTimeEntity {
     }
 
     public static User from(
-            String email,
-            String password,
-            String name,
-            String phone,
-            Gender gender,
-            UserRole role,
-            UserStatus status,
-            LocalDate birth
+            String email, String password, String name, String phone,
+            Gender gender, UserRole role, UserStatus status, LocalDate birth
     ) {
-        return new User(
-                email,
-                password,
-                name,
-                phone,
-                gender,
-                role,
-                status,
-                birth
-        );
+        return new User(email, password, name, phone, gender, role, status, birth);
     }
 
+    /* 다솔 추가 - 회원 수정 쪽 사용 */
+    private User(String phone, String password, UserRole role) {
+        this.phone = phone;
+        this.password = password;
+        this.role = role;
+    }
+
+    public static User from(String phone, String password, UserRole role) {
+        return new User(phone, password, role);
+    }
 }

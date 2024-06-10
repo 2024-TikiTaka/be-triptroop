@@ -1,5 +1,7 @@
 package com.tikitaka.triptroop.admin.dto.request;
 
+import com.tikitaka.triptroop.user.domain.entity.Profile;
+import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
 import com.tikitaka.triptroop.user.domain.type.UserStatus;
@@ -9,6 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -90,5 +93,30 @@ public class AdminUserSaveRequest {
             throw new IllegalArgumentException("Passwords do not match");
         }
     }
+
+
+    public User toUser(PasswordEncoder passwordEncoder) {
+        return User.from(
+                email,
+                passwordEncoder.encode(password),
+                name,
+                phone,
+                gender,
+                role,
+                status,
+                birth
+        );
+    }
+
+    public Profile toProfile(Long userId, String profileImagePath) {
+        return Profile.of(
+                userId,
+                nickname,
+                profileImagePath,
+                introduction,
+                mbti
+        );
+    }
+
 
 }

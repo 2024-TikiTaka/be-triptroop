@@ -1,6 +1,6 @@
-package com.tikitaka.triptroop.inquirie.domain.entity;
+package com.tikitaka.triptroop.inquiry.domain.entity;
 
-import com.tikitaka.triptroop.inquirie.domain.type.InquirieKind;
+import com.tikitaka.triptroop.inquiry.domain.type.InquiryKind;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Inquirie {
+public class Inquiry {
 
     @Id
     @Column(name = "inquiry_id")
@@ -25,7 +25,7 @@ public class Inquirie {
     private Long userId;
 
     @Enumerated(value = EnumType.STRING)
-    private InquirieKind kind;
+    private InquiryKind kind;
 
     private String content;
 
