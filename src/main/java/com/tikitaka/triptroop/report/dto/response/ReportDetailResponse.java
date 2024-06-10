@@ -1,7 +1,8 @@
 package com.tikitaka.triptroop.report.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
+import com.tikitaka.triptroop.image.util.ImageUtils;
 import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,25 +30,9 @@ public class ReportDetailResponse {
     private final ReportType type;
     private final String content;
     private final List<String> imageNames;
-    private final List<String> imageExtensions;
 
-    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, String titleOrNickname) {
-        List<String> imageNames = imageResponses.stream()
-                .map(imageResponse -> {
-                    String fullPath = imageResponse.getFullPath();
-                    String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1, fullPath.lastIndexOf('.'));
-                    return fileName;
-                })
-                .collect(Collectors.toList());
-
-        List<String> imageExtensions = imageResponses.stream()
-                .map(imageResponse -> {
-                    String fullPath = imageResponse.getFullPath();
-                    String extension = fullPath.substring(fullPath.lastIndexOf('.') + 1);
-                    return extension;
-                })
-                .collect(Collectors.toList());
-
+    public static ReportDetailResponse from(final Report report, List<ImageOriginalResponse> imageOriginalResponses, String titleOrNickname) {
+        List<String> imageNames = ImageUtils.extractImageInfo(imageOriginalResponses);
 
         return new ReportDetailResponse(
                 report.getId(),
@@ -60,8 +44,7 @@ public class ReportDetailResponse {
                 report.getReportedAt(),
                 report.getType(),
                 report.getContent(),
-                imageNames,
-                imageExtensions
+                imageNames
         );
     }
 }
