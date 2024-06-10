@@ -63,6 +63,15 @@ public class FriendController {
         return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
     }
 
+    /* 친구 삭제 */
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        /* 친구 상세 조회(프로필 조회)에서 id 받기 */
+        friendService.deleteFriend(loginUser.getUserId(), userProfile.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(("친구 삭제되었습니다.")));
+    }
+
 
 
 }
