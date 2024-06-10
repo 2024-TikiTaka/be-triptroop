@@ -26,6 +26,7 @@ public class FriendController {
     private final FriendService friendService;
     private final UserService userService;
 
+    /* 친구목록 조회 */
     @GetMapping
     public ResponseEntity<List<FriendResponse>> getFriends(@AuthenticationPrincipal CustomUser loginUser) {
         if (loginUser == null) {
