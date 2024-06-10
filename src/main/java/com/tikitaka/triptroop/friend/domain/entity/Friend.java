@@ -44,4 +44,8 @@ public class Friend {
     public void reject() {
         this.status = "REJECTED";
     }
+
+    public void delete() {
+        this.status = "DELETED";
+    }
 }

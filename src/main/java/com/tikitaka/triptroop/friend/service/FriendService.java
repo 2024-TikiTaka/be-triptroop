@@ -45,6 +45,12 @@ public class FriendService {
         friendRepository.save(friend);
         return FriendAcceptorInfoResponse.from(friend);
     }
+
+    public void deleteFriend(Long requesterId, Long accepterId) {
+        Friend friend = friendRepository.findByRequesterIdAndAccepterIdAndStatus(requesterId, accepterId, "ACCEPTED")
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        friendRepository.delete(friend);
+    }
 }
 
 
