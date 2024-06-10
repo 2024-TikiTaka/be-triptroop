@@ -3,9 +3,9 @@ package com.tikitaka.triptroop.admin.controller;
 import com.tikitaka.triptroop.admin.dto.request.AdminUserSaveRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
+import com.tikitaka.triptroop.admin.dto.response.AdminUserSaveResponse;
 import com.tikitaka.triptroop.admin.service.AdminUserService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +38,7 @@ public class AdminUserController {
     @PostMapping("/users")
     public ResponseEntity<ApiResponse> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
                                                 @RequestPart("profileImage") MultipartFile profileImage) {
-        final User registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
+        final AdminUserSaveResponse registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
         return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", registeredAdminUser));
     }
 }
