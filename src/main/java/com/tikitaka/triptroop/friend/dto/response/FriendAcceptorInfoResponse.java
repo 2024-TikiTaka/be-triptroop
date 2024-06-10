@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class FriendResponse {
+public class FriendAcceptorInfoResponse {
 
     private final Long acceptorId;
 
-    public static FriendResponse from(Friend friend) {
-        return new FriendResponse(friend.getAccepterId());
+    public static FriendAcceptorInfoResponse from(Friend friend) {
+        return new FriendAcceptorInfoResponse(friend.getAccepterId());
     }
 }

@@ -26,4 +26,14 @@ public class Friend {
   
     @Column(name = "status", nullable = false)
     private String status;
+
+    private Friend(Long requesterId, Long accepterId, String status) {
+        this.requesterId = requesterId;
+        this.accepterId = accepterId;
+        this.status = status;
+    }
+
+    public static Friend of(Long requesterId, Long accepterId) {
+        return new Friend(requesterId, accepterId, "REQUESTED");
+    }
 }
