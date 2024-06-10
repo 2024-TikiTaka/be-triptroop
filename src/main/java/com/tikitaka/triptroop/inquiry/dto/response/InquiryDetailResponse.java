@@ -30,6 +30,7 @@ public class InquiryDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime processedAt;
     private final String status;
+    private final String reply;
     private final List<String> imageNames;
 
     public static InquiryDetailResponse from(final Inquiry inquiry, User user, List<ImageOriginalResponse> imageOriginalResponses, Profile profile) {
@@ -44,6 +45,7 @@ public class InquiryDetailResponse {
                 inquiry.getCreatedAt(),
                 inquiry.getProcessedAt(),
                 inquiry.getProcessedAt() != null ? "PROCESSED" : "UNPROCESSED",
+                inquiry.getReply(),
                 imageNames
         );
     }

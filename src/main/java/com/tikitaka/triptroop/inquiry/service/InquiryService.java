@@ -7,6 +7,7 @@ import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
+import com.tikitaka.triptroop.inquiry.dto.request.InquiryReplyRequest;
 import com.tikitaka.triptroop.inquiry.dto.response.InquiryDetailResponse;
 import com.tikitaka.triptroop.inquiry.dto.response.InquiryListResponse;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
@@ -16,6 +17,7 @@ import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,5 +52,18 @@ public class InquiryService {
         List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
 
         return InquiryDetailResponse.from(inquiry, user, imageOriginalResponses, profile);
+    }
+
+    /* 3. 답변 등록 */
+    @Transactional
+    public Inquiry inquiryReplySave(final Long inquiryId, final InquiryReplyRequest inquiryReplyRequest, List<MultipartFile> images) {
+
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_INQUIRY));
+
+        inquiry.addReply(inquiryReplyRequest.getReply());
+        inquiryRepository.save(inquiry);
+
+        return inquiry;
     }
 }

@@ -35,4 +35,9 @@ public class Inquiry {
     private LocalDateTime createdAt;
 
     private LocalDateTime processedAt;
+
+    public void addReply(String reply) {
+        this.reply = reply;
+        this.processedAt = LocalDateTime.now();
+    }
 }
