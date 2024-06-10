@@ -35,6 +35,4 @@ public class ImageResponse {
                 .map(ImageResponse::from)
                 .collect(Collectors.toList());
     }
-
-
 }

@@ -29,7 +29,7 @@ public class ImageService {
     public void save(ImageKind kind, Long targetId, MultipartFile image) {
 
         String uploadedFileName = FileUploadUtils.uploadFile(imageDir, image);
-        Image newImage = Image.of(kind, targetId, imageUrl, uploadedFileName, image.getContentType(), image.getName());
+        Image newImage = Image.of(kind, targetId, imageUrl, uploadedFileName, image.getContentType(), image.getOriginalFilename());
         imageRepository.save(newImage);
     }
 

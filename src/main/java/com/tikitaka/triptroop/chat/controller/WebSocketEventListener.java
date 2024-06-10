@@ -39,7 +39,7 @@ public class WebSocketEventListener {
 
             WebSocketChatRequest message = new WebSocketChatRequest();
 //            message.setType(Message.MessageType.LEAVE);
-            message.setSender(username);
+            message.setSender(Long.valueOf(username));
 
             messagingTemplate.convertAndSend("/topic/public", message);
 

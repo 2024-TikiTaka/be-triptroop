@@ -189,9 +189,14 @@ public class ScheduleService {
 
     // TODO 일정 삭제
     public void removeSchedule(Long scheduleId, Long userId) {
-        if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {
-            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
-        }
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
+//        if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {
+//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+//        }
+//        schedule.deleteTime(
+//                LocalDateTime.now()
+//        );
         scheduleRepository.deleteById(scheduleId);
     }
 
@@ -228,6 +233,7 @@ public class ScheduleService {
 //        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
 //            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
 //        }
+
         scheduleItemRepository.deleteById(scheduleItemId);
 
     }

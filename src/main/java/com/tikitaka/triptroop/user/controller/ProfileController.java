@@ -109,7 +109,7 @@ public class ProfileController {
                                                           @RequestBody MultipartFile profileImage) {
 
         profileService.uploadImage(loginUser.getUserId(), profileImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("이미지 등록이 완료되었습니다."));
     }
 
     /**

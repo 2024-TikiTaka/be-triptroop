@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN' WHERE user_id = ?")
+@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN', deleted_at=CURRENT_TIMESTAMP WHERE user_id = ?")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -99,4 +99,49 @@ public class User extends BaseTimeEntity {
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+
+    /* 다솔 추가 */
+    private User(
+            String email,
+            String password,
+            String name,
+            String phone,
+            Gender gender,
+            UserRole role,
+            UserStatus status,
+            LocalDate birth
+    ) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.gender = gender;
+        this.role = role;
+        this.status = status;
+        this.birth = birth;
+    }
+
+    public static User from(
+            String email,
+            String password,
+            String name,
+            String phone,
+            Gender gender,
+            UserRole role,
+            UserStatus status,
+            LocalDate birth
+    ) {
+        return new User(
+                email,
+                password,
+                name,
+                phone,
+                gender,
+                role,
+                status,
+                birth
+        );
+    }
+
 }
