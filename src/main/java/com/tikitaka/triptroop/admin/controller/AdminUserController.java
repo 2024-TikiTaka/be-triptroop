@@ -41,4 +41,14 @@ public class AdminUserController {
         final AdminUserSaveResponse registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
         return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", registeredAdminUser));
     }
+
+    /* 4. 관리자 회원 관리 - 회원 수정 */
+
+
+    /* 5. 관리자 회원 관리 - 회원 삭제 */
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse> removeUser(@PathVariable final Long userId) {
+        adminUserService.deleteAdminUser(userId);
+        return ResponseEntity.ok(ApiResponse.success("회원 삭제에 성공 하였습니다."));
+    }
 }

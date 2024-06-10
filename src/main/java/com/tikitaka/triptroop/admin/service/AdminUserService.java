@@ -5,6 +5,7 @@ import com.tikitaka.triptroop.admin.dto.request.AdminUserSaveRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserSaveResponse;
+import com.tikitaka.triptroop.common.exception.BadRequestException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.util.FileUploadUtils;
@@ -100,5 +101,24 @@ public class AdminUserService {
         return new AdminUserSaveResponse(user, newProfile);
     }
 
+
+
+    /* 4. 관리자 회원 관리 - 회원 수정 */
+
+
+    /* 5. 관리자 회원 관리 - 회원 삭제 */
+    @Transactional
+    public void deleteAdminUser(final Long userId) {
+
+        final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+
+        if (user.isWithdrawnUser()) {
+            throw new BadRequestException(ExceptionCode.ALREADY_WITHDRAWN_USER);
+        }
+
+        userRepository.deleteById(userId);
+
+    }
 
 }
