@@ -15,10 +15,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
-    public List<FriendResponse> getFriends(Long userId) {
-        List<Friend> friendList = friendRepository.findByStatus("ACCEPTED");
+    public List<FriendResponse> getAcceptedFriends(Long userId) {
+        List<Friend> friendList = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
         return friendList.stream()
-                .filter(friend -> friend.getAcceptor_id().equals(userId))
                 .map(FriendResponse::from)
                 .collect(Collectors.toList());
     }

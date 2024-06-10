@@ -34,7 +34,7 @@ public class FriendController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         final UserResponse user = userService.findById(loginUser.getUserId());
-        List<FriendResponse> friendList = friendService.getFriends(user.getUserId());
+        List<FriendResponse> friendList = friendService.getAcceptedFriends(user.getUserId());
         return ResponseEntity.ok(friendList);
     }
 }
