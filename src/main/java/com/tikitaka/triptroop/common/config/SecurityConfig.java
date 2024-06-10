@@ -48,12 +48,13 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET,
-                            "/images/**", "/api/v1/check/**", "/api/v1/find/**",
-                            "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
+                                         "/images/**",
+                                         "/api/v1/check/**", "/api/v1/find/**",
+                                         "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
-                                    "/api/v1/signup/**", "/api/v1/find/**",
-                                    "/api/v1/login", "/api/v1/token/issue")
-                            .permitAll();
+                                         "/api/v1/signup/**", "/api/v1/find/**",
+                                         "/api/v1/login", "/api/v1/token/issue")
+                        .permitAll();
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.requestMatchers("/ws/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");

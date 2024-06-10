@@ -1,5 +1,6 @@
 package com.tikitaka.triptroop.friend.controller;
 
+import com.tikitaka.triptroop.friend.domain.entity.Friend;
 import com.tikitaka.triptroop.friend.dto.response.FriendResponse;
 import com.tikitaka.triptroop.friend.service.FriendService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
