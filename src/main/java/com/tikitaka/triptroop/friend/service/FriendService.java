@@ -37,6 +37,14 @@ public class FriendService {
         friendRepository.save(friend);
         return FriendAcceptorInfoResponse.from(friend);
     }
+
+    public FriendAcceptorInfoResponse rejectFriend(Long requesterId, Long accepterId) {
+        Friend friend = friendRepository.findByRequesterIdAndAccepterIdAndStatus(requesterId, accepterId, "REQUESTED")
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        friend.reject();
+        friendRepository.save(friend);
+        return FriendAcceptorInfoResponse.from(friend);
+    }
 }
 
 

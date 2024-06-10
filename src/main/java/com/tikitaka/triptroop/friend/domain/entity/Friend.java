@@ -40,4 +40,8 @@ public class Friend {
     public void accept() {
         this.status = "ACCEPTED";
     }
+
+    public void reject() {
+        this.status = "REJECTED";
+    }
 }

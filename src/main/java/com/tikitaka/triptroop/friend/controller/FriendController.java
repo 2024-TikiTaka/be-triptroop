@@ -54,11 +54,14 @@ public class FriendController {
         return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
     }
 
-//    /* 친구 신청 거절 */
-//    @PostMapping("/request/reject")
-//    public ResponseEntity<ApiResponse<>> rejectFriendRequest() {
-//
-//    }
+    /* 친구 신청 거절 */
+    @PostMapping("/request/reject")
+    public ResponseEntity<ApiResponse<FriendAcceptorInfoResponse>> rejectFriendRequest(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        /* 채팅으로 받은 알림 메시지에서 requester id 받기 */
+        final FriendAcceptorInfoResponse friendAcceptorInfoResponse = friendService.rejectFriend(loginUser.getUserId(), userProfile.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
+    }
 
 
 
