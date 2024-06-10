@@ -70,4 +70,8 @@ public class Image {
     }
 
 
+    /* 다솔 추가 */
+    public String getOriginalName() {
+        return name;
+    }
 }

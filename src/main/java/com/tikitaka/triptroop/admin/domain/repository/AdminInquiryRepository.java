@@ -13,4 +13,6 @@ public interface AdminInquiryRepository extends JpaRepository<Inquiry, Long> {
             "FROM Inquiry i LEFT JOIN User u ON i.userId = u.id " +
             "LEFT JOIN Profile p ON u.id = p.userId ")
     List<InquiryListResponse> findAdminInquirysAll();
+
+    
 }

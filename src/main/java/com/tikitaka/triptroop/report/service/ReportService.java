@@ -7,7 +7,7 @@ import com.tikitaka.triptroop.companion.domain.repository.CompanionRepository;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
-import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.repository.ReportRepository;
@@ -106,9 +106,9 @@ public class ReportService {
         }
 
         List<Image> images = imageRepository.findByReportId(reportId);
-        List<ImageResponse> imageResponses = ImageResponse.from(images);
+        List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
 
-        return ReportDetailResponse.from(report, imageResponses, titleOrNickname);
+        return ReportDetailResponse.from(report, imageOriginalResponses, titleOrNickname);
     }
 
     @Transactional
