@@ -1,10 +1,13 @@
 package com.tikitaka.triptroop.friend.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class FriendAddRequest {
-    private final String nickname;
+    private String nickname;
 }

@@ -42,6 +42,7 @@ public class FriendController {
     /* 친구 신청 */
     @PostMapping("/request")
     public ResponseEntity<FriendAcceptorInfoResponse> requestFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        log.info(request.getNickname());
         final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
         FriendAcceptorInfoResponse response = friendService.requestFriend(loginUser.getUserId(), userProfile.getUserId());
         return ResponseEntity.ok(response);
