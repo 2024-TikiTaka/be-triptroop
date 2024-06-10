@@ -36,4 +36,8 @@ public class Friend {
     public static Friend of(Long requesterId, Long accepterId) {
         return new Friend(requesterId, accepterId, "REQUESTED");
     }
+
+    public void accept() {
+        this.status = "ACCEPTED";
+    }
 }
