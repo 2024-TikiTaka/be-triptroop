@@ -98,6 +98,5 @@ public class User extends BaseTimeEntity {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-        //TODO: expiredAt 도 추가하기
     }
 }

@@ -5,7 +5,6 @@ import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.util.FileUploadUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,20 +34,5 @@ public class ImageResponse {
         return image.stream()
                 .map(ImageResponse::from)
                 .collect(Collectors.toList());
-    }
-
-    /* 다솔 추가 메서드 */
-    @JsonIgnore
-    public String getName() {
-        String[] parts = fullPath.split("/");
-        String fileName = parts[parts.length - 1];
-        return fileName.substring(0, fileName.lastIndexOf('.'));
-    }
-
-    @JsonIgnore
-    public String getExtension() {
-        String[] parts = fullPath.split("/");
-        String fileName = parts[parts.length - 1];
-        return fileName.substring(fileName.lastIndexOf('.') + 1);
     }
 }
