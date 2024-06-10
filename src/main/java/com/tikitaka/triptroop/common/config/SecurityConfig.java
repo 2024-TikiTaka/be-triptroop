@@ -51,7 +51,9 @@ public class SecurityConfig {
                                          "/images/**", "/api/v1/check/**", "/api/v1/find/**",
                                          "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
-                                         "/api/v1/signup/**", "/api/v1/login", "/api/v1/logout",  "/api/v1/find/**").permitAll();
+                                    "/api/v1/signup/**", "/api/v1/find/**",
+                                    "/api/v1/login", "/api/v1/token/issue")
+                            .permitAll();
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.requestMatchers("/ws/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
