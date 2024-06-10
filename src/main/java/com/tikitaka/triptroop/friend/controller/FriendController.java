@@ -1,19 +1,19 @@
 package com.tikitaka.triptroop.friend.controller;
 
-import com.tikitaka.triptroop.friend.domain.entity.Friend;
-import com.tikitaka.triptroop.friend.dto.response.FriendResponse;
+import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import com.tikitaka.triptroop.friend.dto.request.FriendAddRequest;
+import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorInfoResponse;
 import com.tikitaka.triptroop.friend.service.FriendService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
+import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
 import com.tikitaka.triptroop.user.dto.response.UserResponse;
+import com.tikitaka.triptroop.user.service.ProfileService;
 import com.tikitaka.triptroop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,16 +25,53 @@ public class FriendController {
 
     private final FriendService friendService;
     private final UserService userService;
+    private final ProfileService profileService;
 
-    /* 친구목록 조회 */
+    /* 친구 목록 조회 */
     @GetMapping
-    public ResponseEntity<List<FriendResponse>> getFriends(@AuthenticationPrincipal CustomUser loginUser) {
-        if (loginUser == null) {
-            log.error("로그인된 사용자가 없습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<ApiResponse<List<FriendAcceptorInfoResponse>>> getFriends(@AuthenticationPrincipal CustomUser loginUser) {
         final UserResponse user = userService.findById(loginUser.getUserId());
-        List<FriendResponse> friendList = friendService.getAcceptedFriends(user.getUserId());
-        return ResponseEntity.ok(friendList);
+        List<FriendAcceptorInfoResponse> friendList = friendService.getAcceptedFriends(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(friendList));
     }
+
+    /* 친구 신청 */
+    @PostMapping("/request")
+    public ResponseEntity<ApiResponse<FriendAcceptorInfoResponse>> requestFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        final FriendAcceptorInfoResponse friendAcceptorInfoResponse = friendService.requestFriend(loginUser.getUserId(), userProfile.getUserId());
+        /* 알림 service로 acceptor, requester id 보내기
+        * 알림 service에서는 db에 저장하고 content와 acceptor id를 반환 */
+        return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
+    }
+
+    /* 친구 신청 수락 */
+    @PostMapping("/request/accept")
+    public ResponseEntity<ApiResponse<FriendAcceptorInfoResponse>> acceptFriendRequest(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        /* 채팅으로 받은 알림 메시지에서 requester id 받기 */
+        final FriendAcceptorInfoResponse friendAcceptorInfoResponse = friendService.acceptFriend(loginUser.getUserId(), userProfile.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
+    }
+
+    /* 친구 신청 거절 */
+    @PostMapping("/request/reject")
+    public ResponseEntity<ApiResponse<FriendAcceptorInfoResponse>> rejectFriendRequest(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        /* 채팅으로 받은 알림 메시지에서 requester id 받기 */
+        final FriendAcceptorInfoResponse friendAcceptorInfoResponse = friendService.rejectFriend(loginUser.getUserId(), userProfile.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(friendAcceptorInfoResponse));
+    }
+
+    /* 친구 삭제 */
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
+        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
+        /* 친구 상세 조회(프로필 조회)에서 id 받기 */
+        friendService.deleteFriend(loginUser.getUserId(), userProfile.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(("친구 삭제되었습니다.")));
+    }
+
+
+
 }
