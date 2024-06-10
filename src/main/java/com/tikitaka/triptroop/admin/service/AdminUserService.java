@@ -14,8 +14,8 @@ import com.tikitaka.triptroop.user.domain.repository.UserRepository;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import com.tikitaka.triptroop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,14 +27,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminUserService {
 
+    @Value("${image.image-url}")
+    private String imageUrl;
+
     private final AdminUserRepository adminUserRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final UserService userService;
     private final ProfileService profileService;
-
-    private static final Logger logger = LoggerFactory.getLogger(AdminUserService.class);
-
+    private final PasswordEncoder passwordEncoder;
 
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @Transactional(readOnly = true)
@@ -53,10 +54,6 @@ public class AdminUserService {
     @Transactional
     public User registerAdminUser(final AdminUserSaveRequest adminUserSaveRequest, MultipartFile profileImage) {
 
-        // 요청 데이터 로깅
-        System.out.println("AdminUserSaveRequest: {}" + adminUserSaveRequest);
-        System.out.println("Gender: {}" + adminUserSaveRequest.getGender());
-
         // 이메일 중복 체크
         userService.checkEmailDuplicate(adminUserSaveRequest.getEmail());
 
@@ -65,33 +62,38 @@ public class AdminUserService {
 
         // Null 체크
         if (adminUserSaveRequest.getGender() == null) {
-            System.out.println("Gender is null.");
             throw new IllegalArgumentException("Gender is required.");
         }
 
         // User 엔티티 생성 및 저장
         final User newUser = User.from(
                 adminUserSaveRequest.getEmail(),
-                adminUserSaveRequest.getPassword(),
+                passwordEncoder.encode(adminUserSaveRequest.getPassword()),
                 adminUserSaveRequest.getName(),
-                adminUserSaveRequest.getBirth(),
-                adminUserSaveRequest.getGender().toString()
+                adminUserSaveRequest.getPhone(),
+                adminUserSaveRequest.getGender(),
+                adminUserSaveRequest.getRole(),
+                adminUserSaveRequest.getStatus(),
+                adminUserSaveRequest.getBirth()
         );
 
-        System.out.println("Saving new user : {}" + newUser);
         final User user = userRepository.save(newUser);
 
+        String profileImagePath = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImagePath = FileUploadUtils.uploadFile("", profileImage);
+        }
+
+
         // Profile 엔티티 생성 및 저장
-        String profileImagePath = FileUploadUtils.uploadFile("", profileImage);
         final Profile newProfile = Profile.of(
                 user.getId(),
                 adminUserSaveRequest.getNickname(),
-                profileImagePath,
+                imageUrl + profileImagePath,
                 adminUserSaveRequest.getIntroduction(),
                 adminUserSaveRequest.getMbti()
         );
 
-        logger.debug("Saving new profile: {}", newProfile);
         profileRepository.save(newProfile);
 
         return user;
