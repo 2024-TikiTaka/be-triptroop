@@ -54,4 +54,13 @@ public class Profile extends BaseTimeEntity {
     public void deleteProfileImage() {
         this.profileImage = null;
     }
+
+    /* 다솔 추가 - 수정 쪽 추가 */
+    private Profile(Long userId, String introduction, String mbti) {
+        this.userId = userId;
+        this.introduction = introduction;
+        this.mbti = mbti;
+    }
+
+
 }

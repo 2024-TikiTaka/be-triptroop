@@ -19,4 +19,13 @@ public class UserInterest {
     private Long userId;
 
     private Long interestId;
+
+    private UserInterest(Long userId, Long interestId) {
+        this.userId = userId;
+        this.interestId = interestId;
+    }
+
+    public static UserInterest of(Long userId, Long interestId) {
+        return new UserInterest(userId, interestId);
+    }
 }

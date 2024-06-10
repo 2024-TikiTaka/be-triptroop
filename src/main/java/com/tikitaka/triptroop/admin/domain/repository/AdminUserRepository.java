@@ -25,7 +25,7 @@ public interface AdminUserRepository extends JpaRepository<User, Long> {
             "(SELECT AVG(ur.reviewPoint) FROM UserReview ur WHERE ur.reviewedUserId = u.id), " +
             "p.introduction, " +
             "CAST(GROUP_CONCAT(i.name) AS string), " +
-            "(SELECT COUNT(i) FROM Inquirie i WHERE i.userId = u.id), " +
+            "(SELECT COUNT(i) FROM Inquiry i WHERE i.userId = u.id), " +
             "p.mbti, " +
             "(SELECT COUNT(s) FROM Schedule s WHERE s.userId = u.id) + " +
             "(SELECT COUNT(c) FROM Companion c WHERE c.userId = u.id) + " +
