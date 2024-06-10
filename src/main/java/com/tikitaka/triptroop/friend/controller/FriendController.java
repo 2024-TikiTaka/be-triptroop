@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.friend.controller;
 
-import com.tikitaka.triptroop.friend.domain.entity.Friend;
 import com.tikitaka.triptroop.friend.dto.response.FriendResponse;
 import com.tikitaka.triptroop.friend.service.FriendService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
@@ -34,7 +33,7 @@ public class FriendController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         final UserResponse user = userService.findById(loginUser.getUserId());
-        List<FriendResponse> friendList = friendService.getFriends(user.getUserId());
+        List<FriendResponse> friendList = friendService.getAcceptedFriends(user.getUserId());
         return ResponseEntity.ok(friendList);
     }
 }

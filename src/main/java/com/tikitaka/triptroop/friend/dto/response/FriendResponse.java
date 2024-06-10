@@ -11,7 +11,7 @@ public class FriendResponse {
     private final Long acceptorId;
 
     public static FriendResponse from(Friend friend) {
-        return new FriendResponse(friend.getAcceptor_id());
+        return new FriendResponse(friend.getAcceptorId());
     }
 
 
