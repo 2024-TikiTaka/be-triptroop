@@ -57,7 +57,7 @@ public class ScheduleController {
     }
 
     // TODO 일정 등록
-    @PostMapping()
+    @PostMapping("/regist")
     public ResponseEntity<ApiResponse> saveSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
@@ -71,7 +71,7 @@ public class ScheduleController {
     }
 
     // TODO 일정 수정
-    @PutMapping("/{scheduleId}")
+    @PutMapping("/{scheduleId}/modify")
     public ResponseEntity<ApiResponse> updateSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,

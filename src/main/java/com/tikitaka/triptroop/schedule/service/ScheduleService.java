@@ -55,7 +55,7 @@ public class ScheduleService {
     private final ProfileService profileService;
 
     private Pageable getPageable(final Integer page, final String sort) {
-        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
+        return PageRequest.of(page - 1, 5, Sort.by(sort != null ? sort : "id").descending());
     }
 
     private Pageable getPageable(final Integer page) {
@@ -65,7 +65,8 @@ public class ScheduleService {
     // TODO : 전체 리스트 조회
     @Transactional(readOnly = true)
     public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
-        List<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(Visibility.PUBLIC, keyword, sort, area);
+        Pageable pageable = getPageable(page, sort);
+        Page<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(pageable, Visibility.PUBLIC, keyword, sort, area);
         List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
         for (Schedule schedule : schedules) {
@@ -78,7 +79,7 @@ public class ScheduleService {
         }
 
         // Page 객체 생성 및 반환
-        return new PageImpl<>(scheduleResponses, getPageable(page, sort), schedules.size());
+        return new PageImpl<>(scheduleResponses, pageable, schedules.getTotalElements());
     }
 
     // TODO : 상세 조회
@@ -87,34 +88,6 @@ public class ScheduleService {
         List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
         ScheduleInformationResponse scheduleInformationResponses = scheduleRepositoryImpl.findScheduleById(scheduleId);
         List<ScheduleItemInfoResponse> scheduleItemInfoResponse = scheduleRepositoryImpl.findScheduleItemByScheduleId(scheduleId);
-//        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
-//
-//        Image image = imageRepository.findById(scheduleId)
-//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE));
-//
-//        List<ScheduleItem> scheduleItems = scheduleItemRepository.findByScheduleId(scheduleId);
-//        List<ScheduleItemResponse> scheduleItem = ScheduleItemResponse.from(scheduleItems);
-//        UserProfileResponse userProfile = profileService.findUserProfileByUserId(schedule.getUserId());
-//
-//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-//        List<UserProfileResponse> userInfos = getReviewerProfilesByScheduleId(scheduleId);
-//        List<ScheduleParticipantsResponse> scheduleParticipant = ScheduleParticipantsResponse.from(scheduleParticipants, userInfos);
-//        ScheduleDetailResponse scheduleDetailResponse = ScheduleDetailResponse.of(
-//                schedule.getTitle(),
-//                schedule.getArea().getSido(),
-//                schedule.getCount(),
-//                schedule.getStartDate(),
-//                schedule.getEndDate(),
-//                schedule.getViews(),
-//                ImageResponse.from(image),
-//                userProfile,
-//                scheduleItem,
-//                scheduleParticipant
-//
-//        );
-//
-//        return scheduleDetailResponse;
         ScheduleDetailResponse scheduleDetailResponses = ScheduleDetailResponse.of(
                 scheduleInformationResponses,
                 scheduleParticipantProfileResponse,

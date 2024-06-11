@@ -82,7 +82,4 @@ public class Schedule extends BaseTimeEntity {
         this.visibility = visibility;
     }
 
-    public void countUp(int count) {
-        this.count += count;
-    }
 }
