@@ -1,8 +1,6 @@
 package com.tikitaka.triptroop.common.security.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +41,6 @@ public class TokenUtils {
         TokenUtils.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-
     public static boolean isValidToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(createSignature()).build().parseClaimsJws(token);
@@ -54,21 +51,18 @@ public class TokenUtils {
         }
     }
 
-    public static String getEmail(String accessToken) {
+    public static String getToken(String token) {
+        return (token != null && token.startsWith(BEARER))
+                ? token.replace(BEARER, "") : null;
+    }
+
+    public static String getEmailFromToken(String accessToken) {
         return Jwts.parserBuilder()
                    .setSigningKey(createSignature())
                    .build()
                    .parseClaimsJws(accessToken)
                    .getBody()
                    .get("email").toString();
-    }
-
-    public static String getToken(String token) {
-        if (token != null && token.startsWith(BEARER)) {
-            return token.replace(BEARER, "");
-        }
-
-        return null;
     }
 
     public static String createAccessToken(Map<String, Object> userInfo) {

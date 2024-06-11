@@ -1,7 +1,8 @@
 package com.tikitaka.triptroop.report.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.tikitaka.triptroop.image.dto.response.ImageResponse;
+import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
+import com.tikitaka.triptroop.image.util.ImageUtils;
 import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,10 +23,6 @@ public class ReportDetailResponse {
     private final LocalDateTime processedAt;
     private final ReportKind kind;
     private final Long reporterId;
-//    private final Long scheduleId;
-//    private final Long reporteeId;
-//    private final Long travelId;
-//    private final Long companionId;
     private final String titleOrNickname;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -34,26 +30,9 @@ public class ReportDetailResponse {
     private final ReportType type;
     private final String content;
     private final List<String> imageNames;
-    private final List<String> imageExtensions;
 
-    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, String titleOrNickname) {
-//    public static ReportDetailResponse from(final Report report, List<ImageResponse> imageResponses, Long scheduleId, Long reporteeId, Long travelId, Long companionId) {
-        List<String> imageNames = imageResponses.stream()
-                .map(imageResponse -> {
-                    String fullPath = imageResponse.getFullPath();
-                    String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1, fullPath.lastIndexOf('.'));
-                    return fileName;
-                })
-                .collect(Collectors.toList());
-
-        List<String> imageExtensions = imageResponses.stream()
-                .map(imageResponse -> {
-                    String fullPath = imageResponse.getFullPath();
-                    String extension = fullPath.substring(fullPath.lastIndexOf('.') + 1);
-                    return extension;
-                })
-                .collect(Collectors.toList());
-
+    public static ReportDetailResponse from(final Report report, List<ImageOriginalResponse> imageOriginalResponses, String titleOrNickname) {
+        List<String> imageNames = ImageUtils.extractImageInfo(imageOriginalResponses);
 
         return new ReportDetailResponse(
                 report.getId(),
@@ -61,17 +40,11 @@ public class ReportDetailResponse {
                 report.getProcessedAt(),
                 report.getKind(),
                 report.getReporterId(),
-//                scheduleId,
-//                reporteeId,
-//                travelId,
-//                companionId,
                 titleOrNickname,
-
                 report.getReportedAt(),
                 report.getType(),
                 report.getContent(),
-                imageNames,
-                imageExtensions
+                imageNames
         );
     }
 }

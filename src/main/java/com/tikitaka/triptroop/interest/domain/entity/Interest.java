@@ -19,4 +19,13 @@ public class Interest {
     private String name;
 
     private Long refId;
+
+    private Interest(String name) {
+        this.name = name;
+    }
+
+    public static Interest of(String name) {
+        return new Interest(name);
+    }
+
 }

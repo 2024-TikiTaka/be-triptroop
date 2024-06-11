@@ -1,14 +1,73 @@
 package com.tikitaka.triptroop.friend.service;
 
+import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
+import com.tikitaka.triptroop.friend.domain.entity.Friend;
+import com.tikitaka.triptroop.friend.domain.repository.FriendRepository;
+import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FriendService { //<- Service 앞의 tt 부분을 변경한 본인의 폴더명으로 바꿔주세요.
+public class FriendService {
+    private final FriendRepository friendRepository;
+    public List<FriendAcceptorInfoResponse> getAcceptedFriends(Long userId) {
+        List<Friend> friendList = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
+        return friendList.stream()
+                .map(FriendAcceptorInfoResponse::from)
+                .collect(Collectors.toList());
+    }
 
-    /* 내용을 작성해주세요. */
+    public FriendAcceptorInfoResponse requestFriend(Long requesterId, Long accepterId) {
+        Friend friend = Friend.of(requesterId, accepterId);
+        friendRepository.save(friend);
+        return FriendAcceptorInfoResponse.from(friend);
+    }
 
+    public FriendAcceptorInfoResponse acceptFriend(Long requesterId, Long accepterId) {
+        Friend friend = friendRepository.findByRequesterIdAndAccepterIdAndStatus(requesterId, accepterId, "REQUESTED")
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        friend.accept();
+        friendRepository.save(friend);
+        return FriendAcceptorInfoResponse.from(friend);
+    }
+
+    public FriendAcceptorInfoResponse rejectFriend(Long requesterId, Long accepterId) {
+        Friend friend = friendRepository.findByRequesterIdAndAccepterIdAndStatus(requesterId, accepterId, "REQUESTED")
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        friend.reject();
+        friendRepository.save(friend);
+        return FriendAcceptorInfoResponse.from(friend);
+    }
+
+    public void deleteFriend(Long requesterId, Long accepterId) {
+        Friend friend = friendRepository.findByRequesterIdAndAccepterIdAndStatus(requesterId, accepterId, "ACCEPTED")
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        friendRepository.delete(friend);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

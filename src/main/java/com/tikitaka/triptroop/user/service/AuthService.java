@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.user.service;
 
 
+import com.tikitaka.triptroop.common.exception.AuthException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.common.security.dto.LoginDto;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -39,28 +41,51 @@ public class AuthService implements UserDetailsService {
         return new CustomUser(user.getId(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
-    
     /**
      * RefreshToken 으로 조회
      */
-    public LoginDto findByRefreshToken(String refreshToken) {
+    public User findByRefreshToken(String refreshToken) {
 
-        return LoginDto.from(
-                userRepository.findByRefreshToken(refreshToken)
-                              .orElseThrow(() -> new NotFoundException(INVALID_REFRESH_TOKEN))
-        );
+        return userRepository.findByRefreshToken(refreshToken)
+                             .orElseThrow(() -> new AuthException(INVALID_REFRESH_TOKEN));
+    }
+
+    /**
+     * 이메일로 RefreshToken 조회
+     */
+    public String findRefreshTokenByEmail(String email) {
+
+        return userRepository.findRefreshTokenByEmail(email);
+    }
+
+    /**
+     * AccessToken 발급
+     */
+    public String issueToken(String refreshToken, String email) {
+
+        final User user = findByRefreshToken(refreshToken);
+        final LoginDto loginDto = LoginDto.from(user);
+
+        if (!TokenUtils.isValidToken(refreshToken)) {
+            throw new AuthException(INVALID_REFRESH_TOKEN);
+        }
+
+        return TokenUtils.createAccessToken(getUserInfo(loginDto));
     }
 
     /**
      * RefreshToken 검증 및 재발급
      */
+    @Transactional
     public TokenDto checkRefreshTokenAndReIssueToken(String refreshToken) {
 
-        LoginDto loginDto = findByRefreshToken(refreshToken);
+        User user = findByRefreshToken(refreshToken);
+        LoginDto loginDto = LoginDto.from(user);
+
         String reIssuedRefreshToken = TokenUtils.createRefreshToken();
         String reIssuedAccessToken = TokenUtils.createAccessToken(getUserInfo(loginDto));
 
-        updateRefreshToken(loginDto.getEmail(), reIssuedRefreshToken);
+        user.updateRefreshToken(reIssuedRefreshToken);
 
         return TokenDto.of(reIssuedAccessToken, reIssuedRefreshToken);
     }
@@ -68,11 +93,11 @@ public class AuthService implements UserDetailsService {
     /**
      * RefreshToken 수정
      */
+    @Transactional
     public void updateRefreshToken(String email, String refreshToken) {
 
-        final User user = userRepository.findByEmail(email)
-                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-
+        User user = userRepository.findByEmail(email)
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
         user.updateRefreshToken(refreshToken);
     }
 
