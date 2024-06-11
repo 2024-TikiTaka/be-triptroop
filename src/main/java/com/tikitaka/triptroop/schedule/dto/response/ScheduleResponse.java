@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScheduleResponse {
+    private final Long scheduleId;
 
     private final String sido;
 
@@ -33,6 +34,7 @@ public class ScheduleResponse {
 
     public static ScheduleResponse from(final Schedule schedule, List<Image> images) {
         return new ScheduleResponse(
+                schedule.getId(),
                 schedule.getArea().getSido(),
                 schedule.getCount(),
                 schedule.getStartDate(),
@@ -46,6 +48,7 @@ public class ScheduleResponse {
 
     public static ScheduleResponse from(final Schedule schedule) {
         return new ScheduleResponse(
+                schedule.getId(),
                 schedule.getArea().getSido(),
                 schedule.getCount(),
                 schedule.getStartDate(),

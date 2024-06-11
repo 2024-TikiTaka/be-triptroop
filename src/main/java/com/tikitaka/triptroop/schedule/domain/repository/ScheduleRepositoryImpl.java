@@ -8,6 +8,9 @@ import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.dto.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,8 +29,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
-    public List<Schedule> findSchedulesByKeyword(Visibility visibility, String keyword, String sort, Long area) {
+    public Page<Schedule> findSchedulesByKeyword(Pageable pageable, Visibility visibility, String keyword, String sort, Long area) {
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
         if (visibility != null) {
@@ -41,9 +43,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             predicate = predicate.and(schedule.area.id.eq(area));
         }
 
-
-        JPAQuery<Schedule> query = queryFactory.selectFrom(schedule).where(predicate);
-
+        JPAQuery<Schedule> query = queryFactory.selectFrom(schedule)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
         if (sort != null && !sort.isEmpty()) {
             switch (sort) {
@@ -63,8 +66,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             query.orderBy(schedule.createdAt.desc());
         }
 
-        // 쿼리 수행 후 결과 반환
-        return query.fetch();
+        // 쿼리 수행 후 결과 리스트 및 전체 개수 조회
+        List<Schedule> scheduleList = query.fetch();
+        long total = queryFactory.selectFrom(schedule)
+                .where(predicate)
+                .fetchCount();
+
+        // Page 객체 생성 및 반환
+        return new PageImpl<>(scheduleList, pageable, total);
     }
 
     @Override
@@ -94,6 +103,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .select(new QScheduleInformationResponse(
                         schedule.id,
                         image.path,
+                        image.uuid,
                         user.id,
                         schedule.startDate,
                         schedule.endDate,
