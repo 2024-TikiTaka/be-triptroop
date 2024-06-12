@@ -27,18 +27,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         Map<String, Object> userInfo = getUserInfo(authentication);
-        String email = (String) userInfo.get("email");
 
-        String refreshToken = authService.findRefreshTokenByEmail(email);
+        String accessToken = TokenUtils.createAccessToken(userInfo);
+        String refreshToken = TokenUtils.createRefreshToken();
 
-        if (refreshToken == null || !TokenUtils.isValidToken(refreshToken)) {
-            System.out.println("invalid");
-            refreshToken = TokenUtils.createRefreshToken();
-            authService.updateRefreshToken(email, refreshToken);
-        }
+        authService.updateRefreshToken((String) userInfo.get("email"), refreshToken);
 
         /* 응답 헤더에 발급 된 토큰을 담는다. */
-        String accessToken = TokenUtils.createAccessToken(userInfo);
         response.setHeader("Access-Token", accessToken);
         response.setHeader("Refresh-Token", refreshToken);
         response.setStatus(HttpServletResponse.SC_OK);
