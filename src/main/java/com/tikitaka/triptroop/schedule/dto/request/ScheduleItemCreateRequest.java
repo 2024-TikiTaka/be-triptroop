@@ -17,6 +17,9 @@ public class ScheduleItemCreateRequest {
     @NotNull
     private final LocalDate planDate;
 
+    private final String address;
+    private final String name;
+
     @NotNull
     private final ScheduleItemKind kind;
 
