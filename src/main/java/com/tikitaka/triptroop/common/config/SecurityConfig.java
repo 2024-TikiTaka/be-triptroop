@@ -114,6 +114,7 @@ public class SecurityConfig {
         customAuthenticationFilter.setAuthenticationManager(authenticationManager());
         customAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
         customAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+        
         return customAuthenticationFilter;
     }
 
