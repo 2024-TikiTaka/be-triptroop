@@ -51,6 +51,14 @@ public class AuthService implements UserDetailsService {
     }
 
     /**
+     * 이메일로 RefreshToken 조회
+     */
+    public String findRefreshTokenByEmail(String email) {
+
+        return userRepository.findRefreshTokenByEmail(email);
+    }
+
+    /**
      * AccessToken 발급
      */
     public String issueToken(String refreshToken, String email) {
@@ -90,7 +98,6 @@ public class AuthService implements UserDetailsService {
 
         User user = userRepository.findByEmail(email)
                                   .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-
         user.updateRefreshToken(refreshToken);
     }
 

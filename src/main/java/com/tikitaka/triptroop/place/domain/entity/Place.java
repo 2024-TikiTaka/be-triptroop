@@ -40,4 +40,15 @@ public class Place extends BaseTimeEntity {
                 name
         );
     }
+
+
+    public static Place save(String address, String name) {
+        return new Place(
+
+                address,
+                name
+
+        );
+    }
+
 }
