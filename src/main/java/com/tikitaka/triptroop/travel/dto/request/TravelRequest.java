@@ -17,9 +17,11 @@ public class TravelRequest {
 
     @Min(value = 1)
     private final Long areaId;
+    private final String address;
+    private final String name;
 
-    @Min(value = 1)
-    private final Long placeId;
+//    @Min(value = 1)
+//    private final Long placeId;
 
     @NotBlank
     private final String title;
