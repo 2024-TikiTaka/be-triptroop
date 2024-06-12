@@ -109,7 +109,7 @@ public class TravelService {
 
 
     /* 여행지 소개 등록 */
-    public Long save(final TravelRequest travelRequest, final Long userId, final List<MultipartFile> images) {
+    public Long save(final TravelRequest travelRequest, final Long userId, final List<MultipartFile> images, Long placeId) {
 
         //        Category category = categoryRepository.findById(travelRequest.getCategoryId())
         //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
@@ -122,7 +122,7 @@ public class TravelService {
                 userId,
                 travelRequest.getCategoryId(),
                 travelRequest.getAreaId(),
-                travelRequest.getPlaceId(),
+                placeId,
                 travelRequest.getTitle(),
                 travelRequest.getContent()
         );

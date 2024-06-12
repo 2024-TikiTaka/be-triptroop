@@ -6,6 +6,7 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
+import com.tikitaka.triptroop.place.service.PlaceService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelInfoResponse;
@@ -37,6 +38,7 @@ public class TravelController {
     private final TravelService travelService;
 
     private final ImageService imageService;
+    private final PlaceService placeService;
 
 
     /* 전체 게시글 조회 */
@@ -60,14 +62,16 @@ public class TravelController {
     @PostMapping()
     public ResponseEntity<ApiResponse> save(
             @AuthenticationPrincipal CustomUser loginUser,
-            @RequestPart @Valid final TravelRequest travelRequest,
-            @RequestPart final List<MultipartFile> images) {
+            @RequestPart final TravelRequest travelRequest,
+            @RequestPart(required = false) final List<MultipartFile> images) {
+        Long placeId = placeService.saveplace(travelRequest);
 
-        final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images);
+        final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images, placeId);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
     }
 
 
