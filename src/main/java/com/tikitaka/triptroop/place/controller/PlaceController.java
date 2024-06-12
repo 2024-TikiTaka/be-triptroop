@@ -19,7 +19,7 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-    @GetMapping("/travel/{travelId}/place")
+    @GetMapping("/travels/{travelId}/place")
     public ResponseEntity<ApiResponse> getAllPlaces(
             @PathVariable final Long travelId
     ) {

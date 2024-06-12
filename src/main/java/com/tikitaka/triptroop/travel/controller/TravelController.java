@@ -12,7 +12,6 @@ import com.tikitaka.triptroop.travel.dto.response.TravelInfoResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
-import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +38,6 @@ public class TravelController {
 
     private final ImageService imageService;
 
-    private final EntityManager entityManager;
 
     /* 전체 게시글 조회 */
     @GetMapping()
@@ -108,6 +106,7 @@ public class TravelController {
         TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
         return ResponseEntity.ok(ApiResponse.success(travelInfo));
     }
+
 
     /* 게시글 상세 조회 (하는중)*/
 //    @GetMapping("/{travelId}")

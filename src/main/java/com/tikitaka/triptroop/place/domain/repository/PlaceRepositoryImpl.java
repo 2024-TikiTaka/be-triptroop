@@ -21,10 +21,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .select(new QPlaceTravelResponse(
                         place.address,
                         place.name
-                       
+
                 ))
                 .from(place)
-                .join(travel).on(travel.placeId.eq(travel.id))
+                .join(travel).on(travel.placeId.eq(place.id))
+                .where(travel.id.eq(id))
                 .fetchFirst();
 
     }

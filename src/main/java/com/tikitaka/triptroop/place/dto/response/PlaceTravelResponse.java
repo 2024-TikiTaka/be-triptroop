@@ -8,7 +8,7 @@ public class PlaceTravelResponse {
 
     private final String address;
     private final String name;
-    
+
 
     @QueryProjection
     public PlaceTravelResponse(String address, String name) {
