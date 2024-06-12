@@ -6,6 +6,7 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
+import com.tikitaka.triptroop.place.service.PlaceService;
 import com.tikitaka.triptroop.schedule.dto.request.*;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
@@ -29,6 +30,7 @@ import java.net.URI;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final PlaceService placeService;
     private final ScheduleParticipantService scheduleParticipantService;
     private final ImageService imageService;
 
@@ -60,13 +62,16 @@ public class ScheduleController {
     @PostMapping("/regist")
     public ResponseEntity<ApiResponse> saveSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
-            @RequestPart @Valid final ScheduleCreateRequest scheduleRequest,
+            @RequestPart final ScheduleCreateRequest scheduleRequest,
+            @RequestPart(required = false) final ScheduleItemCreateRequest scheduleItemRequest,
+//            @RequestPart(required = false) final PlaceScheduleRequest placeScheduleRequest,
             @RequestPart final MultipartFile image
     ) {
         Long userId = loginUser.getUserId();
         final Long scheduleId = scheduleService.save(scheduleRequest, userId);
         imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-
+        Long placeId = placeService.savePlace(scheduleItemRequest);
+        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
 
@@ -110,17 +115,20 @@ public class ScheduleController {
     }
 
     // TODO 일정 계획 등록
-    @PostMapping("/{scheduleId}/item")
-    public ResponseEntity<ApiResponse> saveItem(
-            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
-            @PathVariable final Long scheduleId
-    ) {
-
-        scheduleService.saveItem(scheduleItemRequest, scheduleId);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
-    }
+//    @PostMapping("/regist/item")
+//    public ResponseEntity<ApiResponse> saveItem(
+//            @AuthenticationPrincipal CustomUser loginUser,
+//            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
+//            @PathVariable final Long scheduleId
+//    ) {
+//
+//        Long placeId = placeService.savePlace(scheduleItemRequest, loginUser.getUserId());
+//
+//        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
+//
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
+//    }
 
     // TODO 일정 계획 수정
     @PutMapping("/{scheduleItemId}/item")

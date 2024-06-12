@@ -174,9 +174,11 @@ public class ScheduleService {
     }
 
     // TODO : 일정 계획 등록
-    public Long saveItem(ScheduleItemCreateRequest scheduleItemRequest, Long id) {
+    public Long saveItem(ScheduleItemCreateRequest scheduleItemRequest, Long id, Long placeId) {
         final ScheduleItem newItem = ScheduleItem.of(
                 id,
+                placeId
+                ,
                 scheduleItemRequest.getContent(),
                 scheduleItemRequest.getCost(),
                 scheduleItemRequest.getPlanDate(),

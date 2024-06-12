@@ -12,8 +12,8 @@ import java.time.LocalDate;
 public class ScheduleItemInfoResponse {
 
 
-    private String placeName;
-    private String placeAddress;
+    private String name;
+    private String address;
 
     private LocalDate planDate;
 
@@ -24,9 +24,9 @@ public class ScheduleItemInfoResponse {
     private String content;
 
     @QueryProjection
-    public ScheduleItemInfoResponse(String placeName, String placeAddress, LocalDate planDate, ScheduleItemKind kind, Integer cost, String content) {
-        this.placeName = placeName;
-        this.placeAddress = placeAddress;
+    public ScheduleItemInfoResponse(String name, String address, LocalDate planDate, ScheduleItemKind kind, Integer cost, String content) {
+        this.name = name;
+        this.address = address;
         this.planDate = planDate;
         this.kind = kind;
         this.cost = cost;
