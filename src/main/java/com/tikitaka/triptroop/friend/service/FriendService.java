@@ -6,11 +6,15 @@ import com.tikitaka.triptroop.friend.domain.entity.Friend;
 import com.tikitaka.triptroop.friend.domain.repository.FriendRepository;
 import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorInfoResponse;
 import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorRequesterInfoResponse;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
+import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,10 +22,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
+    private final ProfileRepository profileRepository;
+
     public List<FriendAcceptorRequesterInfoResponse> getAcceptedFriends(Long userId) {
-        List<Friend> friendList = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
-        return friendList.stream()
-                .map(friend -> FriendAcceptorRequesterInfoResponse.from(friend, userId))
+        List<Friend> accepterFriends = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
+        List<Friend> requesterFriends = friendRepository.findByStatusAndRequesterId("ACCEPTED", userId);
+
+        List<Friend> allFriends = new ArrayList<>();
+        allFriends.addAll(accepterFriends);
+        allFriends.addAll(requesterFriends);
+
+        return allFriends.stream()
+                .map(friend -> {
+                    Long friendUserId = friend.getRequesterId().equals(userId) ? friend.getAccepterId() : friend.getRequesterId();
+                    Optional<Profile> profileOpt = profileRepository.findByUserId(friendUserId);
+                    return FriendAcceptorRequesterInfoResponse.from(friend, profileOpt);
+                })
                 .collect(Collectors.toList());
     }
 
