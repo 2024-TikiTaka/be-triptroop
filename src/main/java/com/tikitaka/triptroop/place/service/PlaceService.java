@@ -5,10 +5,9 @@ import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepositoryImpl;
 import com.tikitaka.triptroop.place.dto.response.PlaceInfoResponse;
 import com.tikitaka.triptroop.place.dto.response.PlaceTravelResponse;
-import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
-import com.tikitaka.triptroop.place.domain.entity.Place;
-import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
+import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
+import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,7 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
 
     public PlaceInfoResponse findPlace(Long travelId) {
 
-        PlaceTravelResponse placeTravelResponse = placeRepositoryImpl.findPlaceById(travelId);
+        PlaceTravelResponse placeTravelResponse = placeRepositoryImpl.findById(travelId);
 
         return PlaceInfoResponse.of(placeTravelResponse);
     }
@@ -38,7 +37,7 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
         return place.getId();
     }
 
-    public Long saveplace(TravelRequest travelRequest) {
+    public Long savePlace(TravelRequest travelRequest) {
         final Place newPlace = Place.insert(
                 travelRequest.getAddress(),
                 travelRequest.getName()
@@ -47,5 +46,14 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
         return place.getId();
     }
 
-    ;
+    public Long savePlace(TravelUpdateRequest travelRequest) {
+        final Place newPlace = Place.insert(
+                travelRequest.getAddress(),
+                travelRequest.getName()
+        );
+        final Place place = placeRepository.save(newPlace);
+        return place.getId();
+    }
+
+
 }

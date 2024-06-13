@@ -22,6 +22,7 @@ import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -76,7 +77,7 @@ public class TravelService {
         Travel travels = travelRepository.findById(travelId).orElseThrow();
         TravelResponse travel = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(travelId);
         List<ImageResponse> images = travelRepositoryImpl.findImagesByTravelId(travelId);
-        PlaceTravelResponse place = placeRepositoryImpl.findPlaceById(travels.getPlaceId());
+        PlaceTravelResponse place = placeRepositoryImpl.findById(travels.getPlaceId());
         return TravelInfoResponse.of(travel, images, place);
     }
 
@@ -111,12 +112,6 @@ public class TravelService {
     /* 여행지 소개 등록 */
     public Long save(final TravelRequest travelRequest, final Long userId, final List<MultipartFile> images, Long placeId) {
 
-        //        Category category = categoryRepository.findById(travelRequest.getCategoryId())
-        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
-        //        Area area = areaRepository.findById(travelRequest.getAreaId())
-        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA_CODE));
-        //        Place place = placeRepository.findById(travelRequest.getPlaceId())
-        //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE_CODE));
 
         final Travel newTravel = Travel.of(
                 userId,
@@ -131,6 +126,58 @@ public class TravelService {
         imageService.saveAll(ImageKind.TRAVEL, travel.getId(), images);
 
         return travel.getId();
+    }
+
+    /* 게시글 수정 */
+    public void updateTravel(Long travelId, TravelUpdateRequest travelRequest, Long userId, Long placeId) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        }
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+
+        travel.update(
+                travelRequest.getCategoryId(),
+                travelRequest.getAreaId(),
+                placeId,
+                travelRequest.getTitle(),
+                travelRequest.getContent()
+
+        );
+
+
+    }
+
+    /* 게시글을 삭제합시다.♩♪*/
+    public void deleteTravel(Long travelId, Long userId) {
+
+        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        }
+
+        travelRepository.deleteById(travelId);
+    }
+
+
+    /* 공개상태 변경 */
+    @Transactional
+    public void updateStatus(Long userId, Long travelId, String status) {
+        Travel travel = travelRepository.findById(travelId).orElseThrow(() ->
+                new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
+            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        }
+        switch (status) {
+            case "PUBLIC":
+                travel.updateStatus(Visibility.PUBLIC);
+                break;
+            case "PRIVATE":
+                travel.updateStatus(Visibility.PRIVATE);
+                break;
+        }
+
     }
 
     /* 여행소개 상세 조회 (된거) */
@@ -182,55 +229,4 @@ public class TravelService {
 //    }
 
 
-    /* 게시글 수정 */
-    public void updateTravel(Long travelId, TravelUpdateRequest travelRequest, Long userId) {
-
-        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
-            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
-        }
-
-        Travel travel = travelRepository.findById(travelId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-
-        travel.update(
-                travelRequest.getCategoryId(),
-                travelRequest.getAreaId(),
-                travelRequest.getPlaceId(),
-                travelRequest.getTitle(),
-                travelRequest.getContent(),
-                Visibility.valueOf(travelRequest.getStatus())
-        );
-
-
-    }
-
-    /* 게시글을 삭제합시다.♩♪*/
-    public void deleteTravel(Long travelId, Long userId) {
-
-        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
-            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
-        }
-
-        travelRepository.deleteById(travelId);
-    }
-
-
-    /* 공개상태 변경 */
-    @Transactional
-    public void updateStatus(Long userId, Long travelId, String status) {
-        Travel travel = travelRepository.findById(travelId).orElseThrow(() ->
-                new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-        if (!travelRepository.existsByUserIdAndId(userId, travelId)) {
-            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
-        }
-        switch (status) {
-            case "PUBLIC":
-                travel.updateStatus(Visibility.PUBLIC);
-                break;
-            case "PRIVATE":
-                travel.updateStatus(Visibility.PRIVATE);
-                break;
-        }
-
-    }
 }

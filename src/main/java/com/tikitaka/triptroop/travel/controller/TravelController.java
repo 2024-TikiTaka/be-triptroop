@@ -15,6 +15,8 @@ import com.tikitaka.triptroop.travel.service.TravelService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TravelController {
 
+    private static final Logger log = LoggerFactory.getLogger(TravelController.class);
     private final TravelService travelService;
 
     private final ImageService imageService;
@@ -64,7 +67,7 @@ public class TravelController {
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart final TravelRequest travelRequest,
             @RequestPart(required = false) final List<MultipartFile> images) {
-        Long placeId = placeService.saveplace(travelRequest);
+        Long placeId = placeService.savePlace(travelRequest);
 
         final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images, placeId);
 
@@ -72,6 +75,51 @@ public class TravelController {
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+    }
+
+    /* 게시글 상세 조회 (최종 수정본) */
+    @GetMapping("/{travelId}")
+    public ResponseEntity<ApiResponse> findTravel(
+            @PathVariable final Long travelId
+
+    ) {
+        TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
+        return ResponseEntity.ok(ApiResponse.success(travelInfo));
+    }
+
+
+    /* 게시글 수정 */
+    @PutMapping("/{travelId}")
+    public ResponseEntity<ApiResponse> updateTravel(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long travelId,
+            @RequestPart @Valid final TravelUpdateRequest travelRequest,
+            @RequestPart(required = false) final MultipartFile image
+//            ,
+//            @RequestParam String status
+    ) {
+
+        log.info("전달받은 리퀘스트 정보: {}", travelRequest);
+        log.info("전달받은 이미지 정보 : {}", image);
+        Long placeId = placeService.savePlace(travelRequest);
+        travelService.updateTravel(travelId, travelRequest, loginUser.getUserId(), placeId);
+        imageService.updateImage(ImageKind.TRAVEL, travelId, image);
+        travelService.updateStatus(loginUser.getUserId(), travelId, travelRequest.getStatus());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("여행 정보가 수정되었습니다."));
+    }
+
+    /* 게시글을 삭제해주세요~ ♬ */
+    @DeleteMapping("/{travelId}")
+    public ResponseEntity<ApiResponse> deleteTravel(
+            @AuthenticationPrincipal CustomUser loginUser,
+            @PathVariable final Long travelId) {
+
+        travelService.deleteTravel(travelId, loginUser.getUserId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(ApiResponse.success("삭제가 완료되었습니다."));
+
     }
 
 
@@ -101,57 +149,7 @@ public class TravelController {
 //        return ResponseEntity.ok(travelDetailResponse);
 //    }
 
-    /* 게시글 상세 조회 (최종 수정본) */
-    @GetMapping("/{travelId}")
-    public ResponseEntity<ApiResponse> findTravel(
-            @PathVariable final Long travelId
 
-    ) {
-        TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
-        return ResponseEntity.ok(ApiResponse.success(travelInfo));
-    }
-
-
-    /* 게시글 상세 조회 (하는중)*/
-//    @GetMapping("/{travelId}")
-//    public ResponseEntity<Optional<TravelResponse>> findTravel(
-//            @PathVariable final Long travelId) {
-//
-//        Optional<TravelResponse> travelResponse = travelService.findTravel(travelId, Visibility.PUBLIC);
-//
-//        return ResponseEntity.ok(travelResponse);
-//    }
-
-
-    /* 게시글 수정 */
-    @PutMapping("/{travelId}")
-    public ResponseEntity<ApiResponse> updateTravel(
-            @AuthenticationPrincipal CustomUser loginUser,
-            @PathVariable final Long travelId,
-            @RequestPart @Valid final TravelUpdateRequest travelRequest,
-            @RequestPart(required = false) final MultipartFile image,
-            @RequestParam String status
-    ) {
-
-        travelService.updateTravel(travelId, travelRequest, loginUser.getUserId());
-        imageService.updateImage(ImageKind.TRAVEL, travelId, image);
-        travelService.updateStatus(loginUser.getUserId(), travelId, status);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("여행 정보가 수정되었습니다."));
-    }
-
-    /* 게시글을 삭제해주세요~ ♬ */
-    @DeleteMapping("/{travelId}")
-    public ResponseEntity<ApiResponse> deleteTravel(
-            @AuthenticationPrincipal CustomUser loginUser,
-            @PathVariable final Long travelId) {
-
-        travelService.deleteTravel(travelId, loginUser.getUserId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(ApiResponse.success("삭제가 완료되었습니다."));
-
-    }
 
     /* 여행지 소개 공개 / 비공개 */
 //    @PutMapping("/{travelId}/")
@@ -166,6 +164,16 @@ public class TravelController {
 //        return ResponseEntity.ok(ApiResponse.success("공개 상태가 변경되었습니다."));
 //
 //
+//    }
+
+    /* 게시글 상세 조회 (하는중)*/
+//    @GetMapping("/{travelId}")
+//    public ResponseEntity<Optional<TravelResponse>> findTravel(
+//            @PathVariable final Long travelId) {
+//
+//        Optional<TravelResponse> travelResponse = travelService.findTravel(travelId, Visibility.PUBLIC);
+//
+//        return ResponseEntity.ok(travelResponse);
 //    }
 
 }
