@@ -51,9 +51,7 @@ public class ScheduleParticipantService {
                 scheduleId,
                 userId,
                 scheduleParticipantRequest.getProcessedAt(),
-                scheduleParticipantRequest.getStatus(),
-                scheduleParticipantRequest.getCreatedAt()
-        );
+                scheduleParticipantRequest.getStatus());
 
         final ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.save(newScheduleParticipants);
 
@@ -117,6 +115,16 @@ public class ScheduleParticipantService {
         Long participantId = scheduleParticipant.getId();
         scheduleParticipantRepository.deleteById(participantId);
 
+    }
+
+    public void saveUser(Long userId, Long scheduleId) {
+        RequestStatus status = RequestStatus.ACCEPTED;
+        ScheduleParticipant newParticipant = ScheduleParticipant.saveUser(
+                userId,
+                scheduleId,
+                status
+        );
+        scheduleParticipantRepository.save(newParticipant);
     }
 }
 

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     Optional<Place> findById(Long id);
+
 }

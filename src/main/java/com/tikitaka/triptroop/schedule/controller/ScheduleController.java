@@ -15,6 +15,7 @@ import com.tikitaka.triptroop.schedule.service.ScheduleService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
+
+@Slf4j
 
 @RestController
 @RequestMapping("/api/v1/schedules")
@@ -59,21 +63,48 @@ public class ScheduleController {
     }
 
     // TODO 일정 등록
+//    @PostMapping("/regist")
+//    public ResponseEntity<ApiResponse> saveSchedule(
+//            @AuthenticationPrincipal CustomUser loginUser,
+//            @RequestPart final ScheduleCreateRequest scheduleRequest,
+//            @RequestPart(required = false) final List<ScheduleItemCreateRequest> scheduleItemRequest,
+////            @RequestPart(required = false) final PlaceScheduleRequest placeScheduleRequest,
+//            @RequestPart final MultipartFile image
+//    ) {
+//        Long userId = loginUser.getUserId();
+//        final Long scheduleId = scheduleService.save(scheduleRequest, userId);
+//        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+//        Long placeId = placeService.savePlace(scheduleItemRequest);
+//        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
+//    }
     @PostMapping("/regist")
     public ResponseEntity<ApiResponse> saveSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart final ScheduleCreateRequest scheduleRequest,
-            @RequestPart(required = false) final ScheduleItemCreateRequest scheduleItemRequest,
-//            @RequestPart(required = false) final PlaceScheduleRequest placeScheduleRequest,
+            @RequestPart(required = false) final List<ScheduleItemCreateRequest> scheduleItemRequest,
             @RequestPart final MultipartFile image
     ) {
         Long userId = loginUser.getUserId();
         final Long scheduleId = scheduleService.save(scheduleRequest, userId);
-        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-        Long placeId = placeService.savePlace(scheduleItemRequest);
-        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
+
+        // 이미지 저장
+        if (image != null) {
+            imageService.save(ImageKind.SCHEDULE, scheduleId, image);
+        } else {
+            // 이미지가 없는 경우 처리 로직 추가
+        }
+
+        // 일정 항목 저장 및 처리
+        if (scheduleItemRequest != null && !scheduleItemRequest.isEmpty()) {
+            Long placeId = placeService.savePlace(scheduleItemRequest);
+            scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
+        }
+        scheduleParticipantService.saveUser(userId, scheduleId);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
+
 
     // TODO 일정 수정
     @PutMapping("/{scheduleId}/modify")
@@ -81,12 +112,19 @@ public class ScheduleController {
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,
             @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
-            @RequestParam String status
+            @RequestPart(required = false) final MultipartFile image
     ) {
+        log.info("@!#@!#@!#@!#@!#", image);
+        String status = scheduleUpdateRequest.getStatus();
         Long userId = loginUser.getUserId();
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, userId);
         scheduleService.changeStatus(scheduleId, userId, status);
-
+        // 이미지 저장
+        if (image != null) {
+            imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+        } else {
+            // 이미지가 없는 경우 처리 로직 추가
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
 
@@ -108,7 +146,7 @@ public class ScheduleController {
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<ApiResponse> removeSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
-            @PathVariable final Long scheduleId) {
+            @PathVariable(name = "scheduleId") final Long scheduleId) {
         Long userId = loginUser.getUserId();
         scheduleService.removeSchedule(scheduleId, userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.success("일정이 삭제 되었습니다."));
@@ -135,10 +173,11 @@ public class ScheduleController {
     public ResponseEntity<ApiResponse> updateItem(
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestBody @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
-            @PathVariable final Long scheduleItemId
+            @PathVariable(name = "scheduleItemId") final Long scheduleItemId
     ) {
-        Long userId = loginUser.getUserId();
-        scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId, userId);
+
+        Long placeId = scheduleService.updateItem(scheduleItemUpdateRequest, scheduleItemId);
+        placeService.updatePlace(scheduleItemUpdateRequest, placeId);
 
 
         return ResponseEntity.status(HttpStatus.CREATED)

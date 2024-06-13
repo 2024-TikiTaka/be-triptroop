@@ -31,6 +31,7 @@ public class ScheduleItemInfoResponse {
         this.kind = kind;
         this.cost = cost;
         this.content = content;
+
     }
 
 
