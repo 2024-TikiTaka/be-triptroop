@@ -83,7 +83,7 @@ tasks.named('test') {
 tasks.register('copyPrivate') {
     copy {
         from './config'
-        include "application.yml"
+        include "application*.yml"
         into 'src/main/resources'
     }
 }
