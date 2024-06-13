@@ -72,6 +72,4 @@ public class FriendController {
         return ResponseEntity.ok(ApiResponse.success(("친구 삭제되었습니다.")));
     }
 
-
-
 }
