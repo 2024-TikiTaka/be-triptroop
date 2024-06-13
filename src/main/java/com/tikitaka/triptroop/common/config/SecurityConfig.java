@@ -49,11 +49,12 @@ public class SecurityConfig {
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET,
                                          "/images/**",
-                                         "/api/v1/check/**", "/api/v1/find/**",
+                                         "/api/v1/check/**",
                                          "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
-                                         "/api/v1/signup/**", "/api/v1/find/**", "/api/v1/mail/**",
-                                         "/api/v1/login", "/api/v1/token/issue").permitAll();
+                                         "/api/v1/signup/**", "/api/v1/email/**",
+                                         "/api/v1/login", "/api/v1/token/issue",
+                                         "/api/v1/password/reset").permitAll();
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.requestMatchers("/ws/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
@@ -114,7 +115,7 @@ public class SecurityConfig {
         customAuthenticationFilter.setAuthenticationManager(authenticationManager());
         customAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
         customAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
-        
+
         return customAuthenticationFilter;
     }
 
