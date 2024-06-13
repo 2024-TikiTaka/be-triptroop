@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.chat.controller;
 
-import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.request.WebSocketChatRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

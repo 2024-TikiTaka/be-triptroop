@@ -20,7 +20,7 @@ public class ChatResponse {
 
     private String createdAt;
 
-    private String url;
+    private final String url;
 
     private String lastMessageAt;
 
@@ -28,7 +28,8 @@ public class ChatResponse {
         return new ChatResponse(
                 chatRoom.getId().toHexString(),
                 chatRoom.getRoomName(),
-                chatRoom.getCreator()
+                chatRoom.getCreator(),
+                chatRoom.getUrl()
         );
     }
 }

@@ -2,7 +2,6 @@ package com.tikitaka.triptroop.chat.domain.entity;
 
 import com.tikitaka.triptroop.chat.domain.type.ChatRoomType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -43,25 +42,23 @@ public class ChatRoom {
     private LocalDateTime lastMessageAt;
 
     // 정적 팩토리 메서드
-    public static ChatRoom of(String roomName, String type, Long creator, Long member) {
+    public static ChatRoom of(ChatRoomType type, Long creator, Long member, String url) {
         return new ChatRoom(
-                LocalDateTime.now(),
-                roomName,
-                ChatRoomType.valueOf(type),
+                type,
                 creator,
                 Collections.singletonList(member),
-                null // 초기 lastMessageAt 값은 null
+                url
+//                null // 초기 lastMessageAt 값은 null
         );
     }
 
     // 생성자
-    private ChatRoom(LocalDateTime createdAt, String roomName, ChatRoomType type, Long creator, List<Long> member, LocalDateTime lastMessageAt) {
-        this.createdAt = createdAt;
-        this.roomName = roomName;
+    private ChatRoom(ChatRoomType type, Long creator, List<Long> member, String url /*LocalDateTime lastMessageAt*/) {
         this.type = type;
         this.creator = creator;
         this.member = member;
-        this.lastMessageAt = lastMessageAt;
+        this.url = url;
+        /*this.lastMessageAt = lastMessageAt;*/
     }
 
 }

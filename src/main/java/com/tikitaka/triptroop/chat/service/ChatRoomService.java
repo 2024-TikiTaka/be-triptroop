@@ -2,7 +2,7 @@ package com.tikitaka.triptroop.chat.service;
 
 import com.tikitaka.triptroop.chat.domain.entity.ChatRoom;
 import com.tikitaka.triptroop.chat.domain.repository.ChatRoomRepository;
-import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
+import com.tikitaka.triptroop.chat.dto.request.ChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.response.ChatResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,20 +25,23 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatResponse createChatRoom(PrivateChatRoomCreateRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    public ChatResponse createChatRoom(ChatRoomCreateRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = Long.valueOf(userDetails.getUsername());
+        Long friendId = request.getFriendId();
+
+        // 채팅방 URL 생성
+        String url = "ws://localhost:8080/ws/" + userId + "_" + friendId;
+
         ChatRoom chatRoom = ChatRoom.of(
-                request.getRoomName(),
                 request.getType(),
                 Long.valueOf(userDetails.getUsername()), // 로그인 한 사용자 정보 가져오기
-                request.getMember()
+                request.getFriendId(),
+                url
         );
 
         chatRoom = chatRoomRepository.save(chatRoom);
         return ChatResponse.from(chatRoom);
     }
 
-//    public ChatResponse createChatRoom(@Valid ChatRequest request) {
-//        ChatRoom chatRoom = chatRoomRepository.createChatRoom(request);
-//        return ChatResponse.from(chatRoom);
-//    }
+
 }
