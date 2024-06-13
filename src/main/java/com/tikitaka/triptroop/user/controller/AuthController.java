@@ -2,22 +2,16 @@ package com.tikitaka.triptroop.user.controller;
 
 
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.common.security.util.TokenUtils;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import com.tikitaka.triptroop.user.dto.request.SignUpRequest;
 import com.tikitaka.triptroop.user.service.AuthService;
 import com.tikitaka.triptroop.user.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -35,8 +29,10 @@ public class AuthController {
     public ResponseEntity<?> issueToken(@RequestHeader("Refresh-Token") String refreshToken,
                                         @AuthenticationPrincipal CustomUser loginUser) {
 
+        String ReIssuedAccessToken = authService.issueToken(refreshToken, loginUser.getUsername());
+        
         return ResponseEntity.noContent()
-                             .header("Access-Token", authService.issueToken(refreshToken, loginUser.getUsername()))
+                             .header("Access-Token", ReIssuedAccessToken)
                              .build();
     }
 
@@ -46,7 +42,7 @@ public class AuthController {
      * @param signUpRequest 이메일, 비밀번호, 이름, 생년월일, 성별
      */
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<ApiResponse<?>> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
 
         userService.signup(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입이 완료되었습니다."));
@@ -58,7 +54,7 @@ public class AuthController {
      * @param loginUser 로그인 정보
      */
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(@AuthenticationPrincipal CustomUser loginUser) {
+    public ResponseEntity<ApiResponse<?>> logout(@AuthenticationPrincipal CustomUser loginUser) {
 
         authService.updateRefreshToken(loginUser.getUsername(), null);
         return ResponseEntity.ok(ApiResponse.success("로그아웃이 완료되었습니다."));
