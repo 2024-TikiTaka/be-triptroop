@@ -42,15 +42,6 @@ public class ChatRoomController {
         ChatResponse chatRoom = chatRoomService.createChatRoom(request, loginUser);
         return ResponseEntity.ok(chatRoom);
     }
-
-    /*
-    * created_at -> db 저장 시간
-    * room_name -> 조회한 프로필의 사용자의 닉네임
-    * type -> 1:1 채팅 버튼을 눌렀다면 type = PRIVATE
-    * creator -> 로그인 한 사람
-    * member -> 조회한 프로필의 사용자
-    * last_message_at -> 사용자가 채팅을 치면 입력됨.
-    * */
 }
 
 

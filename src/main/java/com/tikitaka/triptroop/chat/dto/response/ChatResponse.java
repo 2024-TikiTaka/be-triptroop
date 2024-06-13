@@ -14,7 +14,7 @@ public class ChatResponse {
 
     private final Long creator;
 
-    private List<Long> member;
+    private final List<Long> member;
 
     private String type;
 
@@ -29,6 +29,7 @@ public class ChatResponse {
                 chatRoom.getId().toHexString(),
                 chatRoom.getRoomName(),
                 chatRoom.getCreator(),
+                chatRoom.getMember(),
                 chatRoom.getUrl()
         );
     }

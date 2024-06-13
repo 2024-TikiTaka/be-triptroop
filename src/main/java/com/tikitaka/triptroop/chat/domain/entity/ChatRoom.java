@@ -44,12 +44,12 @@ public class ChatRoom {
     private LocalDateTime lastMessageAt;
 
     // 정적 팩토리 메서드
-    public static ChatRoom of(String roomName, ChatRoomType type, Long creator, Long member, String url, LocalDateTime lastMessageAt) {
+    public static ChatRoom of(String roomName, ChatRoomType type, Long creator, List<Long> member, String url, LocalDateTime lastMessageAt) {
         return new ChatRoom(
                 roomName,
                 type,
                 creator,
-                Collections.singletonList(member),
+                member,
                 url,
                 lastMessageAt
         );

@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +36,20 @@ public class ChatRoomService {
         // 채팅방 URL 생성
         String url = "ws://localhost:8080/ws/" + userId + "_" + friendId;
 
+        // member 리스트 생성
+        List<Long> members = Arrays.asList(userId, friendId);
+
+        // 중복 채팅방 체크
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByCreatorAndMemberIn(userId, members);
+        if (existingChatRoom.isPresent()) {
+            return ChatResponse.from(existingChatRoom.get());
+        }
+
         ChatRoom chatRoom = ChatRoom.of(
                 request.getRoomName(),
                 request.getType(),
                 userId,
-                request.getFriendId(),
+                members,
                 url,
                 LocalDateTime.now()
         );
