@@ -41,11 +41,10 @@ public class ScheduleParticipant {
 
     private LocalDateTime processedAt;
 
-    public ScheduleParticipant(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status) {
+    public ScheduleParticipant(Long scheduleId, Long userId, LocalDateTime processedAt) {
         this.scheduleId = scheduleId;
         this.reviewerId = userId;
         this.processedAt = processedAt;
-        this.status = status;
     }
 
     public ScheduleParticipant(Long userId, Long scheduleId, RequestStatus status) {
@@ -55,12 +54,12 @@ public class ScheduleParticipant {
     }
 
 
-    public static ScheduleParticipant of(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status) {
+    public static ScheduleParticipant of(Long scheduleId, Long userId, LocalDateTime processedAt) {
         return new ScheduleParticipant(
                 scheduleId,
                 userId,
-                processedAt,
-                status);
+                processedAt
+        );
     }
 
     public static ScheduleParticipant saveUser(Long userId, Long scheduleId, RequestStatus status) {

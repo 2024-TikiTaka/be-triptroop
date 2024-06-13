@@ -11,15 +11,14 @@ import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepo
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantAcceptRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRejectedRequest;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleReviewRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -33,7 +32,7 @@ public class ScheduleParticipantService {
 
 
     // TODO 신청
-    public Long save(@Valid ScheduleParticipantRequest scheduleParticipantRequest, Long scheduleId, Long userId) {
+    public Long save(Long scheduleId, Long userId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).get();
         Long participants = scheduleParticipantRepository.countByScheduleIdAndStatusAccepted(scheduleId);
         int count = schedule.getCount();
@@ -47,11 +46,11 @@ public class ScheduleParticipantService {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_DATE);
         }
 
+        LocalDateTime processedAt = LocalDateTime.now();
         final ScheduleParticipant newScheduleParticipants = ScheduleParticipant.of(
                 scheduleId,
                 userId,
-                scheduleParticipantRequest.getProcessedAt(),
-                scheduleParticipantRequest.getStatus());
+                processedAt);
 
         final ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.save(newScheduleParticipants);
 

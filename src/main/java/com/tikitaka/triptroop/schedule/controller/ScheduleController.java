@@ -143,7 +143,7 @@ public class ScheduleController {
     }
 
     // TODO 일정 삭제
-    @DeleteMapping("/{scheduleId}")
+    @DeleteMapping("/{scheduleId}/remove")
     public ResponseEntity<ApiResponse> removeSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable(name = "scheduleId") final Long scheduleId) {
@@ -199,7 +199,7 @@ public class ScheduleController {
     }
 
     // TODO 일정 계획 삭제
-    @DeleteMapping("/{scheduleItemId}/item")
+    @DeleteMapping("/{scheduleItemId}/remove-item")
     public ResponseEntity<ApiResponse> removeItem(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleItemId) {
@@ -212,11 +212,11 @@ public class ScheduleController {
     // TODO 일정 신청
     @PostMapping("/{scheduleId}/apply")
     public ResponseEntity<ApiResponse> applySchedule(@PathVariable final Long scheduleId,
-                                                     @AuthenticationPrincipal CustomUser loginUser,
-                                                     @RequestBody @Valid final ScheduleParticipantRequest scheduleParticipantRequest
+                                                     @AuthenticationPrincipal CustomUser loginUser
+//                                                     @RequestBody @Valid final ScheduleParticipantRequest scheduleParticipantRequest
     ) {
         Long userId = loginUser.getUserId();
-        final Long scheduleParticipantId = scheduleParticipantService.save(scheduleParticipantRequest, scheduleId, userId);
+        scheduleParticipantService.save(scheduleId, userId);
         return ResponseEntity.ok(ApiResponse.success("일정 신청이 되었습니다."));
 
     }
