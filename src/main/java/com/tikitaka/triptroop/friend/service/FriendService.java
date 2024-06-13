@@ -5,6 +5,7 @@ import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.friend.domain.entity.Friend;
 import com.tikitaka.triptroop.friend.domain.repository.FriendRepository;
 import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorInfoResponse;
+import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorRequesterInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +18,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
-    public List<FriendAcceptorInfoResponse> getAcceptedFriends(Long userId) {
+    public List<FriendAcceptorRequesterInfoResponse> getAcceptedFriends(Long userId) {
         List<Friend> friendList = friendRepository.findByStatusAndAccepterId("ACCEPTED", userId);
         return friendList.stream()
-                .map(FriendAcceptorInfoResponse::from)
+                .map(friend -> FriendAcceptorRequesterInfoResponse.from(friend, userId))
                 .collect(Collectors.toList());
     }
 
