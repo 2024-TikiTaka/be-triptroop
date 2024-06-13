@@ -102,6 +102,21 @@ public class UserService {
     /**
      * 비밀번호 변경
      *
+     * @param email
+     * @param password
+     */
+
+    public void resetPassword(String email, String password) {
+
+        final User user = userRepository.findByEmail(email)
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+
+        user.updatePassword(encode(password));
+    }
+
+    /**
+     * 비밀번호 변경
+     *
      * @param userId
      * @param passwordRequest
      */
@@ -117,7 +132,7 @@ public class UserService {
      *
      * @param userId
      * @param userRequest
-     * @return
+     * @return UserResponse
      */
     @Transactional
     public UserResponse updateUser(Long userId, UserSaveRequest userRequest) {
@@ -163,4 +178,6 @@ public class UserService {
 
         return passwordEncoder.encode(password);
     }
+
+
 }

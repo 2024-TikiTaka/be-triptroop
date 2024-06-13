@@ -30,11 +30,25 @@ public class AuthController {
                                         @AuthenticationPrincipal CustomUser loginUser) {
 
         String ReIssuedAccessToken = authService.issueToken(refreshToken, loginUser.getUsername());
-        
+
         return ResponseEntity.noContent()
                              .header("Access-Token", ReIssuedAccessToken)
                              .build();
     }
+
+    /**
+     * 비밀번호 재설정
+     *
+     * @param email    이메일
+     * @param password 비밀번호
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<?>> resetPassword(String email, String password) {
+
+        userService.resetPassword(email, password);
+        return ResponseEntity.ok(ApiResponse.success("비밀번호 변경이 완료되었습니다."));
+    }
+
 
     /**
      * 회원가입
