@@ -9,7 +9,6 @@ import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantAcceptRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRejectedRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleReviewRequest;
 import lombok.RequiredArgsConstructor;
@@ -58,14 +57,16 @@ public class ScheduleParticipantService {
     }
 
     // TODO 신청 승인
-    public void accept(ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest, Long scheduleParticipantId) {
+    public void accept(Long scheduleParticipantId) {
         ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
         Schedule schedule = scheduleRepository.findById(scheduleParticipant.getScheduleId()).get();
-
+        RequestStatus status = RequestStatus.ACCEPTED;
+        LocalDateTime processedAt = LocalDateTime.now();
         scheduleParticipant.update(
-                scheduleParticipantAcceptRequest.getStatus(),
-                scheduleParticipantAcceptRequest.getProcessedAt()
+                status,
+                processedAt
+
         );
     }
 
@@ -73,9 +74,12 @@ public class ScheduleParticipantService {
     public void reject(ScheduleParticipantRejectedRequest scheduleParticipantRejectedRequest, Long scheduleParticipantId) {
         ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        RequestStatus status = RequestStatus.REJECTED;
+        LocalDateTime processedAt = LocalDateTime.now();
+        log.info("cause:{}", scheduleParticipantRejectedRequest.getCause());
         scheduleParticipant.rejected(
-                scheduleParticipantRejectedRequest.getStatus(),
-                scheduleParticipantRejectedRequest.getProcessedAt(),
+                status,
+                processedAt,
                 scheduleParticipantRejectedRequest.getCause()
         );
     }

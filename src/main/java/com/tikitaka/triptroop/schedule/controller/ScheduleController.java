@@ -209,6 +209,20 @@ public class ScheduleController {
 
     }
 
+//    // TODO 일정 신청자 리스트 조회
+//    @GetMapping()
+//    public ResponseEntity<ApiResponse<PageResponse>> findAllSchedulesParticipant(
+//            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+//            @RequestParam(required = false, name = "keyword") final String keyword,
+//            @RequestParam(required = false, name = "sort") final String sort,
+//            @RequestParam(required = false, name = "area") final Long area
+//    ) {
+//        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, keyword, sort, area);
+//        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
+//        final PageResponse pagingResponse = PageResponse.of(schedules.getContent(), pagingButtonInfo);
+//        return ResponseEntity.ok(ApiResponse.success(pagingResponse));
+//    }
+
     // TODO 일정 신청
     @PostMapping("/{scheduleId}/apply")
     public ResponseEntity<ApiResponse> applySchedule(@PathVariable final Long scheduleId,
@@ -223,10 +237,9 @@ public class ScheduleController {
 
     // TODO 일정 신청 승인
     @PutMapping("/{scheduleParticipantId}/accept")
-    public ResponseEntity<ApiResponse> acceptSchedule(@PathVariable final Long scheduleParticipantId,
-                                                      @RequestBody @Valid final ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest) {
-
-        scheduleParticipantService.accept(scheduleParticipantAcceptRequest, scheduleParticipantId);
+    public ResponseEntity<ApiResponse> acceptSchedule(@PathVariable final Long scheduleParticipantId
+    ) {
+        scheduleParticipantService.accept(scheduleParticipantId);
         return ResponseEntity.ok(ApiResponse.success("일정 신청이 승인되었습니다."));
     }
 
