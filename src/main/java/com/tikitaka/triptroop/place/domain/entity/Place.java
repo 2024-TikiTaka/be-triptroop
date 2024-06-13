@@ -28,4 +28,27 @@ public class Place extends BaseTimeEntity {
     public String name;
 
     public LocalDateTime deletedAt;
+
+    public Place(String address, String name) {
+        this.address = address;
+        this.name = name;
+    }
+
+    public static Place insert(String address, String name) {
+        return new Place(
+                address,
+                name
+        );
+    }
+
+
+    public static Place save(String address, String name) {
+        return new Place(
+
+                address,
+                name
+
+        );
+    }
+
 }

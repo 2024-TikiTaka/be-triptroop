@@ -135,6 +135,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 ))
                 .from(scheduleItem)
                 .join(schedule).on(schedule.id.eq(scheduleItem.scheduleId))
+                .join(place).on(scheduleItem.placeId.eq(place.id))
                 .where(schedule.id.eq(scheduleId))
                 .fetch();
     }
