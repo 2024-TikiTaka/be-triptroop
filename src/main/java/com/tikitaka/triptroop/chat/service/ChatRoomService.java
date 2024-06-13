@@ -4,12 +4,14 @@ import com.tikitaka.triptroop.chat.domain.entity.ChatRoom;
 import com.tikitaka.triptroop.chat.domain.repository.ChatRoomRepository;
 import com.tikitaka.triptroop.chat.dto.request.ChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.response.ChatResponse;
+import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,18 +27,20 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatResponse createChatRoom(ChatRoomCreateRequest request, @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+    public ChatResponse createChatRoom(ChatRoomCreateRequest request, @AuthenticationPrincipal CustomUser loginUser) {
+        Long userId = Long.valueOf(loginUser.getUserId());
         Long friendId = request.getFriendId();
 
         // 채팅방 URL 생성
         String url = "ws://localhost:8080/ws/" + userId + "_" + friendId;
 
         ChatRoom chatRoom = ChatRoom.of(
+                request.getRoomName(),
                 request.getType(),
-                Long.valueOf(userDetails.getUsername()), // 로그인 한 사용자 정보 가져오기
+                userId,
                 request.getFriendId(),
-                url
+                url,
+                LocalDateTime.now()
         );
 
         chatRoom = chatRoomRepository.save(chatRoom);

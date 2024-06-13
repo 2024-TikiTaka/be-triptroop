@@ -39,26 +39,30 @@ public class ChatRoom {
 
     private String url;
 
+    @CreatedDate
+    @Field("last_message_at")
     private LocalDateTime lastMessageAt;
 
     // 정적 팩토리 메서드
-    public static ChatRoom of(ChatRoomType type, Long creator, Long member, String url) {
+    public static ChatRoom of(String roomName, ChatRoomType type, Long creator, Long member, String url, LocalDateTime lastMessageAt) {
         return new ChatRoom(
+                roomName,
                 type,
                 creator,
                 Collections.singletonList(member),
-                url
-//                null // 초기 lastMessageAt 값은 null
+                url,
+                lastMessageAt
         );
     }
 
     // 생성자
-    private ChatRoom(ChatRoomType type, Long creator, List<Long> member, String url /*LocalDateTime lastMessageAt*/) {
+    private ChatRoom(String roomName, ChatRoomType type, Long creator, List<Long> member, String url, LocalDateTime lastMessageAt) {
+        this.roomName = roomName;
         this.type = type;
         this.creator = creator;
         this.member = member;
         this.url = url;
-        /*this.lastMessageAt = lastMessageAt;*/
+        this.lastMessageAt = lastMessageAt;
     }
 
 }
