@@ -56,16 +56,17 @@ public class TravelService {
     /* 여행지 소개 조회 */
     @Transactional(readOnly = true)
     public Page<TravelsResponse> findAll(final Integer page, final Long categoryId, final Long areaId, final String title) {
+        boolean deleted = false;
 
         Page<Travel> travels = null;
         if (areaId != null && areaId > 0) {
-            travels = travelRepository.findByAreaIdAndVisibility(getPageable(page), areaId, Visibility.PUBLIC);
+            travels = travelRepository.findByAreaIdAndVisibilityAndIsDeleted(getPageable(page), areaId, Visibility.PUBLIC, deleted);
         } else if (categoryId != null && categoryId > 0) {
-            travels = travelRepository.findByCategoryIdAndVisibility(getPageable(page), categoryId, Visibility.PUBLIC);
+            travels = travelRepository.findByCategoryIdAndVisibilityAndIsDeleted(getPageable(page), categoryId, Visibility.PUBLIC, deleted);
         } else if (title != null && !title.isEmpty()) {
-            travels = travelRepository.findByTitleAndVisibility(getPageable(page), title, Visibility.PUBLIC);
+            travels = travelRepository.findByTitleContainingAndVisibilityAndIsDeleted(getPageable(page), title, Visibility.PUBLIC, deleted);
         } else {
-            travels = travelRepository.findByVisibility(getPageable(page), Visibility.PUBLIC);
+            travels = travelRepository.findByVisibilityAndIsDeleted(getPageable(page), Visibility.PUBLIC, deleted);
         }
 
         return travels.map(TravelsResponse::from);
