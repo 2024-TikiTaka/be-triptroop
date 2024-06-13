@@ -42,7 +42,7 @@ public class AuthController {
      * @param email    이메일
      * @param password 비밀번호
      */
-    @PostMapping("/signup")
+    @PostMapping("/password/reset")
     public ResponseEntity<ApiResponse<?>> resetPassword(String email, String password) {
 
         userService.resetPassword(email, password);
