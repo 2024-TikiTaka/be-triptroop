@@ -3,7 +3,6 @@ package com.tikitaka.triptroop.admin.controller;
 import com.tikitaka.triptroop.admin.dto.request.AdminUserSaveRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
-import com.tikitaka.triptroop.admin.dto.response.AdminUserSaveResponse;
 import com.tikitaka.triptroop.admin.service.AdminUserService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class AdminUserController {
     @PostMapping("")
     public ResponseEntity<ApiResponse> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
                                                 @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
-        final AdminUserSaveResponse registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
+        final AdminUserSaveRequest registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
         return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", registeredAdminUser));
     }
 

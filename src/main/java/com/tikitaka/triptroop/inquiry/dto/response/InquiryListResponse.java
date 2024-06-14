@@ -2,7 +2,6 @@ package com.tikitaka.triptroop.inquiry.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
 import com.tikitaka.triptroop.inquiry.domain.type.InquiryKind;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @RequiredArgsConstructor
 public class InquiryListResponse {
 

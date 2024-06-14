@@ -2,7 +2,6 @@ package com.tikitaka.triptroop.inquiry.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
 import com.tikitaka.triptroop.image.util.ImageUtils;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @RequiredArgsConstructor
 public class InquiryDetailResponse {
 

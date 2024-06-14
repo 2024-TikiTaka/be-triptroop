@@ -69,6 +69,22 @@ public class AdminUserSaveRequest {
         this.mbti = mbti;
     }
 
+    public AdminUserSaveRequest(User user, Profile profile) {
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.confirmPassword = user.getPassword();
+        this.name = user.getName();
+        this.phone = user.getPhone();
+        this.gender = user.getGender();
+        this.role = user.getRole();
+        this.status = user.getStatus();
+        this.birth = user.getBirth();
+        this.nickname = profile.getNickname();
+        this.profileImage = profile.getProfileImage();
+        this.introduction = profile.getIntroduction();
+        this.mbti = profile.getMbti();
+    }
+
     public static AdminUserSaveRequest from(String email, String password, String confirmPassword, String name, String phone, Gender gender, UserRole role, UserStatus status, LocalDate birth, String nickname, String profileImage, String introduction, String mbti) {
         // 유효성 검사 로직 추가
         validateEmail(email);
