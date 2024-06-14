@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ScheduleParticipantRepository extends JpaRepository<ScheduleParticipant, Long> {
     List<ScheduleParticipant> findByScheduleId(Long scheduleId);
 
+
     Optional<ScheduleParticipant> findFirstByScheduleId(Long scheduleId);
 
     //    @Query("SELECT COUNT(sp) FROM ScheduleParticipant sp WHERE sp.scheduleId = :scheduleId")
@@ -21,4 +22,5 @@ public interface ScheduleParticipantRepository extends JpaRepository<SchedulePar
 
     ScheduleParticipant findByScheduleIdAndReviewerId(Long scheduleId, Long userId);
 
+    List<ScheduleParticipant> findAllByScheduleId(Long scheduleId);
 }

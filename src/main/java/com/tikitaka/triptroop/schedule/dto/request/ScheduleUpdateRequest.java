@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ScheduleUpdateRequest {
 
-    @NotNull
-    private final Long userId;
 
     @NotNull
     private final Long areaId;
@@ -29,4 +27,6 @@ public class ScheduleUpdateRequest {
 
     @Min(value = 1)
     private final Integer count;
+
+    private final String status;
 }
