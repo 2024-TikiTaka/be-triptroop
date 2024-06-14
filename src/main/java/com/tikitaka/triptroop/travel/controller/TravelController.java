@@ -6,13 +6,13 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
+import com.tikitaka.triptroop.place.service.PlaceService;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
 import com.tikitaka.triptroop.travel.dto.response.TravelInfoResponse;
 import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.travel.service.TravelService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
-import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,8 +38,8 @@ public class TravelController {
     private final TravelService travelService;
 
     private final ImageService imageService;
+    private final PlaceService placeService;
 
-    private final EntityManager entityManager;
 
     /* 전체 게시글 조회 */
     @GetMapping()
@@ -62,14 +62,16 @@ public class TravelController {
     @PostMapping()
     public ResponseEntity<ApiResponse> save(
             @AuthenticationPrincipal CustomUser loginUser,
-            @RequestPart @Valid final TravelRequest travelRequest,
-            @RequestPart final List<MultipartFile> images) {
+            @RequestPart final TravelRequest travelRequest,
+            @RequestPart(required = false) final List<MultipartFile> images) {
+        Long placeId = placeService.saveplace(travelRequest);
 
-        final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images);
+        final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images, placeId);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
     }
 
 
@@ -108,6 +110,7 @@ public class TravelController {
         TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
         return ResponseEntity.ok(ApiResponse.success(travelInfo));
     }
+
 
     /* 게시글 상세 조회 (하는중)*/
 //    @GetMapping("/{travelId}")

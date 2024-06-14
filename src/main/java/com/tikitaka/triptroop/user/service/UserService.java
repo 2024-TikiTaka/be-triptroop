@@ -27,37 +27,59 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 회원 존재 여부
+     *
+     * @param email 이메일
+     */
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     /**
-     * 회원 번호로 조회
-     */
-    @Transactional(readOnly = true)
-    public UserResponse findById(Long userId) {
-        return UserResponse.from(findUserById(userId));
-    }
-
-    /**
-     * 이메일로 조회
-     */
-    @Transactional(readOnly = true)
-    public UserResponse findByEmail(String email) {
-        return UserResponse.from(findUserByEmail(email));
-    }
-
-    /**
      * 이메일 가입 여부
+     *
+     * @param email
      */
     public void checkEmailDuplicate(String email) {
+
         if (existsByEmail(email)) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_EMAIL);
         }
     }
 
     /**
+     * 회원 조회
+     *
+     * @param userId 회원번호
+     * @return UserResponse
+     */
+    public UserResponse findById(Long userId) {
+
+        return UserResponse.from(
+                userRepository.findById(userId)
+                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER))
+        );
+    }
+
+    /**
+     * 회원 조회
+     *
+     * @param email 이메일
+     * @return UserResponse
+     */
+    public UserResponse findByEmail(String email) {
+
+        return UserResponse.from(
+                userRepository.findByEmail(email)
+                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER))
+        );
+    }
+
+    /**
      * 회원 가입
+     *
+     * @param userRequest
      */
     @Transactional
     public void signup(final SignUpRequest userRequest) {
@@ -79,7 +101,26 @@ public class UserService {
 
     /**
      * 비밀번호 변경
+     *
+     * @param email
+     * @param password
      */
+
+    public void resetPassword(String email, String password) {
+
+        final User user = userRepository.findByEmail(email)
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+
+        user.updatePassword(encode(password));
+    }
+
+    /**
+     * 비밀번호 변경
+     *
+     * @param userId
+     * @param passwordRequest
+     */
+    @Transactional
     public void changePassword(Long userId, PasswordRequest passwordRequest) {
 
         final User user = validatePassword(userId, passwordRequest.getCurrentPassword());
@@ -87,12 +128,17 @@ public class UserService {
     }
 
     /**
-     * 전화번호 변경
+     * 회원 수정
+     *
+     * @param userId
+     * @param userRequest
+     * @return UserResponse
      */
     @Transactional
     public UserResponse updateUser(Long userId, UserSaveRequest userRequest) {
 
-        final User user = findUserById(userId);
+        final User user = userRepository.findById(userId)
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
         user.updateUser(userRequest.getPhone());
 
         return UserResponse.from(user);
@@ -100,6 +146,9 @@ public class UserService {
 
     /**
      * 회원 탈퇴
+     *
+     * @param userId
+     * @param currentPassword
      */
     @Transactional
     public void withdrawal(Long userId, String currentPassword) {
@@ -113,21 +162,10 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private User findUserByEmail(String email) {
-
-        return userRepository.findByEmail(email)
-                             .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-    }
-
-    private User findUserById(Long userId) {
-
-        return userRepository.findById(userId)
-                             .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
-    }
-
     private User validatePassword(Long userId, String password) {
 
-        final User user = findUserById(userId);
+        final User user = userRepository.findById(userId)
+                                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException(ExceptionCode.INVALID_PASSWORD);
@@ -140,4 +178,6 @@ public class UserService {
 
         return passwordEncoder.encode(password);
     }
+
+
 }

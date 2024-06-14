@@ -29,18 +29,18 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<Schedule> findSchedulesByKeyword(Pageable pageable, Visibility visibility, String keyword, String sort, Long area) {
+    public Page<Schedule> findSchedulesByKeyword(Pageable pageable, Visibility visibility, String keyword, String sort, Long area, boolean deleted) {
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
         if (visibility != null) {
-            predicate = predicate.and(schedule.visibility.eq(visibility));
+            predicate = predicate.and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
         }
 
         if (keyword != null && !keyword.isEmpty()) {
-            predicate = predicate.and(schedule.title.containsIgnoreCase(keyword));
+            predicate = predicate.and(schedule.title.containsIgnoreCase(keyword)).and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
         }
         if (area != null && area > 0) {
-            predicate = predicate.and(schedule.area.id.eq(area));
+            predicate = predicate.and(schedule.area.id.eq(area)).and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
         }
 
         JPAQuery<Schedule> query = queryFactory.selectFrom(schedule)
@@ -126,6 +126,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public List<ScheduleItemInfoResponse> findScheduleItemByScheduleId(Long scheduleId) {
         return queryFactory
                 .select(new QScheduleItemInfoResponse(
+                        scheduleItem.id,
                         place.name,
                         place.address,
                         scheduleItem.planDate,
