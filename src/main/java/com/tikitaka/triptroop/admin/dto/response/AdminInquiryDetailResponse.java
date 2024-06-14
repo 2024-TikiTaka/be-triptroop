@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.inquiry.dto.response;
+package com.tikitaka.triptroop.admin.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class InquiryDetailResponse {
+public class AdminInquiryDetailResponse {
 
     private final Long inquiryId;
     private final String email;
@@ -31,10 +31,10 @@ public class InquiryDetailResponse {
     private final String reply;
     private final List<String> imageNames;
 
-    public static InquiryDetailResponse from(final Inquiry inquiry, User user, List<ImageOriginalResponse> imageOriginalResponses, Profile profile) {
+    public static AdminInquiryDetailResponse from(final Inquiry inquiry, User user, List<ImageOriginalResponse> imageOriginalResponses, Profile profile) {
         List<String> imageNames = ImageUtils.extractImageInfo(imageOriginalResponses);
 
-        return new InquiryDetailResponse(
+        return new AdminInquiryDetailResponse(
                 inquiry.getId(),
                 user.getEmail(),
                 profile.getNickname(),
