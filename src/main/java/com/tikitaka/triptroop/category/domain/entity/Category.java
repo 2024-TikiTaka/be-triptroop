@@ -25,6 +25,12 @@ public class Category {
 
     @CreatedDate
     private LocalDateTime createdAt;
- 
+
     private LocalDateTime deletedAt;
+
+    public void addCategory() {
+        this.name = name;
+        this.createdAt = createdAt;
+        this.deletedAt = deletedAt;
+    }
 }

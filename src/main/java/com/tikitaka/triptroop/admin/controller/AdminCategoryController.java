@@ -1,13 +1,14 @@
 package com.tikitaka.triptroop.admin.controller;
 
+import com.tikitaka.triptroop.admin.dto.request.AdminCategorySaveRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminCategoryResponse;
 import com.tikitaka.triptroop.admin.service.AdminCategoryService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,16 +27,15 @@ public class AdminCategoryController {
     }
 
     /* 2. 카테고리 관리 > 카테고리 등록 */
-//    @PostMapping()
-//    public ResponseEntity<ApiResponse<Long>> saveCategory(
-//            @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest,
-//            @RequestPart final List<MultipartFile> images
-//    ) {
-//
-//        final Long categoryId = adminCategoryService.save(adminCategorySaveRequest, 6L, images);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("카테고리가 등록 되었습니다.", categoryId));
-//    }
+    @PostMapping()
+    public ResponseEntity<ApiResponse<Long>> saveCategory(
+            @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest
+    ) {
+
+        final Long categoryId = adminCategoryService.save(adminCategorySaveRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("카테고리가 등록 되었습니다.", categoryId));
+    }
 
 
     /* 3. 카테고리 관리 > 카테고리 수정 */
