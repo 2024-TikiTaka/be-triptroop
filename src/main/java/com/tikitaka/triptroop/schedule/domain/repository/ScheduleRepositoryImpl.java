@@ -126,6 +126,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public List<ScheduleItemInfoResponse> findScheduleItemByScheduleId(Long scheduleId) {
         return queryFactory
                 .select(new QScheduleItemInfoResponse(
+                        scheduleItem.id,
                         place.name,
                         place.address,
                         scheduleItem.planDate,

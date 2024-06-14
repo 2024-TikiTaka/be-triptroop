@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class ScheduleItemInfoResponse {
 
 
+    private Long id;
     private String name;
     private String address;
 
@@ -24,7 +25,8 @@ public class ScheduleItemInfoResponse {
     private String content;
 
     @QueryProjection
-    public ScheduleItemInfoResponse(String name, String address, LocalDate planDate, ScheduleItemKind kind, Integer cost, String content) {
+    public ScheduleItemInfoResponse(Long id, String name, String address, LocalDate planDate, ScheduleItemKind kind, Integer cost, String content) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.planDate = planDate;

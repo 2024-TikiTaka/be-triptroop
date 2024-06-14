@@ -9,6 +9,7 @@ import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.place.service.PlaceService;
 import com.tikitaka.triptroop.schedule.dto.request.*;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleDetailResponse;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantProfileResponse;
 import com.tikitaka.triptroop.schedule.dto.response.ScheduleResponse;
 import com.tikitaka.triptroop.schedule.service.ScheduleParticipantService;
 import com.tikitaka.triptroop.schedule.service.ScheduleService;
@@ -209,19 +210,14 @@ public class ScheduleController {
 
     }
 
-//    // TODO 일정 신청자 리스트 조회
-//    @GetMapping()
-//    public ResponseEntity<ApiResponse<PageResponse>> findAllSchedulesParticipant(
-//            @RequestParam(defaultValue = "1", name = "page") final Integer page,
-//            @RequestParam(required = false, name = "keyword") final String keyword,
-//            @RequestParam(required = false, name = "sort") final String sort,
-//            @RequestParam(required = false, name = "area") final Long area
-//    ) {
-//        final Page<ScheduleResponse> schedules = scheduleService.findAllSchedules(page, keyword, sort, area);
-//        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(schedules);
-//        final PageResponse pagingResponse = PageResponse.of(schedules.getContent(), pagingButtonInfo);
-//        return ResponseEntity.ok(ApiResponse.success(pagingResponse));
-//    }
+    // TODO 일정 신청자 리스트 조회
+    @GetMapping("{scheduleId}/schedulesParticipantList")
+    public ResponseEntity<ApiResponse<List<ScheduleParticipantProfileResponse>>> findAllSchedulesParticipant(
+            @PathVariable final Long scheduleId
+    ) {
+        final List<ScheduleParticipantProfileResponse> scheduleParticipantProfile = scheduleParticipantService.findAllSchedulesParticipants(scheduleId);
+        return ResponseEntity.ok(ApiResponse.success(scheduleParticipantProfile));
+    }
 
     // TODO 일정 신청
     @PostMapping("/{scheduleId}/apply")
