@@ -30,25 +30,56 @@ public class ProfileController {
      * @param nickname 닉네임
      */
     @GetMapping("/check/nickname")
-    public ResponseEntity<ApiResponse> checkDuplicateNickname(String nickname) {
+    public ResponseEntity<ApiResponse<?>> checkDuplicateNickname(String nickname) {
 
         profileService.checkNicknameDuplicate(nickname);
-        return ResponseEntity.ok(ApiResponse.success("사용 가능한 닉네임입니다."));
+
+        return ResponseEntity.ok(
+                ApiResponse.success("사용 가능한 닉네임입니다.")
+        );
     }
 
     /**
-     * 닉네임으로 프로필 조회
+     * 프로필 조회
      *
-     * @param nickname 닉네임
-     * @return UserProfileResponse 성별, 나이(구간), 고도, 프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI
+     * @param profileId 프로필번호
+     * @return ProfileResponse
      */
-    // TODO: 성향, 친구여부, 차단여부, 채팅 링크
-    @GetMapping("/profiles")
-    public ResponseEntity<ApiResponse> getProfileByNickname(@AuthenticationPrincipal CustomUser loginUser, String nickname) {
+    @GetMapping("/profiles/{profileId}")
+    public ResponseEntity<ApiResponse<ProfileResponse>> getProfile(@PathVariable("profileId") Long profileId) {
 
-        final UserProfileResponse userProfile = profileService.findUserProfileByNickname(nickname);
-        return ResponseEntity.ok(ApiResponse.success(userProfile));
+        return ResponseEntity.ok(
+                ApiResponse.success(profileService.findById(profileId))
+        );
     }
+
+
+    /**
+     * 프로필 상세 조회
+     *
+     * @param userId   회원번호
+     * @param nickname 닉네임
+     * @return UserProfileResponse 회원번호, 성별, 나이(구간), 고도, 프로필:{프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI}
+     */
+    @GetMapping("/users/profile")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> getUserProfile(@RequestParam(required = false) Long userId,
+                                                                           @RequestParam(required = false) String nickname) {
+
+        UserProfileResponse user = null;
+
+        if (userId != null) {
+            user = profileService.findUserProfileByUserId(userId);
+        }
+        if (nickname != null) {
+            user = profileService.findUserProfileByNickname(nickname);
+        }
+
+        return ResponseEntity.ok(
+                ApiResponse.success(user)
+        );
+    }
+
+    /* ================================================== */
 
     /**
      * 내 프로필 조회
@@ -56,11 +87,25 @@ public class ProfileController {
      * @param loginUser 로그인 정보
      * @return ProfileResponse 프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI, 고도
      */
-    @GetMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse> getProfile(@AuthenticationPrincipal CustomUser loginUser) {
+    @GetMapping("/profiles/me")
+    public ResponseEntity<ApiResponse<ProfileResponse>> getProfile(@AuthenticationPrincipal CustomUser loginUser) {
 
-        final UserProfileResponse userProfile = profileService.findUserProfileByUserId(loginUser.getUserId());
-        return ResponseEntity.ok(ApiResponse.success(userProfile));
+        return ResponseEntity.ok(
+                ApiResponse.success(profileService.findByUserId(loginUser.getUserId()))
+        );
+    }
+
+    /**
+     * 내 프로필 상세 조회
+     *
+     * @param loginUser 로그인 정보
+     * @return UserProfileResponse 회원번호, 성별, 나이(구간), 고도, 프로필:{프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI}
+     */
+    @GetMapping("/users/me/profile")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> getUserProfile(@AuthenticationPrincipal CustomUser loginUser) {
+
+        UserProfileResponse currentUser = profileService.findUserProfileByUserId(loginUser.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(currentUser));
     }
 
     /**
@@ -69,10 +114,10 @@ public class ProfileController {
      * @param loginUser      로그인 정보
      * @param profileRequest 닉네임, 자기소개, MBTI
      */
-    @PostMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                   @RequestPart @Valid ProfileSaveRequest profileRequest,
-                                                   @RequestPart MultipartFile profileImage) {
+    @PostMapping("/profiles/me")
+    public ResponseEntity<ApiResponse<?>> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
+                                                      @RequestPart @Valid ProfileSaveRequest profileRequest,
+                                                      @RequestPart MultipartFile profileImage) {
 
         Long userId = loginUser.getUserId();
 
@@ -90,9 +135,9 @@ public class ProfileController {
      * @param loginUser      로그인 정보
      * @param profileRequest 닉네임, 자기소개, MBTI
      */
-    @PutMapping("/users/me/profile")
-    public ResponseEntity<ApiResponse> updateProfile(@AuthenticationPrincipal CustomUser loginUser,
-                                                     @RequestBody @Valid ProfileSaveRequest profileRequest) {
+    @PutMapping("/profiles/me")
+    public ResponseEntity<ApiResponse<?>> updateProfile(@AuthenticationPrincipal CustomUser loginUser,
+                                                        @RequestBody @Valid ProfileSaveRequest profileRequest) {
 
         final ProfileResponse profile = profileService.updateProfile(loginUser.getUserId(), profileRequest);
         return ResponseEntity.ok(ApiResponse.success("프로필 수정이 완료되었습니다.", profile));
@@ -104,9 +149,9 @@ public class ProfileController {
      * @param loginUser    로그인 정보
      * @param profileImage 닉네임, 자기소개, MBTI
      */
-    @PostMapping("/users/me/profile/upload")
-    public ResponseEntity<ApiResponse> uploadProfileImage(@AuthenticationPrincipal CustomUser loginUser,
-                                                          @RequestBody MultipartFile profileImage) {
+    @PostMapping("/profiles/me/upload")
+    public ResponseEntity<ApiResponse<?>> uploadProfileImage(@AuthenticationPrincipal CustomUser loginUser,
+                                                             @RequestBody MultipartFile profileImage) {
 
         profileService.uploadImage(loginUser.getUserId(), profileImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("이미지 등록이 완료되었습니다."));
@@ -117,8 +162,8 @@ public class ProfileController {
      *
      * @param loginUser 로그인 정보
      */
-    @DeleteMapping("/users/me/profile/upload")
-    public ResponseEntity<ApiResponse<Void>> deleteProfileImage(@AuthenticationPrincipal CustomUser loginUser) {
+    @DeleteMapping("/profiles/me/upload")
+    public ResponseEntity<ApiResponse<?>> deleteProfileImage(@AuthenticationPrincipal CustomUser loginUser) {
 
         profileService.deleteImage(loginUser.getUserId());
         return ResponseEntity.noContent().build();

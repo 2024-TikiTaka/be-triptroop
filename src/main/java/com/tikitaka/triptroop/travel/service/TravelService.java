@@ -5,21 +5,21 @@ import com.tikitaka.triptroop.common.domain.type.Visibility;
 import com.tikitaka.triptroop.common.exception.ForbiddenException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.dto.response.ImageResponse;
 import com.tikitaka.triptroop.image.service.ImageService;
-import com.tikitaka.triptroop.place.domain.entity.Place;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
-import com.tikitaka.triptroop.place.dto.response.PlaceResponse;
+import com.tikitaka.triptroop.place.domain.repository.PlaceRepositoryImpl;
+import com.tikitaka.triptroop.place.dto.response.PlaceTravelResponse;
 import com.tikitaka.triptroop.travel.domain.entity.Travel;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepository;
 import com.tikitaka.triptroop.travel.domain.repository.TravelRepositoryImpl;
 import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import com.tikitaka.triptroop.travel.dto.request.TravelUpdateRequest;
-import com.tikitaka.triptroop.travel.dto.response.*;
-import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelInfoResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelResponse;
+import com.tikitaka.triptroop.travel.dto.response.TravelsResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +40,7 @@ public class TravelService {
 
     private final TravelRepository travelRepository;
     private final PlaceRepository placeRepository;
+    private final PlaceRepositoryImpl placeRepositoryImpl;
     private final TravelRepositoryImpl travelRepositoryImpl;
     private final ProfileService profileService;
     private final TravelCommentService travelCommentService;
@@ -72,10 +73,11 @@ public class TravelService {
     /* 상세조회 (JPQL) */
     public TravelInfoResponse getTravelInfo(Long travelId) {
 
+        Travel travels = travelRepository.findById(travelId).orElseThrow();
         TravelResponse travel = travelRepositoryImpl.findDetailedTravelByIdAndVisibility(travelId);
         List<ImageResponse> images = travelRepositoryImpl.findImagesByTravelId(travelId);
-
-        return TravelInfoResponse.of(travel, images);
+        PlaceTravelResponse place = placeRepositoryImpl.findPlaceById(travels.getPlaceId());
+        return TravelInfoResponse.of(travel, images, place);
     }
 
     /* 여행지 소개 상세 조회*/
@@ -107,7 +109,7 @@ public class TravelService {
 
 
     /* 여행지 소개 등록 */
-    public Long save(final TravelRequest travelRequest, final Long userId, final List<MultipartFile> images) {
+    public Long save(final TravelRequest travelRequest, final Long userId, final List<MultipartFile> images, Long placeId) {
 
         //        Category category = categoryRepository.findById(travelRequest.getCategoryId())
         //                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
@@ -120,7 +122,7 @@ public class TravelService {
                 userId,
                 travelRequest.getCategoryId(),
                 travelRequest.getAreaId(),
-                travelRequest.getPlaceId(),
+                placeId,
                 travelRequest.getTitle(),
                 travelRequest.getContent()
         );
@@ -157,27 +159,27 @@ public class TravelService {
 //        return travelCommentUserResponse;
 //    }
 
-    /* 여행 소개 상세 조회 (수정) */
-    public TravelDetailResponse findTravelDetail(Long travelId) {
-
-        Travel travel = travelRepository.findById(travelId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
-        List<Image> images = imageRepository.findByTravelId(travelId);
-        List<ImageResponse> image = ImageResponse.from(images);
-        Place place = placeRepository.findById(travel.getPlaceId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
-        UserProfileResponse userProfile = profileService.findUserProfileByUserId(travel.getUserId());
-        Page<TravelCommentResponse> travelComment = travelCommentService.findAll(1, travelId);
-
-        return TravelDetailResponse.of(
-                travel.getTitle(),
-                travel.getContent(),
-                PlaceResponse.from(place),
-                userProfile,
-                image,
-                travelComment
-        );
-    }
+//    /* 여행 소개 상세 조회 (수정) */
+//    public TravelDetailResponse findTravelDetail(Long travelId) {
+//
+//        Travel travel = travelRepository.findById(travelId)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_TRAVEL));
+//        List<Image> images = imageRepository.findByTravelId(travelId);
+//        List<ImageResponse> image = ImageResponse.from(images);
+//        Place place = placeRepository.findById(travel.getPlaceId())
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLACE));
+//        UserProfileResponse userProfile = profileService.findUserProfileByUserId(travel.getUserId());
+//        Page<TravelCommentResponse> travelComment = travelCommentService.findAll(1, travelId);
+//
+//        return TravelDetailResponse.of(
+//                travel.getTitle(),
+//                travel.getContent(),
+//                PlaceResponse.from(place),
+//                userProfile,
+//                image,
+//                travelComment
+//        );
+//    }
 
 
     /* 게시글 수정 */

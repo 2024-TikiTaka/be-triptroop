@@ -42,6 +42,14 @@ public class Place extends BaseTimeEntity {
         this.name = name;
     }
 
+    public static Place insert(String address, String name) {
+        return new Place(
+                address,
+                name
+        );
+    }
+
+
     public static Place save(String address, String name) {
         return new Place(
 
@@ -51,5 +59,4 @@ public class Place extends BaseTimeEntity {
         );
     }
 
-   
 }
