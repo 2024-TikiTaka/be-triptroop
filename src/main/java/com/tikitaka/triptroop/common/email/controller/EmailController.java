@@ -17,9 +17,11 @@ public class EmailController {
 
     /**
      * 인증 번호 전송
+     *
+     * @param email
      */
-    @PostMapping("/mail/send")
-    public ResponseEntity<ApiResponse> send(String email) throws Exception {
+    @PostMapping("/email/send")
+    public ResponseEntity<ApiResponse<?>> send(String email) throws Exception {
 
         String authCode = emailService.generateAuthCode();
         String token = emailService.encryptToken(email, authCode);
@@ -32,9 +34,13 @@ public class EmailController {
 
     /**
      * 인증 번호 검증
+     *
+     * @param token
+     * @param email
+     * @param code
      */
-    @PostMapping("/mail/verify")
-    public ResponseEntity<ApiResponse> verify(String token, String email, String code) {
+    @PostMapping("/email/verify")
+    public ResponseEntity<ApiResponse<?>> verify(String token, String email, String code) {
 
         emailService.verifyToken(token, email, code);
         return ResponseEntity.ok(ApiResponse.success("인증 완료되었습니다."));
