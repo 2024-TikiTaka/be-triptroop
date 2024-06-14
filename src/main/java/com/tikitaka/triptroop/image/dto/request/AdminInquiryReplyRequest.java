@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.inquiry.dto.request;
+package com.tikitaka.triptroop.image.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class InquiryReplyRequest {
+public class AdminInquiryReplyRequest {
 
     private String reply;
 
     @JsonCreator
-    public InquiryReplyRequest(@JsonProperty("reply") String reply) {
+    public AdminInquiryReplyRequest(@JsonProperty("reply") String reply) {
         this.reply = reply;
     }
 

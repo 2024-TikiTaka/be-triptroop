@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.inquiry.dto.response;
+package com.tikitaka.triptroop.admin.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class InquiryListResponse {
+public class AdminInquiryListResponse {
 
     private final Long inquiryId;
     private final String email;
@@ -24,7 +24,7 @@ public class InquiryListResponse {
     private final LocalDateTime createdAt;
     private final String status;
 
-    public InquiryListResponse(final Inquiry inquiry, User user, Profile profile) {
+    public AdminInquiryListResponse(final Inquiry inquiry, User user, Profile profile) {
         this.inquiryId = inquiry.getId();
         this.email = user.getEmail();
         this.nickname = profile.getNickname();
