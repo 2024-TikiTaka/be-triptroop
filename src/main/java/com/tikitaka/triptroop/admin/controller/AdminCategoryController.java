@@ -32,18 +32,17 @@ public class AdminCategoryController {
             @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest
     ) {
         final Long categoryId = adminCategoryService.save(adminCategorySaveRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("카테고리가 등록 되었습니다.", categoryId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("카테고리가 등록되었습니다.", categoryId));
     }
 
 
     /* 3. 카테고리 관리 > 카테고리 수정 */
-//    @PutMapping("")
-//    public ResponseEntity<ApiResponse> updateCategory(
-//            @PathVariable final Long categoryId,
-//            @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest,
-//            @RequestPart final List<MultipartFile> images
-//    ) {
-//        final Category updateCategory = adminCategoryService.update(categoryId, adminCategorySaveRequest, images);
-//        return ResponseEntity.ok(ApiResponse.success("답변 등록에 성공하였습니다.", updateCategory));
-//    }
+    @PatchMapping("/{categoryId}")
+    public ResponseEntity<ApiResponse> updateCategory(
+            @PathVariable final Long categoryId,
+            @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest
+    ) {
+        final Category updateCategory = adminCategoryService.update(categoryId, adminCategorySaveRequest);
+        return ResponseEntity.ok(ApiResponse.success("카테고리가 수정되었습니다.", updateCategory));
+    }
 }
