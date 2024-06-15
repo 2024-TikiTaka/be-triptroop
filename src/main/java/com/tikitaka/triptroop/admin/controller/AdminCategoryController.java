@@ -1,8 +1,8 @@
 package com.tikitaka.triptroop.admin.controller;
 
 import com.tikitaka.triptroop.admin.dto.request.AdminCategorySaveRequest;
-import com.tikitaka.triptroop.admin.dto.response.AdminCategoryResponse;
 import com.tikitaka.triptroop.admin.service.AdminCategoryService;
+import com.tikitaka.triptroop.category.domain.entity.Category;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class AdminCategoryController {
     /* 1. 카테고리 관리 > 카테고리 목록 조회 */
     @GetMapping("")
     public ResponseEntity<ApiResponse> getCategoryList() {
-        final List<AdminCategoryResponse> categoryList = adminCategoryService.getCategoryList();
-        return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", categoryList));
+        final List<Category> categoryList = adminCategoryService.getCategoryList();
+        return ResponseEntity.ok(ApiResponse.success("카테고리 목록 조회에 성공하였습니다.", categoryList));
     }
 
     /* 2. 카테고리 관리 > 카테고리 등록 */
@@ -31,9 +31,7 @@ public class AdminCategoryController {
     public ResponseEntity<ApiResponse<Long>> saveCategory(
             @RequestPart @Valid final AdminCategorySaveRequest adminCategorySaveRequest
     ) {
-
         final Long categoryId = adminCategoryService.save(adminCategorySaveRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("카테고리가 등록 되었습니다.", categoryId));
     }
 

@@ -28,9 +28,11 @@ public class Category {
 
     private LocalDateTime deletedAt;
 
-    public void addCategory() {
+    private Category(String name) {
         this.name = name;
-        this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public static Category of(String name) {
+        return new Category(name);
     }
 }
