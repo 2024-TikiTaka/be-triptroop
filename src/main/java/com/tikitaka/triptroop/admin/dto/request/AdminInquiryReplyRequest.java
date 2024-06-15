@@ -1,4 +1,4 @@
-package com.tikitaka.triptroop.image.dto.request;
+package com.tikitaka.triptroop.admin.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

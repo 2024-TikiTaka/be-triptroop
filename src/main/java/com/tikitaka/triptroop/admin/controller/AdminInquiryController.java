@@ -1,11 +1,11 @@
 package com.tikitaka.triptroop.admin.controller;
 
 
+import com.tikitaka.triptroop.admin.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryListResponse;
 import com.tikitaka.triptroop.admin.service.AdminInquiryService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.image.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,13 @@
 package com.tikitaka.triptroop.admin.service;
 
 import com.tikitaka.triptroop.admin.domain.repository.AdminInquiryRepository;
+import com.tikitaka.triptroop.admin.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryListResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
-import com.tikitaka.triptroop.image.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
 import com.tikitaka.triptroop.user.domain.entity.Profile;

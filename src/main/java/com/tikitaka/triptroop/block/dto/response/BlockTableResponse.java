@@ -2,7 +2,6 @@ package com.tikitaka.triptroop.block.dto.response;
 
 import com.tikitaka.triptroop.block.domain.entity.Block;
 import com.tikitaka.triptroop.block.domain.type.BlockStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,7 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class BlockTableResponse {
 
     private final Long id;

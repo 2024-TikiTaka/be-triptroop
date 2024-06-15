@@ -40,6 +40,7 @@ public enum ExceptionCode {
     NOT_FOUND_SCHEDULE(2008, "해당 일정이 존재하지 않습니다."),
     NOT_FOUND_SCHEDULE_ITEM(2009, "해당 계획이 존재하지 않습니다."),
     NOT_FOUND_INQUIRY(2000, "문의 내역이 존재하지 않습니다."),
+    NOT_FOUND_NOTICE(2010, "공지 내역이 존재하지 않습니다."),
     ALREADY_EXISTS_EMAIL(409, "이미 존재하는 이메일입니다."),
     ALREADY_EXISTS_PROFILE(409, "이미 프로필이 존재합니다."),
     ALREADY_EXISTS_NICKNAME(409, "이미 존재하는 닉네임입니다."),

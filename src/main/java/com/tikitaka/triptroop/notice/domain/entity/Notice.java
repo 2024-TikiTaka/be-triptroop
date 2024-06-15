@@ -26,7 +26,8 @@ public class Notice {
 
     @Enumerated(value = EnumType.STRING)
     private NoticeKind kind;
-    private String isRead;
+
+    private Boolean isRead;
     private String title;
     private String content;
 
@@ -40,34 +41,34 @@ public class Notice {
     private LocalDateTime modifiedAt;
     private LocalDateTime deliveredAt;
 
-    private Notice(
-            NoticeKind kind,
-            String isRead,
-            String title,
-            String content,
-            NoticeStatus status
-    ) {
-        this.kind = kind;
-        this.isRead = isRead;
-        this.title = title;
-        this.content = content;
-        this.status = status;
-    }
+//    private Notice(
+//            NoticeKind kind,
+//            String isRead,
+//            String title,
+//            String content,
+//            NoticeStatus status
+//    ) {
+//        this.kind = kind;
+//        this.isRead = isRead;
+//        this.title = title;
+//        this.content = content;
+//        this.status = status;
+//    }
 
-    public static Notice of(
-            NoticeKind kind,
-            String isRead,
-            String title,
-            String content,
-            NoticeStatus status
-    ) {
-        return new Notice(
-                kind,
-                isRead,
-                title,
-                content,
-                status
-        );
-    }
+//    public static Notice of(
+//            NoticeKind kind,
+//            String isRead,
+//            String title,
+//            String content,
+//            NoticeStatus status
+//    ) {
+//        return new Notice(
+//                kind,
+//                isRead,
+//                title,
+//                content,
+//                status
+//        );
+//    }
 
 }
