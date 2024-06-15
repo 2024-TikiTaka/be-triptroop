@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.admin.controller;
 
 import com.tikitaka.triptroop.admin.dto.request.AdminCategorySaveRequest;
+import com.tikitaka.triptroop.admin.dto.response.AdminCategoryResponse;
 import com.tikitaka.triptroop.admin.service.AdminCategoryService;
 import com.tikitaka.triptroop.category.domain.entity.Category;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
