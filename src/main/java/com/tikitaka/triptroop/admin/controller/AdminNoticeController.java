@@ -44,4 +44,17 @@ public class AdminNoticeController {
         final Long noticeId = adminNoticeService.save(adminNoticeRequest, images);
         return ResponseEntity.ok(ApiResponse.success("공지 등록에 성공하였습니다.", noticeId));
     }
+
+    /* 4. 공지 관리 > 공지 수정 */
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<ApiResponse> updateNotice(
+            @PathVariable final Long noticeId,
+            @RequestPart @Valid final AdminNoticeRequest adminNoticeRequest,
+            @RequestPart(required = false) final List<MultipartFile> images
+    ) {
+        final Long noticeGetId = adminNoticeService.updateNotice(noticeId, adminNoticeRequest, images);
+        return ResponseEntity.ok(ApiResponse.success("공지 수정에 성공하였습니다.", noticeGetId));
+    }
+
+
 }
