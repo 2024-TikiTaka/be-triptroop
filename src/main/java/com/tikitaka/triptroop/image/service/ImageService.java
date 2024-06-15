@@ -40,8 +40,6 @@ public class ImageService {
         }
     }
 
-    }
-
     @Transactional
     public void updateImage(ImageKind kind, Long targetId, MultipartFile image) {
         deleteExistingImages(kind, targetId);
