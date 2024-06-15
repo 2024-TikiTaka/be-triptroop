@@ -1,5 +1,7 @@
 package com.tikitaka.triptroop.admin.dto.request;
 
+import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
@@ -96,17 +98,17 @@ public class AdminUserSaveRequest {
     private static void validateEmail(String email) {
         // 이메일 유효성 검사 로직
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
+            throw new NotFoundException(ExceptionCode.INVALID_EMAIL);
         }
     }
 
     private static void validatePassword(String password, String confirmPassword) {
         // 비밀번호 유효성 검사 로직
         if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
+            throw new NotFoundException(ExceptionCode.INVALID_PASSWORD);
         }
         if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new NotFoundException(ExceptionCode.INVALID_PASSWORD);
         }
     }
 

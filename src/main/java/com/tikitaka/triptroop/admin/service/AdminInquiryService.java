@@ -56,7 +56,7 @@ public class AdminInquiryService {
 
     /* 3. 답변 등록 */
     @Transactional
-    public Inquiry inquiryReplySave(final Long inquiryId, final AdminInquiryReplyRequest adminInquiryReplyRequest, List<MultipartFile> images) {
+    public AdminInquiryReplyRequest inquiryReplySave(final Long inquiryId, final AdminInquiryReplyRequest adminInquiryReplyRequest, List<MultipartFile> images) {
 
         Inquiry inquiry = admininquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_INQUIRY));
@@ -64,6 +64,6 @@ public class AdminInquiryService {
         inquiry.addReply(adminInquiryReplyRequest.getReply());
         admininquiryRepository.save(inquiry);
 
-        return inquiry;
+        return AdminInquiryReplyRequest.of(adminInquiryReplyRequest.getReply());
     }
 }

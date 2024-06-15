@@ -1,17 +1,23 @@
 package com.tikitaka.triptroop.admin.service;
 
 import com.tikitaka.triptroop.admin.domain.repository.AdminNoticeRepository;
+import com.tikitaka.triptroop.admin.dto.request.AdminNoticeRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
+import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
+import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.notice.domain.entity.Notice;
+import com.tikitaka.triptroop.notice.domain.type.NoticeKind;
+import com.tikitaka.triptroop.notice.domain.type.NoticeStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +29,7 @@ public class AdminNoticeService {
 
     private final AdminNoticeRepository adminNoticeRepository;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     /* 1. 공지 관리 > 공지 목록 조회 */
     @Transactional(readOnly = true)
@@ -33,13 +40,32 @@ public class AdminNoticeService {
 
     /* 2. 공지 관리 > 공지 상세 조회 */
     @Transactional(readOnly = true)
-    public AdminNoticeDetailResponse getNoticeDetail(Long noticeId) {
+    public AdminNoticeDetailResponse getNoticeDetail(final Long noticeId) {
         Notice notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
-        
+
         List<Image> images = imageRepository.findByNoticeId(noticeId);
         List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
 
         return AdminNoticeDetailResponse.from(notice, imageOriginalResponses);
+    }
+
+    @Transactional
+    public Long save(final AdminNoticeRequest adminNoticeRequest, final List<MultipartFile> images) {
+
+        final Notice newNotice = Notice.of(
+                NoticeKind.valueOf(adminNoticeRequest.getKind().toString()),
+                adminNoticeRequest.getIsRead(),
+                adminNoticeRequest.getTitle(),
+                adminNoticeRequest.getContent(),
+                NoticeStatus.valueOf(adminNoticeRequest.getStatus().toString())
+        );
+
+        final Notice notice = adminNoticeRepository.save(newNotice);
+        //System.out.println("notice 등록 값 있음?? : " + notice);
+        imageService.saveAll(ImageKind.NOTICE, notice.getId(), images);
+        //System.out.println("Image 등록 값 있음?? : " + images);
+        return notice.getId();
+
     }
 }
