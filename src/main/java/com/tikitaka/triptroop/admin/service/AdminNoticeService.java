@@ -24,22 +24,22 @@ public class AdminNoticeService {
     private final AdminNoticeRepository adminNoticeRepository;
     private final ImageRepository imageRepository;
 
+    /* 1. 공지 관리 > 공지 목록 조회 */
     @Transactional(readOnly = true)
     public List<AdminNoticeResponse> getNoticeList() {
         List<Notice> notices = adminNoticeRepository.findAll();
         return notices.stream().map(AdminNoticeResponse::from).collect(Collectors.toList());
     }
 
+    /* 2. 공지 관리 > 공지 상세 조회 */
     @Transactional(readOnly = true)
     public AdminNoticeDetailResponse getNoticeDetail(Long noticeId) {
         Notice notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
-        System.out.println("notice : " + notice);
-
-        List<Image> images = imageRepository.findByInquiryId(noticeId);
+        
+        List<Image> images = imageRepository.findByNoticeId(noticeId);
         List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
-        System.out.println("images : " + images);
-        System.out.println("ImageOriginalResponse : " + imageOriginalResponses);
+
         return AdminNoticeDetailResponse.from(notice, imageOriginalResponses);
     }
 }

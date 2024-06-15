@@ -25,7 +25,7 @@ public class AdminNoticeController {
     @GetMapping("")
     public ResponseEntity<ApiResponse> getNoticeList() {
         final List<AdminNoticeResponse> noticeList = adminNoticeService.getNoticeList();
-        return ResponseEntity.ok(ApiResponse.success("공", noticeList));
+        return ResponseEntity.ok(ApiResponse.success("공지 목록 조회에 성공하였습니다.", noticeList));
     }
 
     /* 2. 공지 관리 > 공지 상세 조회 */

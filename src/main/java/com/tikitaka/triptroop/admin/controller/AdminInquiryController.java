@@ -24,7 +24,7 @@ public class AdminInquiryController {
 
     /* 1. 문의 관리 > 문의 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getInquriryList() {
+    public ResponseEntity<ApiResponse> getInquiryList() {
         final List<AdminInquiryListResponse> inquryList = inquiryService.getInquriryList();
         return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", inquryList));
     }
