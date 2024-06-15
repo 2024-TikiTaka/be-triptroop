@@ -35,4 +35,13 @@ public class Category {
     public static Category of(String name) {
         return new Category(name);
     }
+
+    public void updateCategory(String name) {
+        this.name = name;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+//    public void deleteCategory() {
+//        this.deletedAt = LocalDateTime.now();
+//    }
 }
