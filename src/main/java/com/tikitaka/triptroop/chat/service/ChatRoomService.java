@@ -8,7 +8,6 @@ import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,13 +33,13 @@ public class ChatRoomService {
         Long friendId = request.getFriendId();
 
         // 채팅방 URL 생성
-        String url = "ws://localhost:8080/ws/" + userId + "_" + friendId;
+        String url = "http://localhost:8080/ws/" + userId + "_" + friendId;
 
         // member 리스트 생성
         List<Long> members = Arrays.asList(userId, friendId);
 
         // 중복 채팅방 체크
-        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByCreatorAndMemberIn(userId, members);
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByCreatorAndMember(userId, members);
         if (existingChatRoom.isPresent()) {
             return ChatResponse.from(existingChatRoom.get());
         }
@@ -57,6 +56,7 @@ public class ChatRoomService {
         chatRoom = chatRoomRepository.save(chatRoom);
         return ChatResponse.from(chatRoom);
     }
+
 
 
 }

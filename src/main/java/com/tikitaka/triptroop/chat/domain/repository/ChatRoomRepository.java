@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, ObjectId> {
     List<ChatRoom> findByMemberContaining(Long username);
 
-    Optional<ChatRoom> findByCreatorAndMemberIn(Long creator, List<Long> member);
+    Optional<ChatRoom> findByCreatorAndMember(Long creator, List<Long> member);
 
 
 }

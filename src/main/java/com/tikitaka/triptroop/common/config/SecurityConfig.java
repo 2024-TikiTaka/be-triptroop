@@ -53,7 +53,7 @@ public class SecurityConfig {
                                          "/api/v1/travels/**", "/api/v1/schedules/**", "/api/v1/friend/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
                                          "/api/v1/signup/**", "/api/v1/find/**",
-                                         "/api/v1/login", "/api/v1/token/issue", "api/v1/friend/**")
+                                         "/api/v1/login", "/api/v1/token/issue", "api/v1/friend/**", "api/v1/users/**")
                         .permitAll();
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.requestMatchers("/ws/**").permitAll();
