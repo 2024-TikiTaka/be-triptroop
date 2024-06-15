@@ -21,6 +21,7 @@ public enum ExceptionCode {
     INVALID_CREDENTIALS(401, "아이디 또는 비밀번호가 잘못되었습니다."),
     INVALID_PASSWORD(401, "비밀번호가 올바르지 않습니다."),
     INVALID_REFRESH_TOKEN(401, "리프레시 토큰이 유효하지 않습니다."),
+    INVALID_EMAIL(401, "이메일 형식이 올바르지 않습니다."),
 
     ACCESS_DENIED(403, "허가 되지 않은 요청입니다."),
     ACCESS_DENIED_POST(403, "내가 쓴 게시글이 아닙니다."),
