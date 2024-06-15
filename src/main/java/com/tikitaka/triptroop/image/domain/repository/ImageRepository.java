@@ -18,5 +18,5 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     List<Image> findByInquiryId(Long id);
 
-
+    List<Image> findByNoticeId(Long id);
 }

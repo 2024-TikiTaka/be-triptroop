@@ -56,6 +56,7 @@ public class ImageService {
             case COMPANION -> imageRepository.findByCompanionId(targetId);
             case REPORT -> imageRepository.findByReportId(targetId);
             case INQUIRY -> imageRepository.findByInquiryId(targetId);
+            case NOTICE -> imageRepository.findByNoticeId(targetId);
         };
     }
 

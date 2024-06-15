@@ -1,11 +1,11 @@
 package com.tikitaka.triptroop.admin.controller;
 
 
+import com.tikitaka.triptroop.admin.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryListResponse;
 import com.tikitaka.triptroop.admin.service.AdminInquiryService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.image.dto.request.AdminInquiryReplyRequest;
 import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class AdminInquiryController {
 
     /* 1. 문의 관리 > 문의 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getInquriryList() {
+    public ResponseEntity<ApiResponse> getInquiryList() {
         final List<AdminInquiryListResponse> inquryList = inquiryService.getInquriryList();
         return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", inquryList));
     }

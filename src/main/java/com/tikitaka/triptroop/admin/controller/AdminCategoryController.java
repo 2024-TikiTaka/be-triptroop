@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.admin.controller;
 
 import com.tikitaka.triptroop.admin.dto.request.AdminCategorySaveRequest;
+import com.tikitaka.triptroop.admin.dto.response.AdminCategoryResponse;
 import com.tikitaka.triptroop.admin.service.AdminCategoryService;
 import com.tikitaka.triptroop.category.domain.entity.Category;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
@@ -22,7 +23,7 @@ public class AdminCategoryController {
     /* 1. 카테고리 관리 > 카테고리 목록 조회 */
     @GetMapping("")
     public ResponseEntity<ApiResponse<?>> getCategoryList() {
-        final List<Category> categoryList = adminCategoryService.getCategoryList();
+        final List<AdminCategoryResponse> categoryList = adminCategoryService.getCategoryList();
         return ResponseEntity.ok(ApiResponse.success("카테고리 목록 조회에 성공하였습니다.", categoryList));
     }
 
