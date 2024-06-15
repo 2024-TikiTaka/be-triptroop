@@ -21,7 +21,7 @@ public class AdminCategoryController {
 
     /* 1. 카테고리 관리 > 카테고리 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getCategoryList() {
+    public ResponseEntity<ApiResponse<?>> getCategoryList() {
         final List<Category> categoryList = adminCategoryService.getCategoryList();
         return ResponseEntity.ok(ApiResponse.success("카테고리 목록 조회에 성공하였습니다.", categoryList));
     }
