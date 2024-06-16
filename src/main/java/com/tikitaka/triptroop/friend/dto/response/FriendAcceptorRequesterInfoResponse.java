@@ -1,24 +1,31 @@
 package com.tikitaka.triptroop.friend.dto.response;
 
 import com.tikitaka.triptroop.friend.domain.entity.Friend;
+import com.tikitaka.triptroop.user.domain.entity.Profile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 @Getter
 @RequiredArgsConstructor
 public class FriendAcceptorRequesterInfoResponse {
-
-    private final Long acceptorId;
+    private final Long friendId;
     private final Long requesterId;
+    private final Long acceptorId;
+    private final String nickname;
+    private final String profileImage;
 
-    public static FriendAcceptorRequesterInfoResponse from(Friend friend, Long currentUserId) {
-        Long acceptorId = friend.getAccepterId();
-        Long requesterId = friend.getRequesterId();
+    public static FriendAcceptorRequesterInfoResponse from(Friend friend, Optional<Profile> profileOpt) {
+        String nickname = profileOpt.map(Profile::getNickname).orElse("Unknown");
+        String profileImage = profileOpt.map(Profile::getProfileImage).orElse("default-profile.png");
 
-        // currentUserId와 중복되지 않는 ID를 반환
         return new FriendAcceptorRequesterInfoResponse(
-                acceptorId.equals(currentUserId) ? null : acceptorId,
-                requesterId.equals(currentUserId) ? null : requesterId
+                friend.getId(),
+                friend.getRequesterId(),
+                friend.getAccepterId(),
+                nickname,
+                profileImage
         );
     }
 }
