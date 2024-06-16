@@ -73,12 +73,14 @@ public class Notice {
             NoticeKind kind,
             String title,
             String content,
-            NoticeStatus status
+            NoticeStatus status,
+            LocalDateTime modified
     ) {
         this.kind = kind;
         this.title = title;
         this.content = content;
         this.status = status;
+        this.modifiedAt = LocalDateTime.now();
     }
 
 }

@@ -85,9 +85,10 @@ public class AdminNoticeService {
                 NoticeKind.valueOf(adminNoticeUpdateRequest.getKind().toString()),
                 adminNoticeUpdateRequest.getTitle(),
                 adminNoticeUpdateRequest.getContent(),
-                NoticeStatus.valueOf(adminNoticeUpdateRequest.getStatus().toString())
+                NoticeStatus.valueOf(adminNoticeUpdateRequest.getStatus().toString()),
+                adminNoticeUpdateRequest.getModifiedAt()
         );
-       
+
         if (imageService.hasValidImages(images)) {
             //이미지 검사 통과 -> 이미지 저장됨
             imageService.updateAll(ImageKind.NOTICE, noticeId, images);

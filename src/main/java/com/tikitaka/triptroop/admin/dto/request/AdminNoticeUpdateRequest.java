@@ -5,6 +5,8 @@ import com.tikitaka.triptroop.notice.domain.type.NoticeStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @RequiredArgsConstructor
 public class AdminNoticeUpdateRequest {
@@ -13,5 +15,6 @@ public class AdminNoticeUpdateRequest {
     private final String title;
     private final String content;
     private final NoticeStatus status;
+    private final LocalDateTime modifiedAt;
 
 }
