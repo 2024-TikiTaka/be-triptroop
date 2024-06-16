@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.chat.controller;
 
-import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.request.WebSocketChatRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -9,9 +8,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 @Controller
-//@RestController
-//@RequestMapping("/api") // <- "" 안에 매핑할 주소를 적어주세요. ( ex) /schedule/post )
-//@RequiredArgsConstructor
 public class WebSocketController {
     /* 클라이언트가 '/chat.sendMessage' 주소로 메시지를 전송하면,
     * 서버에서 메시지를 받아서 '/topic/public' 주제를 구독하는(채팅방에 참여하고 있는) 클라이언트에게 메시지를 브로드캐스팅한다. */

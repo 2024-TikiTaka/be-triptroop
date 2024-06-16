@@ -1,6 +1,5 @@
 package com.tikitaka.triptroop.chat.controller;
 
-import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.request.WebSocketChatRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
