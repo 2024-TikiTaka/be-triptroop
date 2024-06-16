@@ -49,7 +49,7 @@ public class SecurityConfig {
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET,
                                          "/images/**",
-                                         "/api/v1/check/**", "/api/v1/find/**",
+                                         "/api/v1/check/**", "/api/v1/find/**", "/api/v1/admin/**",
                                          "/api/v1/travels/**", "/api/v1/schedules/**", "/api/v1/friend/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
                                          "/api/v1/signup/**", "/api/v1/find/**", "/api/v1/email/**",

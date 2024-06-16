@@ -7,10 +7,8 @@ import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
-import com.tikitaka.triptroop.image.dto.response.ImageOriginalResponse;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.notice.domain.entity.Notice;
 import com.tikitaka.triptroop.notice.domain.type.NoticeKind;
@@ -45,10 +43,10 @@ public class AdminNoticeService {
         final Notice notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
 
-        List<Image> images = imageRepository.findByNoticeId(noticeId);
-        List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
+//        List<Image> images = imageRepository.findByNoticeId(noticeId);
+//        List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
 
-        return AdminNoticeDetailResponse.from(notice, imageOriginalResponses);
+        return AdminNoticeDetailResponse.from(notice/*, imageOriginalResponses*/);
     }
 
     /* 3. 공지 관리 > 공지 등록 */
