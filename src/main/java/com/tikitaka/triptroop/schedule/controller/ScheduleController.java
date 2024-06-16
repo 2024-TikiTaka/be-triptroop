@@ -98,7 +98,7 @@ public class ScheduleController {
 
         // 일정 항목 저장 및 처리
         if (scheduleItemRequest != null && !scheduleItemRequest.isEmpty()) {
-            Long placeId = placeService.savePlace(scheduleItemRequest);
+            Long placeId = placeService.saveSchedulePlace(scheduleItemRequest);
             scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
         }
         scheduleParticipantService.saveUser(userId, scheduleId);
@@ -112,11 +112,11 @@ public class ScheduleController {
     public ResponseEntity<ApiResponse> updateSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long scheduleId,
-            @RequestPart @Valid final ScheduleUpdateRequest scheduleUpdateRequest,
+            @RequestPart(required = false) @Valid ScheduleUpdateRequest scheduleUpdateRequest,
             @RequestPart(required = false) final MultipartFile image
     ) {
         log.info("@!#@!#@!#@!#@!#", image);
-        String status = scheduleUpdateRequest.getStatus();
+        String status = scheduleUpdateRequest.getVisibility();
         Long userId = loginUser.getUserId();
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequest, userId);
         scheduleService.changeStatus(scheduleId, userId, status);
@@ -126,8 +126,10 @@ public class ScheduleController {
         } else {
             // 이미지가 없는 경우 처리 로직 추가
         }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
+
 
     // TODO 일정 썸네일 수정
     @PutMapping("/{scheduleId}/thumbnail")
@@ -173,7 +175,7 @@ public class ScheduleController {
     @PutMapping("/{scheduleItemId}/item")
     public ResponseEntity<ApiResponse> updateItem(
             @AuthenticationPrincipal CustomUser loginUser,
-            @RequestBody @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
+            @RequestBody(required = false) @Valid final ScheduleItemUpdateRequest scheduleItemUpdateRequest,
             @PathVariable(name = "scheduleItemId") final Long scheduleItemId
     ) {
 

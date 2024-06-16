@@ -5,12 +5,10 @@ import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.place.domain.repository.PlaceRepositoryImpl;
 import com.tikitaka.triptroop.place.dto.response.PlaceInfoResponse;
 import com.tikitaka.triptroop.place.dto.response.PlaceTravelResponse;
-import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
-import com.tikitaka.triptroop.place.domain.entity.Place;
-import com.tikitaka.triptroop.place.domain.repository.PlaceRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
+import com.tikitaka.triptroop.travel.dto.request.TravelRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,7 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
     private final PlaceRepository placeRepository;
     private final ScheduleItemRepository scheduleItemRepository;
 
-    public Long savePlace(List<ScheduleItemCreateRequest> scheduleItemRequests) {
+    public Long saveSchedulePlace(List<ScheduleItemCreateRequest> scheduleItemRequests) {
         Long placeId = null;
 
         for (ScheduleItemCreateRequest request : scheduleItemRequests) {
@@ -43,9 +41,9 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
             // 저장된 Place의 ID를 반환
             placeId = savedPlace.getId();
         }
-
         return placeId;
     }
+
     public PlaceInfoResponse findPlace(Long travelId) {
 
         PlaceTravelResponse placeTravelResponse = placeRepositoryImpl.findPlaceById(travelId);
@@ -73,6 +71,7 @@ public class PlaceService { //<- Service 앞의 tt 부분을 변경한 본인의
         log.info("@!#@!#@!#@!#@!#@!#!@#!@# : {}", place.toString());
 
     }
+
     public Long saveplace(TravelRequest travelRequest) {
         final Place newPlace = Place.insert(
                 travelRequest.getAddress(),
