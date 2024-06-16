@@ -69,5 +69,18 @@ public class Notice {
         );
     }
 
+    public void update(
+            NoticeKind kind,
+            String title,
+            String content,
+            NoticeStatus status,
+            LocalDateTime modified
+    ) {
+        this.kind = kind;
+        this.title = title;
+        this.content = content;
+        this.status = status;
+        this.modifiedAt = LocalDateTime.now();
+    }
 
 }

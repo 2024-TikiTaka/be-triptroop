@@ -2,6 +2,7 @@ package com.tikitaka.triptroop.admin.service;
 
 import com.tikitaka.triptroop.admin.domain.repository.AdminNoticeRepository;
 import com.tikitaka.triptroop.admin.dto.request.AdminNoticeRequest;
+import com.tikitaka.triptroop.admin.dto.request.AdminNoticeUpdateRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
@@ -41,7 +42,7 @@ public class AdminNoticeService {
     /* 2. 공지 관리 > 공지 상세 조회 */
     @Transactional(readOnly = true)
     public AdminNoticeDetailResponse getNoticeDetail(final Long noticeId) {
-        Notice notice = adminNoticeRepository.findById(noticeId)
+        final Notice notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
 
         List<Image> images = imageRepository.findByNoticeId(noticeId);
@@ -50,6 +51,7 @@ public class AdminNoticeService {
         return AdminNoticeDetailResponse.from(notice, imageOriginalResponses);
     }
 
+    /* 3. 공지 관리 > 공지 등록 */
     @Transactional
     public Long save(final AdminNoticeRequest adminNoticeRequest, final List<MultipartFile> images) {
 
@@ -62,10 +64,39 @@ public class AdminNoticeService {
         );
 
         final Notice notice = adminNoticeRepository.save(newNotice);
-        //System.out.println("notice 등록 값 있음?? : " + notice);
-        imageService.saveAll(ImageKind.NOTICE, notice.getId(), images);
-        //System.out.println("Image 등록 값 있음?? : " + images);
-        return notice.getId();
 
+        if (imageService.hasValidImages(images)) {
+            //이미지 검사 통과 -> 이미지 저장됨
+            imageService.saveAll(ImageKind.NOTICE, notice.getId(), images);
+        } else {
+            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
+        }
+
+        return notice.getId();
+    }
+
+    /* 4. 공지 관리 > 공지 수정 */
+    @Transactional
+    public Long updateNotice(final Long noticeId, final AdminNoticeUpdateRequest adminNoticeUpdateRequest, final List<MultipartFile> images) {
+        final Notice notice = adminNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
+
+        notice.update(
+                NoticeKind.valueOf(adminNoticeUpdateRequest.getKind().toString()),
+                adminNoticeUpdateRequest.getTitle(),
+                adminNoticeUpdateRequest.getContent(),
+                NoticeStatus.valueOf(adminNoticeUpdateRequest.getStatus().toString()),
+                adminNoticeUpdateRequest.getModifiedAt()
+        );
+
+        if (imageService.hasValidImages(images)) {
+            //이미지 검사 통과 -> 이미지 저장됨
+            imageService.updateAll(ImageKind.NOTICE, noticeId, images);
+        } else {
+            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
+        }
+
+
+        return notice.getId();
     }
 }

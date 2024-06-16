@@ -35,30 +35,18 @@ public class ImageService {
 
     @Transactional
     public void saveAll(ImageKind kind, Long targetId, List<MultipartFile> images) {
-
-        /* 기존 로직
         for (MultipartFile image : images) {
             save(kind, targetId, image);
         }
-        */
-        //수정 로직 : 파일 업로드 하지 않았을 시 설정.
-        if (images != null && images.isEmpty()) {
-            for (MultipartFile image : images) {
-                save(kind, targetId, image);
-            }
-        }
-
     }
 
     @Transactional
     public void updateImage(ImageKind kind, Long targetId, MultipartFile image) {
-
         deleteExistingImages(kind, targetId);
         save(kind, targetId, image);
     }
 
     private List<Image> findImagesByKindAndTargetId(ImageKind kind, Long targetId) {
-
         return switch (kind) {
             case TRAVEL -> imageRepository.findByTravelId(targetId);
             case SCHEDULE -> imageRepository.findByScheduleId(targetId);
@@ -70,13 +58,38 @@ public class ImageService {
     }
 
     private void deleteExistingImages(ImageKind kind, Long targetId) {
-
         List<Image> existingImages = findImagesByKindAndTargetId(kind, targetId);
         for (Image existingImage : existingImages) {
             String existingFilename = existingImage.getUuid();
             FileUploadUtils.deleteFile(imageDir, existingFilename);
             imageRepository.delete(existingImage);
         }
+    }
+
+    /* 다솔 추가 */
+    @Transactional
+    public void updateAll(ImageKind kind, Long targetId, List<MultipartFile> images) {
+
+        deleteExistingImages(kind, targetId);
+        for (MultipartFile image : images) {
+            save(kind, targetId, image);
+        }
+    }
+
+    //존재 여부 체크
+    public boolean hasValidImages(List<MultipartFile> images) {
+        if (images == null || images.isEmpty()) {
+            return false;
+        }
+
+        for (MultipartFile image : images) {
+            if (image == null || image.isEmpty() ||
+                    image.getOriginalFilename() == null || image.getOriginalFilename().isEmpty() ||
+                    image.getContentType() == null || image.getContentType().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

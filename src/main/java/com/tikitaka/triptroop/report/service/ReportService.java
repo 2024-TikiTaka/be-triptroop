@@ -121,7 +121,12 @@ public class ReportService {
         );
 
         final Report report = reportRepository.save(newReport);
-        imageService.saveAll(ImageKind.REPORT, report.getId(), images);
+        if (imageService.hasValidImages(images)) {
+            //이미지 검사 통과 -> 이미지 저장됨
+            imageService.saveAll(ImageKind.REPORT, report.getId(), images);
+        } else {
+            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
+        }
 
         return report.getId();
     }
