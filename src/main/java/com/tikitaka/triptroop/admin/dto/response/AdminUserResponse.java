@@ -1,7 +1,6 @@
 package com.tikitaka.triptroop.admin.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AdminUserResponse {
 
     private final Long userId;

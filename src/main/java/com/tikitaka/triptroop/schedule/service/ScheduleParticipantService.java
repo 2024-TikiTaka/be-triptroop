@@ -9,17 +9,21 @@ import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleParticipant;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleParticipantRepository;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepository;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantAcceptRequest;
+import com.tikitaka.triptroop.schedule.domain.repository.ScheduleRepositoryImpl;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRejectedRequest;
-import com.tikitaka.triptroop.schedule.dto.request.ScheduleParticipantRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleReviewRequest;
-import jakarta.validation.Valid;
+import com.tikitaka.triptroop.schedule.dto.response.ScheduleParticipantProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -27,13 +31,17 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ScheduleParticipantService {
 
+    private Pageable getPageable(final Integer page, final String sort) {
+        return PageRequest.of(page - 1, 5, Sort.by(sort != null ? sort : "id").descending());
+    }
 
     private final ScheduleParticipantRepository scheduleParticipantRepository;
+    private final ScheduleRepositoryImpl scheduleRepositoryImpl;
     private final ScheduleRepository scheduleRepository;
 
 
     // TODO 신청
-    public Long save(@Valid ScheduleParticipantRequest scheduleParticipantRequest, Long scheduleId, Long userId) {
+    public Long save(Long scheduleId, Long userId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).get();
         Long participants = scheduleParticipantRepository.countByScheduleIdAndStatusAccepted(scheduleId);
         int count = schedule.getCount();
@@ -47,13 +55,11 @@ public class ScheduleParticipantService {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_DATE);
         }
 
+        LocalDateTime processedAt = LocalDateTime.now();
         final ScheduleParticipant newScheduleParticipants = ScheduleParticipant.of(
                 scheduleId,
                 userId,
-                scheduleParticipantRequest.getProcessedAt(),
-                scheduleParticipantRequest.getStatus(),
-                scheduleParticipantRequest.getCreatedAt()
-        );
+                processedAt);
 
         final ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.save(newScheduleParticipants);
 
@@ -61,14 +67,16 @@ public class ScheduleParticipantService {
     }
 
     // TODO 신청 승인
-    public void accept(ScheduleParticipantAcceptRequest scheduleParticipantAcceptRequest, Long scheduleParticipantId) {
+    public void accept(Long scheduleParticipantId) {
         ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
         Schedule schedule = scheduleRepository.findById(scheduleParticipant.getScheduleId()).get();
-
+        RequestStatus status = RequestStatus.ACCEPTED;
+        LocalDateTime processedAt = LocalDateTime.now();
         scheduleParticipant.update(
-                scheduleParticipantAcceptRequest.getStatus(),
-                scheduleParticipantAcceptRequest.getProcessedAt()
+                status,
+                processedAt
+
         );
     }
 
@@ -76,9 +84,12 @@ public class ScheduleParticipantService {
     public void reject(ScheduleParticipantRejectedRequest scheduleParticipantRejectedRequest, Long scheduleParticipantId) {
         ScheduleParticipant scheduleParticipant = scheduleParticipantRepository.findById(scheduleParticipantId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
+        RequestStatus status = RequestStatus.REJECTED;
+        LocalDateTime processedAt = LocalDateTime.now();
+        log.info("cause:{}", scheduleParticipantRejectedRequest.getCause());
         scheduleParticipant.rejected(
-                scheduleParticipantRejectedRequest.getStatus(),
-                scheduleParticipantRejectedRequest.getProcessedAt(),
+                status,
+                processedAt,
                 scheduleParticipantRejectedRequest.getCause()
         );
     }
@@ -117,6 +128,22 @@ public class ScheduleParticipantService {
         Long participantId = scheduleParticipant.getId();
         scheduleParticipantRepository.deleteById(participantId);
 
+    }
+
+    public void saveUser(Long userId, Long scheduleId) {
+        RequestStatus status = RequestStatus.ACCEPTED;
+        ScheduleParticipant newParticipant = ScheduleParticipant.saveUser(
+                userId,
+                scheduleId,
+                status
+        );
+        scheduleParticipantRepository.save(newParticipant);
+    }
+
+    public List<ScheduleParticipantProfileResponse> findAllSchedulesParticipants(Long scheduleId) {
+        List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
+
+        return scheduleParticipantProfileResponse;
     }
 }
 

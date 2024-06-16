@@ -1,12 +1,11 @@
 package com.tikitaka.triptroop.admin.controller;
 
 
+import com.tikitaka.triptroop.admin.dto.request.AdminInquiryReplyRequest;
+import com.tikitaka.triptroop.admin.dto.response.AdminInquiryDetailResponse;
+import com.tikitaka.triptroop.admin.dto.response.AdminInquiryListResponse;
+import com.tikitaka.triptroop.admin.service.AdminInquiryService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
-import com.tikitaka.triptroop.inquiry.domain.entity.Inquiry;
-import com.tikitaka.triptroop.inquiry.dto.request.InquiryReplyRequest;
-import com.tikitaka.triptroop.inquiry.dto.response.InquiryDetailResponse;
-import com.tikitaka.triptroop.inquiry.dto.response.InquiryListResponse;
-import com.tikitaka.triptroop.inquiry.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +19,19 @@ import java.util.List;
 @RequestMapping("/api/v1/admin/inquiry")
 public class AdminInquiryController {
 
-    private final InquiryService inquiryService;
+    private final AdminInquiryService AdminInquiryService;
 
     /* 1. 문의 관리 > 문의 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getInquriryList() {
-        final List<InquiryListResponse> inquryList = inquiryService.getInquriryList();
+    public ResponseEntity<ApiResponse> getInquiryList() {
+        final List<AdminInquiryListResponse> inquryList = AdminInquiryService.getInquriryList();
         return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", inquryList));
     }
 
     /* 2. 문의 관리 > 문의 상세 조회 */
     @GetMapping("/{inquiryId}")
     public ResponseEntity<ApiResponse> getInquiryDetail(@PathVariable final Long inquiryId) {
-        final InquiryDetailResponse inquiryDetail = inquiryService.getInquiryDetail(inquiryId);
+        final AdminInquiryDetailResponse inquiryDetail = AdminInquiryService.getInquiryDetail(inquiryId);
         return ResponseEntity.ok(ApiResponse.success("문의 상세 조회에 성공하였습니다.", inquiryDetail));
     }
 
@@ -40,10 +39,10 @@ public class AdminInquiryController {
     @PatchMapping("/{inquiryId}/reply")
     public ResponseEntity<ApiResponse> saveInquiryReply(
             @PathVariable final Long inquiryId,
-            @RequestPart @Valid final InquiryReplyRequest inquiryReplyRequest,
-            @RequestPart final List<MultipartFile> images
+            @RequestPart @Valid final AdminInquiryReplyRequest adminInquiryReplyRequest,
+            @RequestPart(required = false) final List<MultipartFile> images
     ) {
-        final Inquiry updateInquiry = inquiryService.inquiryReplySave(inquiryId, inquiryReplyRequest, images);
-        return ResponseEntity.ok(ApiResponse.success("답변 등록에 성공하였습니다.", updateInquiry));
+        final AdminInquiryReplyRequest inquiryReply = AdminInquiryService.inquiryReplySave(inquiryId, adminInquiryReplyRequest, images);
+        return ResponseEntity.ok(ApiResponse.success("답변 등록에 성공하였습니다."));
     }
 }

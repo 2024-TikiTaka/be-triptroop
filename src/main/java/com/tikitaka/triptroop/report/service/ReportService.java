@@ -37,17 +37,11 @@ import java.util.stream.Collectors;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-
     private final ProfileRepository profileRepository;
-
     private final ScheduleRepository scheduleRepository;
-
     private final TravelRepository travelRepository;
-
     private final CompanionRepository companionRepository;
-
     private final ImageRepository imageRepository;
-
     private final ImageService imageService;
 
     /* 1. 신고 목록 조회 Test */

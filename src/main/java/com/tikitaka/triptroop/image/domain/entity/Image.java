@@ -32,6 +32,8 @@ public class Image {
 
     private Long inquiryId;
 
+    private Long noticeId;
+
     @Enumerated(EnumType.STRING)
     private ImageKind kind;
 
@@ -65,6 +67,7 @@ public class Image {
             case TRAVEL -> this.travelId = id;
             case SCHEDULE -> this.scheduleId = id;
             case INQUIRY -> this.inquiryId = id;
+            case NOTICE -> this.noticeId = id;
             case COMPANION -> this.companionId = id;
         }
     }

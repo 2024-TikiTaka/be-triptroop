@@ -36,9 +36,18 @@ public class ImageService {
     @Transactional
     public void saveAll(ImageKind kind, Long targetId, List<MultipartFile> images) {
 
+        /* 기존 로직
         for (MultipartFile image : images) {
             save(kind, targetId, image);
         }
+        */
+        //수정 로직 : 파일 업로드 하지 않았을 시 설정.
+        if (images != null && images.isEmpty()) {
+            for (MultipartFile image : images) {
+                save(kind, targetId, image);
+            }
+        }
+
     }
 
     @Transactional
@@ -56,6 +65,7 @@ public class ImageService {
             case COMPANION -> imageRepository.findByCompanionId(targetId);
             case REPORT -> imageRepository.findByReportId(targetId);
             case INQUIRY -> imageRepository.findByInquiryId(targetId);
+            case NOTICE -> imageRepository.findByNoticeId(targetId);
         };
     }
 

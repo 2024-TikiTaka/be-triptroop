@@ -25,6 +25,23 @@ public class Category {
 
     @CreatedDate
     private LocalDateTime createdAt;
- 
+
     private LocalDateTime deletedAt;
+
+    private Category(String name) {
+        this.name = name;
+    }
+
+    public static Category of(String name) {
+        return new Category(name);
+    }
+
+    public void updateCategory(String name) {
+        this.name = name;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+//    public void deleteCategory() {
+//        this.deletedAt = LocalDateTime.now();
+//    }
 }

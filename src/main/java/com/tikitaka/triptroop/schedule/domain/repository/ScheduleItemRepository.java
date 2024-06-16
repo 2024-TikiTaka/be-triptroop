@@ -10,6 +10,8 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long
 
     List<ScheduleItem> findByScheduleId(Long scheduleId);
 
+    Long findFirstByScheduleId(Long scheduleId);
+
     Optional<ScheduleItem> findById(Long scheduleItemId);
 
 //    boolean existsByUserIdAndId(Long scheduleItemId, Long userId);
