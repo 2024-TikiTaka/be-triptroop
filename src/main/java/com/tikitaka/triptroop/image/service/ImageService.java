@@ -40,8 +40,6 @@ public class ImageService {
         }
     }
 
-    }
-
     @Transactional
     public void updateImage(ImageKind kind, Long targetId, MultipartFile image) {
         deleteExistingImages(kind, targetId);
@@ -71,8 +69,9 @@ public class ImageService {
     /* 다솔 추가 */
     @Transactional
     public void updateAll(ImageKind kind, Long targetId, List<MultipartFile> images) {
+
+        deleteExistingImages(kind, targetId);
         for (MultipartFile image : images) {
-            deleteExistingImages(kind, targetId);
             save(kind, targetId, image);
         }
     }

@@ -71,16 +71,16 @@ public class Notice {
 
     public void update(
             NoticeKind kind,
-            Boolean isRead,
             String title,
             String content,
-            NoticeStatus status
+            NoticeStatus status,
+            LocalDateTime modified
     ) {
         this.kind = kind;
-        this.isRead = isRead;
         this.title = title;
         this.content = content;
         this.status = status;
+        this.modifiedAt = LocalDateTime.now();
     }
 
 }
