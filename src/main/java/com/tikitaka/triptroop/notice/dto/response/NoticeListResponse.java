@@ -14,7 +14,7 @@ public class NoticeListResponse {
 
     public static NoticeListResponse from(Notice notice) {
         return new NoticeListResponse(
-                notice.getNoticeId(),
+                notice.getId(),
                 notice.getTitle(),
                 notice.getCreatedAt()
         );
