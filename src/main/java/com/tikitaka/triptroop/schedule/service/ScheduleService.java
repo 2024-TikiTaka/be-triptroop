@@ -127,7 +127,7 @@ public class ScheduleService {
         if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
         }
-
+        log.info("일정 수정:{}", scheduleUpdateRequest);
         Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
 
@@ -152,12 +152,12 @@ public class ScheduleService {
 
 
     // TODO 일정 공개 여부 변경
-    public void changeStatus(Long scheduleId, Long userId, String status) {
+    public void changeStatus(Long scheduleId, Long userId, String visibility) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
         if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
         }
-        switch (status) {
+        switch (visibility) {
             case "PUBLIC":
                 schedule.changeStatus(Visibility.PUBLIC);
                 break;

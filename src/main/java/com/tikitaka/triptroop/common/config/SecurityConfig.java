@@ -48,13 +48,13 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     /* TODO :: 추후 설정 */
                     auth.requestMatchers(HttpMethod.GET,
-                                         "/images/**",
-                                         "/api/v1/check/**",
-                                         "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
+                            "/images/**",
+                            "/api/v1/check/**",
+                            "/api/v1/travels/**", "/api/v1/schedules/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,
-                                         "/api/v1/signup/**", "/api/v1/email/**",
-                                         "/api/v1/login", "/api/v1/token/issue",
-                                         "/api/v1/password/reset").permitAll();
+                            "/api/v1/signup/**", "/api/v1/email/**",
+                            "/api/v1/login", "/api/v1/token/issue",
+                            "/api/v1/password/reset").permitAll();
                     auth.requestMatchers("/api/v1/chat/**").permitAll();
                     auth.requestMatchers("/ws/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
@@ -74,15 +74,15 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         /* TODO :: 추후 설정 */
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000/", "http://ec2-3-38-83-20.ap-northeast-2.compute.amazonaws.com/"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin",
-                                                          "Access-Control-Allow-Headers",
-                                                          "Content-Type",
-                                                          "Authorization",
-                                                          "X-Requested-With",
-                                                          "Access-Token",
-                                                          "Refresh-Token"));
+                "Access-Control-Allow-Headers",
+                "Content-Type",
+                "Authorization",
+                "X-Requested-With",
+                "Access-Token",
+                "Refresh-Token"));
         corsConfiguration.setExposedHeaders(Arrays.asList("Access-Token", "Refresh-Token"));
         corsConfiguration.setAllowCredentials(true); // 자격 증명 허용 설정 추가
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
