@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.tikitaka.triptroop.area.domain.entity.QArea.area;
 import static com.tikitaka.triptroop.image.domain.entity.QImage.image;
 import static com.tikitaka.triptroop.place.domain.entity.QPlace.place;
 import static com.tikitaka.triptroop.schedule.domain.entity.QSchedule.schedule;
@@ -37,10 +38,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         }
 
         if (keyword != null && !keyword.isEmpty()) {
-            predicate = predicate.and(schedule.title.containsIgnoreCase(keyword)).and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
+            predicate = predicate.and(schedule.title.containsIgnoreCase(keyword));
         }
         if (area != null && area > 0) {
-            predicate = predicate.and(schedule.area.id.eq(area)).and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
+            predicate = predicate.and(schedule.area.id.eq(area));
         }
 
         JPAQuery<Schedule> query = queryFactory.selectFrom(schedule)
@@ -76,6 +77,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return new PageImpl<>(scheduleList, pageable, total);
     }
 
+
     @Override
     public List<ScheduleParticipantProfileResponse> findParticipantsProfilesByScheduleId(Long scheduleId) {
         return queryFactory
@@ -105,6 +107,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         image.path,
                         image.uuid,
                         user.id,
+                        area.id,
                         schedule.startDate,
                         schedule.endDate,
                         schedule.title,

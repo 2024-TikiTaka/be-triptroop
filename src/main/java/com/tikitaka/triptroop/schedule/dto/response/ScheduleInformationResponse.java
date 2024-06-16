@@ -14,6 +14,7 @@ public class ScheduleInformationResponse {
     private Long scheduleId;
     private String scheduleImage;// path + uuid
     private Long userId;
+    private Long areaId;
     private LocalDate startDate;
     private LocalDate endDate;
     private String title;
@@ -25,10 +26,11 @@ public class ScheduleInformationResponse {
 
 
     @QueryProjection
-    public ScheduleInformationResponse(Long scheduleId, String path, String uuid, Long userId, LocalDate startDate, LocalDate endDate, String title, Integer count, Integer views, String nickname, String mbti, String profileImage) {
+    public ScheduleInformationResponse(Long scheduleId, String path, String uuid, Long userId, Long areaId, LocalDate startDate, LocalDate endDate, String title, Integer count, Integer views, String nickname, String mbti, String profileImage) {
         this.scheduleId = scheduleId;
         this.scheduleImage = path + uuid;
         this.userId = userId;
+        this.areaId = areaId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
