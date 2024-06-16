@@ -2,15 +2,18 @@ package com.tikitaka.triptroop.chat.service;
 
 import com.tikitaka.triptroop.chat.domain.entity.ChatRoom;
 import com.tikitaka.triptroop.chat.domain.repository.ChatRoomRepository;
-import com.tikitaka.triptroop.chat.dto.request.PrivateChatRoomCreateRequest;
+import com.tikitaka.triptroop.chat.dto.request.ChatRoomCreateRequest;
 import com.tikitaka.triptroop.chat.dto.response.ChatResponse;
+import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,20 +28,35 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatResponse createChatRoom(PrivateChatRoomCreateRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    public ChatResponse createChatRoom(ChatRoomCreateRequest request, @AuthenticationPrincipal CustomUser loginUser) {
+        Long userId = Long.valueOf(loginUser.getUserId());
+        Long friendId = request.getFriendId();
+
+        // 채팅방 URL 생성
+        String url = "http://localhost:8080/ws/" + userId + "_" + friendId;
+
+        // member 리스트 생성
+        List<Long> members = Arrays.asList(userId, friendId);
+
+        // 중복 채팅방 체크
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByCreatorAndMember(userId, members);
+        if (existingChatRoom.isPresent()) {
+            return ChatResponse.from(existingChatRoom.get());
+        }
+
         ChatRoom chatRoom = ChatRoom.of(
                 request.getRoomName(),
                 request.getType(),
-                Long.valueOf(userDetails.getUsername()), // 로그인 한 사용자 정보 가져오기
-                request.getMember()
+                userId,
+                members,
+                url,
+                LocalDateTime.now()
         );
 
         chatRoom = chatRoomRepository.save(chatRoom);
         return ChatResponse.from(chatRoom);
     }
 
-//    public ChatResponse createChatRoom(@Valid ChatRequest request) {
-//        ChatRoom chatRoom = chatRoomRepository.createChatRoom(request);
-//        return ChatResponse.from(chatRoom);
-//    }
+
+
 }

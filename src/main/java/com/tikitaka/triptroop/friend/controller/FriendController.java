@@ -7,7 +7,6 @@ import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorRequesterInfoRes
 import com.tikitaka.triptroop.friend.service.FriendService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
-import com.tikitaka.triptroop.user.dto.response.UserResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import com.tikitaka.triptroop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +67,8 @@ public class FriendController {
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
         final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
-        /* 친구 상세 조회(프로필 조회)에서 id 받기 */
+        log.info(String.valueOf(loginUser.getUserId()));
+        log.info(String.valueOf(userProfile.getUserId()));
         friendService.deleteFriend(loginUser.getUserId(), userProfile.getUserId());
         return ResponseEntity.ok(ApiResponse.success(("친구 삭제되었습니다.")));
     }

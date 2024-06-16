@@ -14,13 +14,13 @@ public class ChatResponse {
 
     private final Long creator;
 
-    private List<Long> member;
+    private final List<Long> member;
 
     private String type;
 
     private String createdAt;
 
-    private String url;
+    private final String url;
 
     private String lastMessageAt;
 
@@ -28,7 +28,9 @@ public class ChatResponse {
         return new ChatResponse(
                 chatRoom.getId().toHexString(),
                 chatRoom.getRoomName(),
-                chatRoom.getCreator()
+                chatRoom.getCreator(),
+                chatRoom.getMember(),
+                chatRoom.getUrl()
         );
     }
 }
