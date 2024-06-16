@@ -2,6 +2,7 @@ package com.tikitaka.triptroop.admin.controller;
 
 
 import com.tikitaka.triptroop.admin.dto.request.AdminNoticeRequest;
+import com.tikitaka.triptroop.admin.dto.request.AdminNoticeUpdateRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.admin.service.AdminNoticeService;
@@ -49,10 +50,10 @@ public class AdminNoticeController {
     @PutMapping("/{noticeId}")
     public ResponseEntity<ApiResponse> updateNotice(
             @PathVariable final Long noticeId,
-            @RequestPart @Valid final AdminNoticeRequest adminNoticeRequest,
+            @RequestPart @Valid final AdminNoticeUpdateRequest adminNoticeUpdateRequest,
             @RequestPart(required = false) final List<MultipartFile> images
     ) {
-        final Long noticeGetId = adminNoticeService.updateNotice(noticeId, adminNoticeRequest, images);
+        final Long noticeGetId = adminNoticeService.updateNotice(noticeId, adminNoticeUpdateRequest, images);
         return ResponseEntity.ok(ApiResponse.success("공지 수정에 성공하였습니다.", noticeGetId));
     }
 

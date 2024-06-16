@@ -2,6 +2,7 @@ package com.tikitaka.triptroop.admin.service;
 
 import com.tikitaka.triptroop.admin.domain.repository.AdminNoticeRepository;
 import com.tikitaka.triptroop.admin.dto.request.AdminNoticeRequest;
+import com.tikitaka.triptroop.admin.dto.request.AdminNoticeUpdateRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
@@ -76,20 +77,22 @@ public class AdminNoticeService {
 
     /* 4. 공지 관리 > 공지 수정 */
     @Transactional
-    public Long updateNotice(final Long noticeId, final AdminNoticeRequest adminNoticeRequest, final List<MultipartFile> images) {
+    public Long updateNotice(final Long noticeId, final AdminNoticeUpdateRequest adminNoticeUpdateRequest, final List<MultipartFile> images) {
         final Notice notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
 
         notice.update(
-                NoticeKind.valueOf(adminNoticeRequest.getKind().toString()),
-                adminNoticeRequest.getIsRead(),
-                adminNoticeRequest.getTitle(),
-                adminNoticeRequest.getContent(),
-                NoticeStatus.valueOf(adminNoticeRequest.getStatus().toString())
+                NoticeKind.valueOf(adminNoticeUpdateRequest.getKind().toString()),
+                adminNoticeUpdateRequest.getTitle(),
+                adminNoticeUpdateRequest.getContent(),
+                NoticeStatus.valueOf(adminNoticeUpdateRequest.getStatus().toString())
         );
-        if (images != null) {
-            //System.out.println("이미지에 값이 있다면 나와랏 뿅!!!!");
+       
+        if (imageService.hasValidImages(images)) {
+            //이미지 검사 통과 -> 이미지 저장됨
             imageService.updateAll(ImageKind.NOTICE, noticeId, images);
+        } else {
+            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
         }
 
 
