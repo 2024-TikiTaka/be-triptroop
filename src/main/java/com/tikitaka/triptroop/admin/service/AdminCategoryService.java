@@ -40,6 +40,7 @@ public class AdminCategoryService {
         return category.getId();
     }
 
+    /* 3. 카테고리 관리 > 카테고리 수정 */
     @Transactional
     public Category update(final Long categoryId, final AdminCategorySaveRequest adminCategorySaveRequest) {
         Category category = adminCategoryRepository.findById(categoryId)
@@ -49,9 +50,6 @@ public class AdminCategoryService {
         adminCategoryRepository.save(category);
         return category;
     }
-
-
-    /* 3. 카테고리 관리 > 카테고리 수정 */
 
 
 }
