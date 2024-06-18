@@ -25,14 +25,11 @@
 
 
 ## 팀원 소개
+| 김다솔 | 김아현 | 박병언 | 이은재 | 조형기 |    
+|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:| 
+| [<img src="https://avatars.githubusercontent.com/u/154950177?v=4" height=100 width=100> <br/> @ddalla0425](https://github.com/ddalla0425) |[<img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4" height=100 width=100> <br/> @may54ther](https://github.com/may54ther) | [<img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" height=100 width=100> <br/> @qkrquddjs1](https://github.com/qkrquddjs1) | [<img src="https://avatars.githubusercontent.com/u/154950170?v=4" height=100 width=100> <br/> @EUNJAE97](https://github.com/EUNJAE97) |[<img src="https://avatars.githubusercontent.com/u/120306336?v=4" height=100 width=100> <br/> @chk2023](https://github.com/chk2023) |
+| 관리자, 신고, 공지사항 |  회원, 프로필, 배포 | 여행지 소개, 댓글 | 일정, 계획 | 채팅, 친구  |
 
-|                                                             팀원                                                              |                           이름                           | 담당 기능             |
-|:---------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------:|:------------------|
-| [<img src="https://avatars.githubusercontent.com/u/154950177?v=4"      height=75 width=75> ](https://github.com/ddalla0425) | 김다솔 <br/> [@ddalla0425](https://github.com/ddalla0425) | 신고<br> 차단<br> 관리자 |
-| [<img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4"  height=75 width=75> ](https://github.com/may54ther)  |  김아현 <br/> [@may54ther](https://github.com/may54ther)  | 회원<br> 프로필<br> 매칭 |
-| [<img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" height=75 width=75> ](https://github.com/qkrquddjs1) | 박병언 <br/> [@qkrquddjs1](https://github.com/qkrquddjs1) | 여행지 소개<br> 여행 기록  |
-|  [<img src="https://avatars.githubusercontent.com/u/154950170?v=4"      height=75 width=75> ](https://github.com/EUNJAE97)  |   이은재 <br/> [@EUNJAE97](https://github.com/EUNJAE97)   | 일정<br> 동행글        |
-|  [<img src="https://avatars.githubusercontent.com/u/120306336?v=4"      height=75 width=75> ](https://github.com/chk2023)   |    조형기 <br/> [@chk2023](https://github.com/chk2023)    | 채팅<br> 친구         |
 
 ## 프로젝트 소개
 
