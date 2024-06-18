@@ -28,6 +28,20 @@ public class Profile extends BaseTimeEntity {
 
     private String mbti;
 
+    /* 다솔 추가 - 수정 쪽 추가 */
+    private Profile(Long userId, String introduction, String mbti) {
+        this.userId = userId;
+        this.introduction = introduction;
+        this.mbti = mbti;
+    }
+
+    private Profile(Long userId, String nickname, String introduction, String mbti) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.introduction = introduction;
+        this.mbti = mbti;
+    }
+
     private Profile(Long userId, String nickname, String profileImage, String introduction, String mbti) {
         this.userId = userId;
         this.nickname = nickname;
@@ -37,8 +51,11 @@ public class Profile extends BaseTimeEntity {
     }
 
     public static Profile of(Long userId, String nickname, String profileImage, String introduction, String mbti) {
-
         return new Profile(userId, nickname, profileImage, introduction, mbti);
+    }
+
+    public static Profile of(Long userId, String nickname, String introduction, String mbti) {
+        return new Profile(userId, nickname, introduction, mbti);
     }
 
     public void updateProfile(String nickname, String introduction, String mbti) {
@@ -54,13 +71,4 @@ public class Profile extends BaseTimeEntity {
     public void deleteProfileImage() {
         this.profileImage = null;
     }
-
-    /* 다솔 추가 - 수정 쪽 추가 */
-    private Profile(Long userId, String introduction, String mbti) {
-        this.userId = userId;
-        this.introduction = introduction;
-        this.mbti = mbti;
-    }
-
-
 }
