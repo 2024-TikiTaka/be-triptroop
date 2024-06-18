@@ -74,7 +74,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         /* TODO :: 추후 설정 */
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000/", "https://triptroop.store"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000/", "http://ec2-3-38-83-20.ap-northeast-2.compute.amazonaws.com/"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin",
                 "Access-Control-Allow-Headers",
