@@ -27,6 +27,5 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .join(travel).on(travel.placeId.eq(place.id))
                 .where(travel.placeId.eq(id))
                 .fetchFirst();
-
     }
 }
