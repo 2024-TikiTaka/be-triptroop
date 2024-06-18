@@ -40,21 +40,21 @@
   여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다. 
   상품 판매가 아닌 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
 
-## 논리 ERD
+##
 
-![ERD](https://github.com/2024-TikiTaka/be-triptroop/assets/151039466/5d6ed41d-11be-40a6-a3e6-db7bcecadd81)
+![ERD_01](https://github.com/2024-TikiTaka/be-triptroop/assets/42160693/d6c2e0c2-bbcf-439b-a6a5-ece5887ab6f2)
+![ERD_02](https://github.com/2024-TikiTaka/be-triptroop/assets/42160693/16bc6a41-f296-4aa2-a7dc-e3a2102b8025)
 
 ## 개발 기간
-
-<img src="https://private-user-images.githubusercontent.com/151039466/340213381-bb8a8ecf-3c21-48fb-93b0-1c65671cda32.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTg2MDg4MjMsIm5iZiI6MTcxODYwODUyMywicGF0aCI6Ii8xNTEwMzk0NjYvMzQwMjEzMzgxLWJiOGE4ZWNmLTNjMjEtNDhmYi05M2IwLTFjNjU2NzFjZGEzMi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNjE3JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDYxN1QwNzE1MjNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1jMzI3MzU3YWU5NjdlNTAzZTdjMzZiOTY0NTlmZjI2ZTJiMzk1MmEwY2MzOGYxZjg2MzNkMjRlYjkzNDk0MGNkJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.3UKghPCt-3fKLyc885xQOt2nXolX6B6A08h089Zv3XY">
+![개발기간](https://github.com/2024-TikiTaka/be-triptroop/assets/151039466/bb8a8ecf-3c21-48fb-93b0-1c65671cda32)
 
 ## 주요 기능 
 
 - AWS, Docker, Github Actions을 이용한 CI/CD 구축 및 배포
 - 로그인 및 회원가입 (Spring Security, JWT)
 - 이메일 인증
-- 여행지소개
-- 일정
+- 여행지 소개
+- 일정, 계획
 - 채팅
 - 공지사항
 - 신고
