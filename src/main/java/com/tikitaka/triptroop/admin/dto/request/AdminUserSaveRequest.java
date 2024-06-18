@@ -1,5 +1,7 @@
 package com.tikitaka.triptroop.admin.dto.request;
 
+import com.tikitaka.triptroop.common.exception.NotFoundException;
+import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.type.Gender;
@@ -69,6 +71,22 @@ public class AdminUserSaveRequest {
         this.mbti = mbti;
     }
 
+    public AdminUserSaveRequest(User user, Profile profile) {
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.confirmPassword = user.getPassword();
+        this.name = user.getName();
+        this.phone = user.getPhone();
+        this.gender = user.getGender();
+        this.role = user.getRole();
+        this.status = user.getStatus();
+        this.birth = user.getBirth();
+        this.nickname = profile.getNickname();
+        this.profileImage = profile.getProfileImage();
+        this.introduction = profile.getIntroduction();
+        this.mbti = profile.getMbti();
+    }
+
     public static AdminUserSaveRequest from(String email, String password, String confirmPassword, String name, String phone, Gender gender, UserRole role, UserStatus status, LocalDate birth, String nickname, String profileImage, String introduction, String mbti) {
         // 유효성 검사 로직 추가
         validateEmail(email);
@@ -80,17 +98,17 @@ public class AdminUserSaveRequest {
     private static void validateEmail(String email) {
         // 이메일 유효성 검사 로직
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
+            throw new NotFoundException(ExceptionCode.INVALID_EMAIL);
         }
     }
 
     private static void validatePassword(String password, String confirmPassword) {
         // 비밀번호 유효성 검사 로직
         if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
+            throw new NotFoundException(ExceptionCode.INVALID_PASSWORD);
         }
         if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new NotFoundException(ExceptionCode.INVALID_PASSWORD);
         }
     }
 

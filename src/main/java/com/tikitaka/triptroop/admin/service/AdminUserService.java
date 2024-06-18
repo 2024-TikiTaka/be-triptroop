@@ -4,7 +4,6 @@ import com.tikitaka.triptroop.admin.domain.repository.AdminUserRepository;
 import com.tikitaka.triptroop.admin.dto.request.AdminUserSaveRequest;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
-import com.tikitaka.triptroop.admin.dto.response.AdminUserSaveResponse;
 import com.tikitaka.triptroop.common.exception.BadRequestException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
@@ -58,7 +57,7 @@ public class AdminUserService {
 
     /* 3. 관리자 회원 관리 - 회원 등록 */
     @Transactional
-    public AdminUserSaveResponse registerAdminUser(final AdminUserSaveRequest adminUserSaveRequest, MultipartFile profileImage) {
+    public AdminUserSaveRequest registerAdminUser(final AdminUserSaveRequest adminUserSaveRequest, MultipartFile profileImage) {
 
         checkForDuplicates(adminUserSaveRequest);
 
@@ -73,7 +72,7 @@ public class AdminUserService {
         Profile profile = adminUserSaveRequest.toProfile(user.getId(), imageUrl + profileImagePath);
         profile = profileRepository.save(profile);
 
-        return new AdminUserSaveResponse(user, profile);
+        return new AdminUserSaveRequest(user, profile);
     }
 
 

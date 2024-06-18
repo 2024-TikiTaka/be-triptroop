@@ -5,14 +5,13 @@ import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class ReportTableResponse {
 
     private final Long reportId;

@@ -24,4 +24,5 @@ public class PlaceResponse {
                 place.name
         );
     }
+
 }

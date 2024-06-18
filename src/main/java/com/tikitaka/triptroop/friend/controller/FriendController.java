@@ -3,10 +3,10 @@ package com.tikitaka.triptroop.friend.controller;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
 import com.tikitaka.triptroop.friend.dto.request.FriendAddRequest;
 import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorInfoResponse;
+import com.tikitaka.triptroop.friend.dto.response.FriendAcceptorRequesterInfoResponse;
 import com.tikitaka.triptroop.friend.service.FriendService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import com.tikitaka.triptroop.user.dto.response.UserProfileResponse;
-import com.tikitaka.triptroop.user.dto.response.UserResponse;
 import com.tikitaka.triptroop.user.service.ProfileService;
 import com.tikitaka.triptroop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ public class FriendController {
 
     /* 친구 목록 조회 */
     @GetMapping
-    public ResponseEntity<ApiResponse<List<FriendAcceptorInfoResponse>>> getFriends(@AuthenticationPrincipal CustomUser loginUser) {
-        final UserResponse user = userService.findById(loginUser.getUserId());
-        List<FriendAcceptorInfoResponse> friendList = friendService.getAcceptedFriends(user.getUserId());
+    public ResponseEntity<ApiResponse<List<FriendAcceptorRequesterInfoResponse>>> getFriends(@AuthenticationPrincipal CustomUser loginUser) {
+        final Long userId = loginUser.getUserId();
+        List<FriendAcceptorRequesterInfoResponse> friendList = friendService.getAcceptedFriends(userId);
         return ResponseEntity.ok(ApiResponse.success(friendList));
     }
 
@@ -67,11 +67,10 @@ public class FriendController {
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFriend(@AuthenticationPrincipal CustomUser loginUser, @RequestBody FriendAddRequest request) {
         final UserProfileResponse userProfile = profileService.findUserProfileByNickname(request.getNickname());
-        /* 친구 상세 조회(프로필 조회)에서 id 받기 */
+        log.info(String.valueOf(loginUser.getUserId()));
+        log.info(String.valueOf(userProfile.getUserId()));
         friendService.deleteFriend(loginUser.getUserId(), userProfile.getUserId());
         return ResponseEntity.ok(ApiResponse.success(("친구 삭제되었습니다.")));
     }
-
-
 
 }

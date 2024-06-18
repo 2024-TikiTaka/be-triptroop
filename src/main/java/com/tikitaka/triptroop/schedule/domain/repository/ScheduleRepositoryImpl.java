@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.tikitaka.triptroop.area.domain.entity.QArea.area;
 import static com.tikitaka.triptroop.image.domain.entity.QImage.image;
 import static com.tikitaka.triptroop.place.domain.entity.QPlace.place;
 import static com.tikitaka.triptroop.schedule.domain.entity.QSchedule.schedule;
@@ -29,11 +30,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<Schedule> findSchedulesByKeyword(Pageable pageable, Visibility visibility, String keyword, String sort, Long area) {
+    public Page<Schedule> findSchedulesByKeyword(Pageable pageable, Visibility visibility, String keyword, String sort, Long area, boolean deleted) {
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
         if (visibility != null) {
-            predicate = predicate.and(schedule.visibility.eq(visibility));
+            predicate = predicate.and(schedule.visibility.eq(visibility)).and(schedule.isDeleted.eq(deleted));
         }
 
         if (keyword != null && !keyword.isEmpty()) {
@@ -76,6 +77,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return new PageImpl<>(scheduleList, pageable, total);
     }
 
+
     @Override
     public List<ScheduleParticipantProfileResponse> findParticipantsProfilesByScheduleId(Long scheduleId) {
         return queryFactory
@@ -105,6 +107,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         image.path,
                         image.uuid,
                         user.id,
+                        area.id,
                         schedule.startDate,
                         schedule.endDate,
                         schedule.title,
@@ -126,6 +129,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public List<ScheduleItemInfoResponse> findScheduleItemByScheduleId(Long scheduleId) {
         return queryFactory
                 .select(new QScheduleItemInfoResponse(
+                        scheduleItem.id,
                         place.name,
                         place.address,
                         scheduleItem.planDate,

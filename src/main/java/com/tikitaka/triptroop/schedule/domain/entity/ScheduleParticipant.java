@@ -37,26 +37,35 @@ public class ScheduleParticipant {
     private String cause;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime processedAt;
 
-    public ScheduleParticipant(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status, LocalDateTime createdAt) {
+    public ScheduleParticipant(Long scheduleId, Long userId, LocalDateTime processedAt) {
         this.scheduleId = scheduleId;
         this.reviewerId = userId;
         this.processedAt = processedAt;
+    }
+
+    public ScheduleParticipant(Long userId, Long scheduleId, RequestStatus status) {
+        this.scheduleId = scheduleId;
+        this.reviewerId = userId;
         this.status = status;
-        this.createdAt = createdAt;
     }
 
 
-    public static ScheduleParticipant of(Long scheduleId, Long userId, LocalDateTime processedAt, RequestStatus status, LocalDateTime createdAt) {
+    public static ScheduleParticipant of(Long scheduleId, Long userId, LocalDateTime processedAt) {
         return new ScheduleParticipant(
                 scheduleId,
                 userId,
-                processedAt,
-                status,
-                createdAt
+                processedAt
+        );
+    }
+
+    public static ScheduleParticipant saveUser(Long userId, Long scheduleId, RequestStatus status) {
+        return new ScheduleParticipant(userId,
+                scheduleId,
+                status
         );
     }
 

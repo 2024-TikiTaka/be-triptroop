@@ -1,6 +1,7 @@
 package com.tikitaka.triptroop.notification.domain.entity;
 
 import com.tikitaka.triptroop.notification.domain.type.NotificationType;
+import com.tikitaka.triptroop.notification.dto.request.NotificationCreateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,4 +37,13 @@ public class Notification {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
 
+    public Notification(Long userId, NotificationType kind, String content) {
+        this.userId = userId;
+        this.kind = kind;
+        this.content = content;
+    }
+
+    public static Notification of(Long userId, NotificationType kind, String content) {
+        return new Notification(userId, kind, content);
+    }
 }

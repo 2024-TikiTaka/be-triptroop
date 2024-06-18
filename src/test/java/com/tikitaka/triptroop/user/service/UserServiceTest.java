@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 @SpringBootTest
 class UserServiceTest {
 
@@ -20,7 +18,6 @@ class UserServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @DisplayName("회원가입_테스트_성공")
     @Test

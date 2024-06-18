@@ -14,4 +14,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Boolean existsByUserIdAndId(Long userId, Long scheduleId);
 
+    Long findPlaceIdById(Long scheduleId);
+
 }

@@ -71,6 +71,7 @@ public class Travel extends BaseTimeEntity {
         this.categoryId = categoryId;
         this.areaId = areaId;
         this.placeId = placeId;
+
         this.title = title;
         this.content = content;
     }
@@ -80,6 +81,7 @@ public class Travel extends BaseTimeEntity {
             final Long categoryId,
             final Long areaId,
             final Long placeId,
+
             final String title,
             final String content
     ) {

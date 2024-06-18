@@ -1,7 +1,6 @@
 package com.tikitaka.triptroop.admin.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tikitaka.triptroop.user.domain.type.Gender;
 import com.tikitaka.triptroop.user.domain.type.Provider;
 import com.tikitaka.triptroop.user.domain.type.UserRole;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AdminUserDetailResponse {
 
     private final Long userId;
@@ -52,7 +50,7 @@ public class AdminUserDetailResponse {
                                    Long friendCount/*, Long loginCount, Long loginTimeTotal*/) {
         this.userId = userId;
         this.email = email;
-        this.nickname = nickname;
+        this.nickname = nickname != null ? nickname : "";
         this.role = role;
         this.createdAt = createdAt;
         this.name = name;

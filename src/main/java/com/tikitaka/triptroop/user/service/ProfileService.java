@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 
 @Service
 @Transactional
@@ -30,14 +29,29 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
 
+    /**
+     * 프로필 존재 여부
+     *
+     * @param userId 회원번호
+     */
     public boolean existsProfileByUserId(Long userId) {
         return profileRepository.existsProfileByUserId(userId);
     }
 
+    /**
+     * 프로필 존재 여부
+     *
+     * @param nickname 닉네임
+     */
     public boolean existsByNickname(String nickname) {
         return profileRepository.existsByNickname(nickname);
     }
 
+    /**
+     * 닉네임 중복 검증
+     *
+     * @param nickname 닉네임
+     */
     public void checkNicknameDuplicate(String nickname) {
         if (existsByNickname(nickname)) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
@@ -45,9 +59,23 @@ public class ProfileService {
     }
 
     /**
-     * 회원 번호로 프로필 정보 조회
+     * 프로필 상세 조회
      *
-     * @return UserProfileResponse 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI
+     * @param profileId 프로필번호
+     * @return UserProfileResponse 회원번호, 성별, 나이(구간), 고도, 프로필:{프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI}
+     */
+    @Transactional(readOnly = true)
+    public UserProfileResponse findUserProfileById(Long profileId) {
+
+        return profileRepository.findUserProfileById(profileId)
+                                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+    }
+
+    /**
+     * 프로필 상세 조회
+     *
+     * @param userId 회원번호
+     * @return UserProfileResponse 회원번호, 성별, 나이(구간), 고도, 프로필:{프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI}
      */
     @Transactional(readOnly = true)
     public UserProfileResponse findUserProfileByUserId(Long userId) {
@@ -57,9 +85,10 @@ public class ProfileService {
     }
 
     /**
-     * 닉네임으로 프로필 정보 조회
+     * 프로필 상세 조회
      *
-     * @return UserProfileResponse 회원번호, 나이(범위), 성별, 고도, 닉네임, 프로필이미지, 자기소개, MBTI
+     * @param nickname 닉네임
+     * @return UserProfileResponse 회원번호, 성별, 나이(구간), 고도, 프로필:{프로필번호, 프로필이미지, 닉네임, 자기소개, MBTI}
      */
     @Transactional(readOnly = true)
     public UserProfileResponse findUserProfileByNickname(String nickname) {
@@ -68,6 +97,43 @@ public class ProfileService {
                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
     }
 
+    /**
+     * 프로필 조회
+     *
+     * @param profileId 프로필번호
+     * @return ProfileResponse
+     */
+    @Transactional(readOnly = true)
+    public ProfileResponse findById(Long profileId) {
+
+        return ProfileResponse.from(
+                profileRepository.findById(profileId)
+                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE))
+        );
+    }
+
+    /**
+     * 프로필 조회
+     *
+     * @param userId 회원번호
+     * @return ProfileResponse
+     */
+    @Transactional(readOnly = true)
+    public ProfileResponse findByUserId(Long userId) {
+
+        return ProfileResponse.from(
+                profileRepository.findByUserId(userId)
+                                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE))
+        );
+    }
+
+    /**
+     * 프로필 등록
+     *
+     * @param userId
+     * @param profileRequest
+     * @param profileImage
+     */
     @Transactional
     public ProfileResponse save(Long userId, ProfileSaveRequest profileRequest, MultipartFile profileImage) {
 
@@ -87,6 +153,12 @@ public class ProfileService {
         return ProfileResponse.from(newProfile);
     }
 
+    /**
+     * 프로필 수정
+     *
+     * @param userId
+     * @param profileRequest
+     */
     @Transactional
     public ProfileResponse updateProfile(Long userId, ProfileSaveRequest profileRequest) {
 
@@ -94,7 +166,7 @@ public class ProfileService {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
         }
 
-        final Profile profile = profileRepository.findProfileByUserId(userId)
+        final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
 
         profile.updateProfile(profileRequest.getNickname(), profileRequest.getIntroduction(), profileRequest.getMbti());
@@ -102,10 +174,17 @@ public class ProfileService {
         return ProfileResponse.from(profile);
     }
 
+
+    /**
+     * 프로필 이미지 등록
+     *
+     * @param userId
+     * @param image
+     */
     @Transactional
     public void uploadImage(Long userId, MultipartFile image) {
 
-        final Profile profile = profileRepository.findProfileByUserId(userId)
+        final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
         String profileImag = FileUploadUtils.uploadFile(imageDir, image);
         String storedProfileImage = imageUrl + profileImag;
@@ -113,11 +192,17 @@ public class ProfileService {
         profile.updateProfileImage(storedProfileImage);
     }
 
+    /**
+     * 프로필 이미지 삭제
+     *
+     * @param userId
+     */
     @Transactional
     public void deleteImage(Long userId) {
 
-        final Profile profile = profileRepository.findProfileByUserId(userId)
+        final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+
         if (profile.getProfileImage() == null) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE);
         }

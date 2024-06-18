@@ -7,7 +7,6 @@ import com.tikitaka.triptroop.report.domain.entity.Report;
 import com.tikitaka.triptroop.report.domain.type.ReportKind;
 import com.tikitaka.triptroop.report.domain.type.ReportProcessStatus;
 import com.tikitaka.triptroop.report.domain.type.ReportType;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class ReportDetailResponse {
 
     private final Long id;
