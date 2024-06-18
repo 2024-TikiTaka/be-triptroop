@@ -2,9 +2,20 @@
 
 <img src="https://avatars.githubusercontent.com/u/168394855?s=200&v=4" width="150" alt="favicon">
 
+
+## 프로젝트 소개
+
+- 트립 트룹(TripTroop)은 “여행 그룹” 을 의미하며
+  여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다. 
+  상품 판매가 아닌 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
+
+<br>
+  
 ## 규칙
 
 - [Git, Github 커밋 가이드](https://github.com/2024-TikiTaka/be-triptroop/wiki/%EC%BB%A4%EB%B0%8B-%EA%B0%80%EC%9D%B4%EB%93%9C)
+
+<br>
 
 ## 개발 환경
 
@@ -23,6 +34,7 @@
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=plastic&logo=mysql&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-000000?style=plastic&logo=mongodb&logoColor=white)
 
+<br>
 
 ## 팀원 소개
 | 김다솔 | 김아현 | 박병언 | 이은재 | 조형기 |    
@@ -30,32 +42,34 @@
 | [<img src="https://avatars.githubusercontent.com/u/154950177?v=4" height=100 width=100> <br/> @ddalla0425](https://github.com/ddalla0425) |[<img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4" height=100 width=100> <br/> @may54ther](https://github.com/may54ther) | [<img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" height=100 width=100> <br/> @qkrquddjs1](https://github.com/qkrquddjs1) | [<img src="https://avatars.githubusercontent.com/u/154950170?v=4" height=100 width=100> <br/> @EUNJAE97](https://github.com/EUNJAE97) |[<img src="https://avatars.githubusercontent.com/u/120306336?v=4" height=100 width=100> <br/> @chk2023](https://github.com/chk2023) |
 | 관리자, 신고, 공지사항 |  회원, 프로필, 배포 | 여행지 소개, 댓글 | 일정, 계획 | 채팅, 친구  |
 
+<br>
 
-## 프로젝트 소개
-
-- 트립 트룹(TripTroop)은 “여행 그룹” 을 의미하며
-  여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다. 
-  상품 판매가 아닌 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
-
-##
+## ERD
 
 ![ERD_01](https://github.com/2024-TikiTaka/be-triptroop/assets/42160693/d6c2e0c2-bbcf-439b-a6a5-ece5887ab6f2)
 ![ERD_02](https://github.com/2024-TikiTaka/be-triptroop/assets/42160693/16bc6a41-f296-4aa2-a7dc-e3a2102b8025)
 
+<br>
+
 ## 개발 기간
 ![개발기간](https://github.com/2024-TikiTaka/be-triptroop/assets/151039466/bb8a8ecf-3c21-48fb-93b0-1c65671cda32)
+
+<br>
 
 ## 주요 기능 
 
 - AWS, Docker, Github Actions을 이용한 CI/CD 구축 및 배포
 - 로그인 및 회원가입 (Spring Security, JWT)
-- 이메일 인증
-- 여행지 소개
-- 일정, 계획
-- 채팅
-- 공지사항
-- 신고
-- 차단
+- 회원 가입 시 이메일 인증
+- 자신만의 추천 여행지 소개글
+- 일정 생성 및 여행 계획 작성
+- 공개 일정을 통해 여행 계획을 손쉽게
+- 정확한 장소 정보 제공을 위해 카카오맵 API 사용
+- 생성한 일정에는 회원을 초대 가능
+- 채팅 기능을 통해 사용자간 소통
+- 공지사항, 알림 기능
+- 사용자간의 신고, 차단 기능 
+
 
 ## 프로젝트 후기 
 
