@@ -40,7 +40,7 @@
   여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다. 
   상품 판매가 아닌 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
 
-## DB설계 : 논리 ERD
+## 논리 ERD
 
 ![ERD](https://github.com/2024-TikiTaka/be-triptroop/assets/151039466/5d6ed41d-11be-40a6-a3e6-db7bcecadd81)
 
@@ -50,8 +50,8 @@
 
 ## 주요 기능 
 
-- 로그인 및 회원가입 (Spring Security, JWT)
 - AWS, Docker, Github Actions을 이용한 CI/CD 구축 및 배포
+- 로그인 및 회원가입 (Spring Security, JWT)
 - 이메일 인증
 - 여행지소개
 - 일정
@@ -62,13 +62,13 @@
 
 ## 프로젝트 후기 
 
-|                                                             팀원                                                              |                           이름                           | 느낀 점             |
-|:---------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------:|:------------------|
-| [<img src="https://avatars.githubusercontent.com/u/154950177?v=4"      height=125 width=125> ](https://github.com/ddalla0425) | 김다솔 <br/> [@ddalla0425](https://github.com/ddalla0425) | 비록 일정이 빠듯해 기능이 많이 빠졌지만, 끝까지 책임감 있게 노력한 우리 티키타카가 많이 자랑스러웠습니다! 오늘 보다 내일이 더 아름다울 우리일 테니, 이번 경험을 통해 더 멋진 개발자가 될 수 있을거라 믿어 의심치 않습니다!! 우리 모두 화이팅!!!!  |
-| [<img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4"  height=125 width=125> ](https://github.com/may54ther)  |  김아현 <br/> [@may54ther](https://github.com/may54ther)  |  무언가를 기획할 때, 생각과 고민이 많아 괴로워하는 편인데 행동력 있는 팀원들 덕분에 고민보다는 일단 Go! 를 깨닫게 되었습니다. 😎 오늘의 아쉬움을 발판삼아 성장하기를!! |
-| [<img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" height=125 width=125> ](https://github.com/qkrquddjs1) | 박병언 <br/> [@qkrquddjs1](https://github.com/qkrquddjs1) | 프로젝트 기간 동안 힘든 시간이 있었지만, 팀원들과 함께협력하며 이를 극복해나간경험은 매우뜻깊었습니다.어려움에 직면했을 때 서로를 격려하고 지원하는 팀 문화가 큰 힘이 되었습니다. 팀원들의 응원과 지지로 인해 끝까지 프로젝트를 완수할 수 있었습니다.  |
-|  [<img src="https://avatars.githubusercontent.com/u/154950170?v=4"      height=125 width=125> ](https://github.com/EUNJAE97)  |   이은재 <br/> [@EUNJAE97](https://github.com/EUNJAE97)   | 프로젝트를 진행하는 동안 여러 가지 힘든 상황이 많았습니다. 하지만 이러한 어려움들을 극복할 수 있었던 것은 강사님과 팀원분들의 도움 덕분이었습니다. 강사님께서는 언제나 친절하게 지도해 주셨고, 팀원분들은 서로 도우며 협력해 주셨습니다. 모두의 지원과 격려 덕분에 저는 힘든 순간들을 이겨내고 프로젝트를 성공적으로 마칠 수 있었습니다! 감사합니다@!😁       |
-|  [<img src="https://avatars.githubusercontent.com/u/120306336?v=4"      height=125 width=125> ](https://github.com/chk2023)   |    조형기 <br/> [@chk2023](https://github.com/chk2023)    | 이번 프로젝트를 통해 협업의 중요성과 기술적 성장의 기회를 깊이 체감했습니다. 팀원들과의 원활한 의사소통과 역할 분담이 프로젝트의 성공에 큰 영향을 미쳤으며, SockJS와 STOMP 같은 새로운 기술을 익히고 적용하면서 문제 해결 능력이 향상되었습니다. 또한, 사용자 중심의 설계와 작은 디테일의 중요성을 배우며, 지속적인 개선과 학습이 필수적임을 깨달았습니다.         |
+|                           팀원                           | 느낀 점             |
+|:------------------------------------------------------:|:------------------:|
+| [<img src="https://avatars.githubusercontent.com/u/154950177?v=4"  height=100 width=100> ](https://github.com/ddalla0425) <br/> 김다솔 <br/> [@ddalla0425](https://github.com/ddalla0425) | 비록 일정이 빠듯해 기능이 많이 빠졌지만, 끝까지 책임감 있게 노력한 우리 티키타카가 많이 자랑스러웠습니다! 오늘 보다 내일이 더 아름다울 우리일 테니, 이번 경험을 통해 더 멋진 개발자가 될 수 있을거라 믿어 의심치 않습니다!! 우리 모두 화이팅!!!!  |
+| [<img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4"  height=100 width=100> ](https://github.com/may54ther) <br/> 김아현 <br/> [@may54ther](https://github.com/may54ther)  |  무언가를 기획할 때, 생각과 고민이 많아 괴로워하는 편인데 행동력 있는 팀원들 덕분에 고민보다는 일단 Go! 를 깨닫게 되었습니다. 😎 오늘의 아쉬움을 발판삼아 성장하기를!! |
+| [<img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" height=100 width=100> ](https://github.com/qkrquddjs1) <br/> 박병언 <br/> [@qkrquddjs1](https://github.com/qkrquddjs1) | 프로젝트 기간 동안 힘든 시간이 있었지만, 팀원들과 함께협력하며 이를 극복해나간경험은 매우뜻깊었습니다.어려움에 직면했을 때 서로를 격려하고 지원하는 팀 문화가 큰 힘이 되었습니다. 팀원들의 응원과 지지로 인해 끝까지 프로젝트를 완수할 수 있었습니다.  |
+|  [<img src="https://avatars.githubusercontent.com/u/154950170?v=4" height=100 width=100> ](https://github.com/EUNJAE97) <br/> 이은재 <br/> [@EUNJAE97](https://github.com/EUNJAE97)   | 프로젝트를 진행하는 동안 여러 가지 힘든 상황이 많았습니다. 하지만 이러한 어려움들을 극복할 수 있었던 것은 강사님과 팀원분들의 도움 덕분이었습니다. 강사님께서는 언제나 친절하게 지도해 주셨고, 팀원분들은 서로 도우며 협력해 주셨습니다. 모두의 지원과 격려 덕분에 저는 힘든 순간들을 이겨내고 프로젝트를 성공적으로 마칠 수 있었습니다! 감사합니다@!😁       |
+|  [<img src="https://avatars.githubusercontent.com/u/120306336?v=4" height=100 width=100> ](https://github.com/chk2023) <br/> 조형기 <br/> [@chk2023](https://github.com/chk2023)    | 이번 프로젝트를 통해 협업의 중요성과 기술적 성장의 기회를 깊이 체감했습니다. 팀원들과의 원활한 의사소통과 역할 분담이 프로젝트의 성공에 큰 영향을 미쳤으며, SockJS와 STOMP 같은 새로운 기술을 익히고 적용하면서 문제 해결 능력이 향상되었습니다. 또한, 사용자 중심의 설계와 작은 디테일의 중요성을 배우며, 지속적인 개선과 학습이 필수적임을 깨달았습니다.         |
 
 <!--
 
