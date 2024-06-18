@@ -28,15 +28,17 @@ import java.net.URI;
 import java.util.List;
 
 @Slf4j
-
 @RestController
 @RequestMapping("/api/v1/schedules")
 @RequiredArgsConstructor
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
     private final PlaceService placeService;
+
     private final ScheduleParticipantService scheduleParticipantService;
+
     private final ImageService imageService;
 
     // TODO 일정 리스트 조회,조건 조회
@@ -56,29 +58,14 @@ public class ScheduleController {
     // TODO 일정 상세 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ApiResponse<ScheduleDetailResponse>> findByScheduleId(@PathVariable(name = "scheduleId") final Long scheduleId) {
-//        final ScheduleDetailResponse scheduleDetailResponse =
-//                scheduleService.getFindByScheduleId(scheduleId);
+        //        final ScheduleDetailResponse scheduleDetailResponse =
+        //                scheduleService.getFindByScheduleId(scheduleId);
         final ScheduleDetailResponse scheduleDetailResponse =
                 scheduleService.findByScheduleId(scheduleId);
         return ResponseEntity.ok(ApiResponse.success(scheduleDetailResponse));
     }
 
     // TODO 일정 등록
-//    @PostMapping("/regist")
-//    public ResponseEntity<ApiResponse> saveSchedule(
-//            @AuthenticationPrincipal CustomUser loginUser,
-//            @RequestPart final ScheduleCreateRequest scheduleRequest,
-//            @RequestPart(required = false) final List<ScheduleItemCreateRequest> scheduleItemRequest,
-////            @RequestPart(required = false) final PlaceScheduleRequest placeScheduleRequest,
-//            @RequestPart final MultipartFile image
-//    ) {
-//        Long userId = loginUser.getUserId();
-//        final Long scheduleId = scheduleService.save(scheduleRequest, userId);
-//        imageService.save(ImageKind.SCHEDULE, scheduleId, image);
-//        Long placeId = placeService.savePlace(scheduleItemRequest);
-//        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
-//    }
     @PostMapping("/regist")
     public ResponseEntity<ApiResponse> saveSchedule(
             @AuthenticationPrincipal CustomUser loginUser,
@@ -103,7 +90,8 @@ public class ScheduleController {
         }
         scheduleParticipantService.saveUser(userId, scheduleId);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
 
 
@@ -127,7 +115,8 @@ public class ScheduleController {
             // 이미지가 없는 경우 처리 로직 추가
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
 
 
@@ -142,7 +131,7 @@ public class ScheduleController {
         scheduleService.updateThumbnail(userId, scheduleId, image);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
+                             .body(ApiResponse.success(URI.create("/api/v1/schedules/" + scheduleId)));
     }
 
     // TODO 일정 삭제
@@ -156,20 +145,20 @@ public class ScheduleController {
     }
 
     // TODO 일정 계획 등록
-//    @PostMapping("/regist/item")
-//    public ResponseEntity<ApiResponse> saveItem(
-//            @AuthenticationPrincipal CustomUser loginUser,
-//            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
-//            @PathVariable final Long scheduleId
-//    ) {
-//
-//        Long placeId = placeService.savePlace(scheduleItemRequest, loginUser.getUserId());
-//
-//        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
-//    }
+    //    @PostMapping("/regist/item")
+    //    public ResponseEntity<ApiResponse> saveItem(
+    //            @AuthenticationPrincipal CustomUser loginUser,
+    //            @RequestBody @Valid final ScheduleItemCreateRequest scheduleItemRequest,
+    //            @PathVariable final Long scheduleId
+    //    ) {
+    //
+    //        Long placeId = placeService.savePlace(scheduleItemRequest, loginUser.getUserId());
+    //
+    //        scheduleService.saveItem(scheduleItemRequest, scheduleId, placeId);
+    //
+    //        return ResponseEntity.status(HttpStatus.CREATED)
+    //                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
+    //    }
 
     // TODO 일정 계획 수정
     @PutMapping("/{scheduleItemId}/item")
@@ -184,7 +173,7 @@ public class ScheduleController {
 
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
+                             .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
     }
 
     // TODO 일정 공개 여부 변경
@@ -198,7 +187,7 @@ public class ScheduleController {
         scheduleService.changeStatus(scheduleId, userId, status);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
+                             .body(ApiResponse.success(URI.create("/api/v1/schedules/")));
     }
 
     // TODO 일정 계획 삭제
@@ -225,7 +214,7 @@ public class ScheduleController {
     @PostMapping("/{scheduleId}/apply")
     public ResponseEntity<ApiResponse> applySchedule(@PathVariable final Long scheduleId,
                                                      @AuthenticationPrincipal CustomUser loginUser
-//                                                     @RequestBody @Valid final ScheduleParticipantRequest scheduleParticipantRequest
+            //                                                     @RequestBody @Valid final ScheduleParticipantRequest scheduleParticipantRequest
     ) {
         Long userId = loginUser.getUserId();
         scheduleParticipantService.save(scheduleId, userId);

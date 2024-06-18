@@ -4,5 +4,5 @@ import com.tikitaka.triptroop.place.dto.response.PlaceTravelResponse;
 
 public interface PlaceRepositoryCustom {
 
-    PlaceTravelResponse findPlaceById(Long id);
+    PlaceTravelResponse findById(Long id);
 }
