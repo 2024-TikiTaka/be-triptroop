@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 
 @Service
 @Transactional
@@ -162,12 +164,16 @@ public class ProfileService {
     @Transactional
     public ProfileResponse updateProfile(Long userId, ProfileSaveRequest profileRequest) {
 
-        if (existsByNickname(profileRequest.getNickname())) {
-            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
-        }
 
         final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
+
+        String nickname = profileRequest.getNickname();
+        String currentNickname = profile.getNickname();
+
+        if (!Objects.equals(nickname, currentNickname) && existsByNickname(nickname)) {
+            throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
+        }
 
         profile.updateProfile(profileRequest.getNickname(), profileRequest.getIntroduction(), profileRequest.getMbti());
 
