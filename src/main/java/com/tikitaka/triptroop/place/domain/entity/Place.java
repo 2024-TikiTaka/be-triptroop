@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "places")
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Place extends BaseTimeEntity {
@@ -31,7 +29,7 @@ public class Place extends BaseTimeEntity {
 
     public LocalDateTime deletedAt;
 
-    public Place(String address, String name) {
+    private Place(String address, String name) {
         this.address = address;
         this.name = name;
     }
@@ -42,21 +40,8 @@ public class Place extends BaseTimeEntity {
         this.name = name;
     }
 
-    public static Place insert(String address, String name) {
-        return new Place(
-                address,
-                name
-        );
+
+    public static Place of(String address, String name) {
+        return new Place(address, name);
     }
-
-
-    public static Place save(String address, String name) {
-        return new Place(
-
-                address,
-                name
-
-        );
-    }
-
 }

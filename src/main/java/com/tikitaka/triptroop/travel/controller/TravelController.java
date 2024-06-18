@@ -15,6 +15,7 @@ import com.tikitaka.triptroop.travel.service.TravelService;
 import com.tikitaka.triptroop.user.domain.type.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import java.util.List;
  * => 현재 로그인한 회원의 정보를 받아와서 아이디 넘겨주기(아이디는 PK 값 말하는 것)
  * => loginUser.getUserId()
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/travels")
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public class TravelController {
     private final TravelService travelService;
 
     private final ImageService imageService;
+
     private final PlaceService placeService;
 
 
@@ -48,7 +51,6 @@ public class TravelController {
             @RequestParam(required = false) final Long areaId,
             @RequestParam(required = false) final Long categoryId,
             @RequestParam(required = false) final String title) {
-
 
         final Page<TravelsResponse> travels = travelService.findAll(page, areaId, categoryId, title);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(travels);
@@ -64,63 +66,22 @@ public class TravelController {
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart final TravelRequest travelRequest,
             @RequestPart(required = false) final List<MultipartFile> images) {
-        Long placeId = placeService.saveplace(travelRequest);
 
-        final Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images, placeId);
+        Long placeId = placeService.savePlace(travelRequest);
+        Long travelId = travelService.save(travelRequest, loginUser.getUserId(), images, placeId);
 
-
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(ApiResponse.success(URI.create("/api/v1/travels/" + travelId)));
     }
-
-
-//    @PostMapping(value = "/{travelId}/upload")
-//    public ResponseEntity<Void> saveImage(@RequestPart final MultipartFile image,
-//                                          @PathVariable final Long travelId) {
-//
-//        imageService.save(ImageKind.TRAVEL, travelId, image);
-//        return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
-//    }
-
-    /* 게시글 상세 조회 (된거)*/
-//    @GetMapping("/travel/{travelId}")
-//    public ResponseEntity<TravelCommentUserResponse> getTravelCommentUser(
-//            @PathVariable final Long travelId
-//    ) {
-//        TravelCommentUserResponse travelCommentUserResponse = travelService.getTravelCommentUser(travelId);
-//        return ResponseEntity.ok(travelCommentUserResponse);
-//    }
-
-    /* 게시글 상세 조회 (수정본) */
-//    @GetMapping("/{travelId}")
-//    public ResponseEntity<TravelDetailResponse> findTravelDetail(
-//            @PathVariable final Long travelId
-//    ) {
-//        TravelDetailResponse travelDetailResponse = travelService.findTravelDetail(travelId);
-//        return ResponseEntity.ok(travelDetailResponse);
-//    }
 
     /* 게시글 상세 조회 (최종 수정본) */
     @GetMapping("/{travelId}")
-    public ResponseEntity<ApiResponse> findTravel(
-            @PathVariable final Long travelId
+    public ResponseEntity<ApiResponse> findTravel(@PathVariable final Long travelId) {
 
-    ) {
         TravelInfoResponse travelInfo = travelService.getTravelInfo(travelId);
+
         return ResponseEntity.ok(ApiResponse.success(travelInfo));
     }
-
-
-    /* 게시글 상세 조회 (하는중)*/
-//    @GetMapping("/{travelId}")
-//    public ResponseEntity<Optional<TravelResponse>> findTravel(
-//            @PathVariable final Long travelId) {
-//
-//        Optional<TravelResponse> travelResponse = travelService.findTravel(travelId, Visibility.PUBLIC);
-//
-//        return ResponseEntity.ok(travelResponse);
-//    }
 
 
     /* 게시글 수정 */
@@ -129,16 +90,19 @@ public class TravelController {
             @AuthenticationPrincipal CustomUser loginUser,
             @PathVariable final Long travelId,
             @RequestPart @Valid final TravelUpdateRequest travelRequest,
-            @RequestPart(required = false) final MultipartFile image,
-            @RequestParam String status
-    ) {
+            @RequestPart(required = false) final MultipartFile image) {
 
-        travelService.updateTravel(travelId, travelRequest, loginUser.getUserId());
+        log.info("전달받은 리퀘스트 정보: {}", travelRequest);
+        log.info("전달받은 이미지 정보 : {}", image);
+
+        Long placeId = placeService.savePlace(travelRequest);
+
+        travelService.updateTravel(travelId, travelRequest, loginUser.getUserId(), placeId);
         imageService.updateImage(ImageKind.TRAVEL, travelId, image);
-        travelService.updateStatus(loginUser.getUserId(), travelId, status);
+        travelService.updateStatus(loginUser.getUserId(), travelId, travelRequest.getStatus());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("여행 정보가 수정되었습니다."));
+                             .body(ApiResponse.success("여행 정보가 수정되었습니다."));
     }
 
     /* 게시글을 삭제해주세요~ ♬ */
@@ -149,23 +113,62 @@ public class TravelController {
 
         travelService.deleteTravel(travelId, loginUser.getUserId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(ApiResponse.success("삭제가 완료되었습니다."));
+                             .body(ApiResponse.success("삭제가 완료되었습니다."));
 
     }
 
+
+    //    @PostMapping(value = "/{travelId}/upload")
+    //    public ResponseEntity<Void> saveImage(@RequestPart final MultipartFile image,
+    //                                          @PathVariable final Long travelId) {
+    //
+    //        imageService.save(ImageKind.TRAVEL, travelId, image);
+    //        return ResponseEntity.created(URI.create("/api/v1/travels" + travelId)).build();
+    //    }
+
+    /* 게시글 상세 조회 (된거)*/
+    //    @GetMapping("/travel/{travelId}")
+    //    public ResponseEntity<TravelCommentUserResponse> getTravelCommentUser(
+    //            @PathVariable final Long travelId
+    //    ) {
+    //        TravelCommentUserResponse travelCommentUserResponse = travelService.getTravelCommentUser(travelId);
+    //        return ResponseEntity.ok(travelCommentUserResponse);
+    //    }
+
+    /* 게시글 상세 조회 (수정본) */
+    //    @GetMapping("/{travelId}")
+    //    public ResponseEntity<TravelDetailResponse> findTravelDetail(
+    //            @PathVariable final Long travelId
+    //    ) {
+    //        TravelDetailResponse travelDetailResponse = travelService.findTravelDetail(travelId);
+    //        return ResponseEntity.ok(travelDetailResponse);
+    //    }
+
+
+
     /* 여행지 소개 공개 / 비공개 */
-//    @PutMapping("/{travelId}/")
-//    public ResponseEntity<ApiResponse> updateStatus(
-//            @AuthenticationPrincipal CustomUser loginUser,
-//            @PathVariable final Long travelId,
-//            @RequestParam String status
-//    ) {
-//
-//        travelService.updateStatus(loginUser.getUserId(), travelId, status);
-//
-//        return ResponseEntity.ok(ApiResponse.success("공개 상태가 변경되었습니다."));
-//
-//
-//    }
+    //    @PutMapping("/{travelId}/")
+    //    public ResponseEntity<ApiResponse> updateStatus(
+    //            @AuthenticationPrincipal CustomUser loginUser,
+    //            @PathVariable final Long travelId,
+    //            @RequestParam String status
+    //    ) {
+    //
+    //        travelService.updateStatus(loginUser.getUserId(), travelId, status);
+    //
+    //        return ResponseEntity.ok(ApiResponse.success("공개 상태가 변경되었습니다."));
+    //
+    //
+    //    }
+
+    /* 게시글 상세 조회 (하는중)*/
+    //    @GetMapping("/{travelId}")
+    //    public ResponseEntity<Optional<TravelResponse>> findTravel(
+    //            @PathVariable final Long travelId) {
+    //
+    //        Optional<TravelResponse> travelResponse = travelService.findTravel(travelId, Visibility.PUBLIC);
+    //
+    //        return ResponseEntity.ok(travelResponse);
+    //    }
 
 }
