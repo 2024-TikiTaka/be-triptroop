@@ -16,7 +16,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public PlaceTravelResponse findPlaceById(Long id) {
+    public PlaceTravelResponse findById(Long id) {
         return queryFactory
                 .select(new QPlaceTravelResponse(
                         place.address,
@@ -25,8 +25,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 ))
                 .from(place)
                 .join(travel).on(travel.placeId.eq(place.id))
-                .where(travel.id.eq(id))
+                .where(travel.placeId.eq(id))
                 .fetchFirst();
-
     }
 }
