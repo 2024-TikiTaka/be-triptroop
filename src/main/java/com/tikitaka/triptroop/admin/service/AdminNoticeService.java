@@ -7,7 +7,6 @@ import com.tikitaka.triptroop.admin.dto.response.AdminNoticeDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminNoticeResponse;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.notice.domain.entity.Notice;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 public class AdminNoticeService {
 
     private final AdminNoticeRepository adminNoticeRepository;
-    private final ImageRepository imageRepository;
+
     private final ImageService imageService;
 
     /* 1. 공지 관리 > 공지 목록 조회 */
@@ -41,10 +40,10 @@ public class AdminNoticeService {
     @Transactional(readOnly = true)
     public AdminNoticeDetailResponse getNoticeDetail(final Long noticeId) {
         final Notice notice = adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
+                                                   .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
 
-//        List<Image> images = imageRepository.findByNoticeId(noticeId);
-//        List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
+        //        List<Image> images = imageRepository.findByNoticeId(noticeId);
+        //        List<ImageOriginalResponse> imageOriginalResponses = ImageOriginalResponse.from(images);
 
         return AdminNoticeDetailResponse.from(notice/*, imageOriginalResponses*/);
     }
@@ -62,13 +61,7 @@ public class AdminNoticeService {
         );
 
         final Notice notice = adminNoticeRepository.save(newNotice);
-
-        if (imageService.hasValidImages(images)) {
-            //이미지 검사 통과 -> 이미지 저장됨
-            imageService.saveAll(ImageKind.NOTICE, notice.getId(), images);
-        } else {
-            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
-        }
+        imageService.saveAll(ImageKind.NOTICE, notice.getId(), images);
 
         return notice.getId();
     }
@@ -77,7 +70,7 @@ public class AdminNoticeService {
     @Transactional
     public Long updateNotice(final Long noticeId, final AdminNoticeUpdateRequest adminNoticeUpdateRequest, final List<MultipartFile> images) {
         final Notice notice = adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
+                                                   .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_NOTICE));
 
         notice.update(
                 NoticeKind.valueOf(adminNoticeUpdateRequest.getKind().toString()),
@@ -87,13 +80,7 @@ public class AdminNoticeService {
                 adminNoticeUpdateRequest.getModifiedAt()
         );
 
-        if (imageService.hasValidImages(images)) {
-            //이미지 검사 통과 -> 이미지 저장됨
-            imageService.updateAll(ImageKind.NOTICE, noticeId, images);
-        } else {
-            // 이미지 검사 불합격 -> 이미지 저장 안되고 글만 저장됨.
-        }
-
+        imageService.updateAll(ImageKind.NOTICE, noticeId, images);
 
         return notice.getId();
     }
