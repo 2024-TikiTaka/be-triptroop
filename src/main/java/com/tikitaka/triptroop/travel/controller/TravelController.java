@@ -45,7 +45,7 @@ public class TravelController {
 
 
     /* 전체 게시글 조회 */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<ApiResponse<PageResponse>> findAll(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long areaId,
@@ -61,7 +61,7 @@ public class TravelController {
 
 
     /* 여행 소개 등록 */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse> save(
             @AuthenticationPrincipal CustomUser loginUser,
             @RequestPart final TravelRequest travelRequest,
@@ -98,7 +98,7 @@ public class TravelController {
         Long placeId = placeService.savePlace(travelRequest);
 
         travelService.updateTravel(travelId, travelRequest, loginUser.getUserId(), placeId);
-        imageService.updateImage(ImageKind.TRAVEL, travelId, image);
+        imageService.update(ImageKind.TRAVEL, travelId, image);
         travelService.updateStatus(loginUser.getUserId(), travelId, travelRequest.getStatus());
 
         return ResponseEntity.status(HttpStatus.CREATED)

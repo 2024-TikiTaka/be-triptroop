@@ -3,7 +3,7 @@ package com.tikitaka.triptroop.user.service;
 import com.tikitaka.triptroop.common.exception.ConflictException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
-import com.tikitaka.triptroop.image.util.FileUploadUtils;
+import com.tikitaka.triptroop.image.service.ImageService;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
 import com.tikitaka.triptroop.user.dto.request.ProfileSaveRequest;
@@ -28,6 +28,8 @@ public class ProfileService {
 
     @Value("${image.image-dir}")
     private String imageDir;
+
+    private final ImageService imageService;
 
     private final ProfileRepository profileRepository;
 
@@ -134,22 +136,22 @@ public class ProfileService {
      *
      * @param userId
      * @param profileRequest
-     * @param profileImage
+     * @param image
      */
     @Transactional
-    public ProfileResponse save(Long userId, ProfileSaveRequest profileRequest, MultipartFile profileImage) {
+    public ProfileResponse save(Long userId, ProfileSaveRequest profileRequest, MultipartFile image) {
 
         if (existsByNickname(profileRequest.getNickname())) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_NICKNAME);
         }
 
-        String profileImageUrl = FileUploadUtils.uploadFile(imageDir, profileImage);
+        String profileImage = imageUrl + imageService.uploadProfile(image);
+
         final Profile newProfile = Profile.of(userId,
                                               profileRequest.getNickname(),
-                                              imageUrl + profileImageUrl,
+                                              profileImage,
                                               profileRequest.getIntroduction(),
                                               profileRequest.getMbti());
-
         profileRepository.save(newProfile);
 
         return ProfileResponse.from(newProfile);
@@ -192,10 +194,10 @@ public class ProfileService {
 
         final Profile profile = profileRepository.findByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER_PROFILE));
-        String profileImag = FileUploadUtils.uploadFile(imageDir, image);
-        String storedProfileImage = imageUrl + profileImag;
 
-        profile.updateProfileImage(storedProfileImage);
+        String profileImage = imageUrl + imageService.uploadProfile(image);
+
+        profile.updateProfileImage(profileImage);
     }
 
     /**
@@ -213,8 +215,8 @@ public class ProfileService {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE);
         }
 
-        String storedFilename = profile.getProfileImage().replaceAll(imageUrl, "");
-        FileUploadUtils.deleteFile(imageDir, storedFilename);
+
+        imageService.deleteProfile(profile.getProfileImage());
 
         profile.deleteProfileImage();
     }
