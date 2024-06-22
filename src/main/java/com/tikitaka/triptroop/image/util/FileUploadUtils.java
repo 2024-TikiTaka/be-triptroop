@@ -23,8 +23,11 @@ public class FileUploadUtils {
         return image.getPath() + image.getUuid();
     }
 
-    public static String getRandomFilename() {
-        return UUID.randomUUID().toString().replace("-", "");
+    /**
+     * 랜덤 파일명 생성
+     */
+    public static String createFilename(String ext) {
+        return UUID.randomUUID().toString() + "." + ext;
     }
 
     /**
@@ -40,15 +43,14 @@ public class FileUploadUtils {
                 Files.createDirectories(uploadPath);
 
             /* 파일명 생성 */
-            String filename = getRandomFilename();
-            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-            String newFilename = filename + "." + extension;
+            String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+            String filename = createFilename(ext);
 
             /* 파일 저장 */
-            Path filePath = uploadPath.resolve(newFilename);
+            Path filePath = uploadPath.resolve(filename);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return newFilename;
+            return filename;
         } catch (IOException e) {
             throw new ServerInternalException(FAIL_TO_UPLOAD_FILE);
         }
@@ -62,6 +64,7 @@ public class FileUploadUtils {
         try {
             Path uploadPath = Paths.get(uploadDir);
             Path filePath = uploadPath.resolve(fileName);
+
             Files.delete(filePath);
         } catch (IOException e) {
             throw new ServerInternalException(FAIL_TO_DELETE_FILE);
