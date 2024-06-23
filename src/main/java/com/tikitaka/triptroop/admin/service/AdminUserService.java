@@ -45,18 +45,20 @@ public class AdminUserService {
     private final InterestRepository interestRepository;
 
     private Pageable getPageable(final Integer page, final String sort) {
-        return PageRequest.of(page - 1, 5, Sort.by(sort != null ? sort : "id").descending());
+        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
     }
 
-    private Pageable getPageable(final Integer page) {
-        return getPageable(page, null);
+    //    private Pageable getPageable(final Integer page) {
+//        return getPageable(page, null);
+//    }
+    private Pageable getPageable(final Integer page, final Integer pageSize) {
+        return PageRequest.of(page - 1, pageSize);
     }
-
 
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @Transactional(readOnly = true)
     public Page<AdminUserResponse> findAdminUsers(final Integer page) {
-        Pageable pageable = getPageable(page);
+        Pageable pageable = getPageable(page, 10);
 
         return adminUserRepository.findAdminUsersAll(pageable);
     }
