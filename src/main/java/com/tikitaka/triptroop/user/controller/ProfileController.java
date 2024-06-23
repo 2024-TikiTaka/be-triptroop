@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -117,14 +118,13 @@ public class ProfileController {
     @PostMapping("/profiles/me")
     public ResponseEntity<ApiResponse<?>> saveProfile(@AuthenticationPrincipal CustomUser loginUser,
                                                       @RequestPart @Valid ProfileSaveRequest profileRequest,
-                                                      @RequestPart MultipartFile profileImage) {
+                                                      @RequestPart MultipartFile profileImage) throws IOException {
 
         Long userId = loginUser.getUserId();
 
         if (profileService.existsProfileByUserId(userId)) {
             throw new ConflictException(ExceptionCode.ALREADY_EXISTS_PROFILE);
         }
-
         final ProfileResponse profile = profileService.save(userId, profileRequest, profileImage);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(profile));
     }

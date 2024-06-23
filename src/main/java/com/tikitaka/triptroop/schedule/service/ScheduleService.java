@@ -11,7 +11,6 @@ import com.tikitaka.triptroop.image.domain.entity.Image;
 import com.tikitaka.triptroop.image.domain.repository.ImageRepository;
 import com.tikitaka.triptroop.image.domain.type.ImageKind;
 import com.tikitaka.triptroop.image.service.ImageService;
-import com.tikitaka.triptroop.place.service.PlaceService;
 import com.tikitaka.triptroop.schedule.domain.entity.Schedule;
 import com.tikitaka.triptroop.schedule.domain.entity.ScheduleItem;
 import com.tikitaka.triptroop.schedule.domain.repository.ScheduleItemRepository;
@@ -24,7 +23,6 @@ import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemCreateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.request.ScheduleUpdateRequest;
 import com.tikitaka.triptroop.schedule.dto.response.*;
-import com.tikitaka.triptroop.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -52,10 +50,8 @@ public class ScheduleService {
     private final AreaRepository areaRepository;
 
     private final ImageRepository imageRepository;
-    private final ImageService imageService;
-    private final PlaceService placeService;
 
-    private final ProfileService profileService;
+    private final ImageService imageService;
 
     private Pageable getPageable(final Integer page, final String sort) {
         return PageRequest.of(page - 1, 5, Sort.by(sort != null ? sort : "id").descending());
@@ -65,12 +61,12 @@ public class ScheduleService {
         return getPageable(page, null);
     }
 
-    // TODO : 전체 리스트 조회
+    // 전체 리스트 조회
     @Transactional(readOnly = true)
     public Page<ScheduleResponse> findAllSchedules(Integer page, String keyword, String sort, Long area) {
+
         Pageable pageable = getPageable(page, sort);
-        boolean deleted = false;
-        Page<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(pageable, Visibility.PUBLIC, keyword, sort, area, deleted);
+        Page<Schedule> schedules = scheduleRepositoryImpl.findSchedulesByKeyword(pageable, Visibility.PUBLIC, keyword, sort, area, false);
         List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
         for (Schedule schedule : schedules) {
@@ -86,29 +82,31 @@ public class ScheduleService {
         return new PageImpl<>(scheduleResponses, pageable, schedules.getTotalElements());
     }
 
-    // TODO : 상세 조회
+    // 상세 조회
     @Transactional(readOnly = true)
     public ScheduleDetailResponse findByScheduleId(Long scheduleId) {
+
         List<ScheduleParticipantProfileResponse> scheduleParticipantProfileResponse = scheduleRepositoryImpl.findParticipantsProfilesByScheduleId(scheduleId);
         ScheduleInformationResponse scheduleInformationResponses = scheduleRepositoryImpl.findScheduleById(scheduleId);
         List<ScheduleItemInfoResponse> scheduleItemInfoResponse = scheduleRepositoryImpl.findScheduleItemByScheduleId(scheduleId);
-//        Long placeId = scheduleItemRepository.findFirstByScheduleId(scheduleId);
-//        List<PlaceScheduleResponse> placeScheduleResponse = placeRepositoryImpl.findById(placeId);
+        //        Long placeId = scheduleItemRepository.findFirstByScheduleId(scheduleId);
+        //        List<PlaceScheduleResponse> placeScheduleResponse = placeRepositoryImpl.findById(placeId);
 
-        ScheduleDetailResponse scheduleDetailResponses = ScheduleDetailResponse.of(
+        return ScheduleDetailResponse.of(
                 scheduleInformationResponses,
                 scheduleParticipantProfileResponse,
                 scheduleItemInfoResponse
-//                ,                placeScheduleResponse
+                //                ,                placeScheduleResponse
         );
-        return scheduleDetailResponses;
     }
 
 
-    // TODO : 일정 등록
+    // 일정 등록
     public Long save(ScheduleCreateRequest scheduleRequest, Long userId) {
+
         Area area = areaRepository.findById(scheduleRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+
         final Schedule newSchedule = Schedule.of(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getCount(),
@@ -117,19 +115,23 @@ public class ScheduleService {
                 scheduleRequest.getEndDate(),
                 scheduleRequest.getStartDate()
         );
+
         final Schedule schedule = scheduleRepository.save(newSchedule);
         return schedule.getId();
     }
 
-    // TODO 일정 수정
+    // 일정 수정
     public void updateSchedule(Long scheduleId, ScheduleUpdateRequest scheduleUpdateRequest, Long userId) {
-        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
+        Schedule schedule = scheduleRepository.findByIdAndVisibility(scheduleId, Visibility.PUBLIC)
+                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
         if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
         }
-        log.info("일정 수정:{}", scheduleUpdateRequest);
+
         Area area = areaRepository.findById(scheduleUpdateRequest.getAreaId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
+                                  .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_AREA));
 
 
         schedule.update(
@@ -141,22 +143,26 @@ public class ScheduleService {
         );
     }
 
-    // TODO 일정 썸네일 수정
+    // 일정 썸네일 수정
     public void updateThumbnail(Long userId, Long scheduleId, MultipartFile image) {
         if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
         }
 
-        imageService.updateImage(ImageKind.SCHEDULE, scheduleId, image);
+        imageService.update(ImageKind.SCHEDULE, scheduleId, image);
     }
 
 
-    // TODO 일정 공개 여부 변경
+    // 일정 공개 여부 변경
     public void changeStatus(Long scheduleId, Long userId, String visibility) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
         if (!scheduleRepository.existsByUserIdAndId(userId, scheduleId)) {
             throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
         }
+
         switch (visibility) {
             case "PUBLIC":
                 schedule.changeStatus(Visibility.PUBLIC);
@@ -165,26 +171,27 @@ public class ScheduleService {
                 schedule.changeStatus(Visibility.PRIVATE);
                 break;
         }
-
     }
 
-    // TODO 일정 삭제
+    // 일정 삭제
     public void removeSchedule(Long scheduleId, Long userId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
 
-//        if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {
-//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
-//        }
-//        schedule.deleteTime(
-//                LocalDateTime.now()
-//        );
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                                              .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE));
+
+        //        if (!scheduleRepository.existsByUserIdAndId(scheduleId, userId)) {
+        //            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        //        }
+        //        schedule.deleteTime(
+        //                LocalDateTime.now()
+        //        );
         scheduleRepository.deleteById(scheduleId);
     }
 
-    // TODO : 일정 계획 등록
+    // 일정 계획 등록
     public List<Long> saveItem(List<ScheduleItemCreateRequest> scheduleItemRequests, Long scheduleId, Long placeId) {
-        List<Long> savedItemIds = new ArrayList<>();
 
+        List<Long> savedItemIds = new ArrayList<>();
         for (ScheduleItemCreateRequest request : scheduleItemRequests) {
             ScheduleItem newItem = ScheduleItem.of(
                     scheduleId,
@@ -202,12 +209,11 @@ public class ScheduleService {
         return savedItemIds;
     }
 
-
-    // TODO 일정 계획 수정
+    // 일정 계획 수정
     public Long updateItem(ScheduleItemUpdateRequest scheduleItemUpdateRequests, Long scheduleItemId) {
-//        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
-//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
-//        }
+        //        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
+        //            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED_POST);
+        //        }
         String kind = scheduleItemUpdateRequests.getKind();
         ScheduleItemKind scheduleItemKind = null;
 
@@ -229,44 +235,45 @@ public class ScheduleService {
                 break;
             }
         }
-        ScheduleItem scheduleItems = scheduleItemRepository.findById(scheduleItemId).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE_ITEM));
+
+        ScheduleItem scheduleItems = scheduleItemRepository.findById(scheduleItemId)
+                                                           .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_SCHEDULE_ITEM));
         scheduleItems.update(
                 scheduleItemUpdateRequests.getContent(),
                 scheduleItemUpdateRequests.getCost(),
                 scheduleItemKind,
                 scheduleItemUpdateRequests.getPlanDate()
         );
+
         return scheduleItems.getPlaceId();
     }
 
-    // TODO 일정 계획 삭제
+    // 일정 계획 삭제
     public void removeItem(Long scheduleItemId, Long userId) {
-//        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
-//            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
-//        }
+        //        if (!scheduleItemRepository.existsByUserIdAndId(scheduleItemId, userId)) {
+        //            throw new ForbiddenException(ExceptionCode.ACCESS_DENIED);
+        //        }
 
         scheduleItemRepository.deleteById(scheduleItemId);
-
     }
 
     public Long findPlaceIdByScheduleId(Long scheduleId) {
-        Long placeId = scheduleRepository.findPlaceIdById(scheduleId);
-        return placeId;
+
+        return scheduleRepository.findPlaceIdById(scheduleId);
     }
 
 
-//
-//    public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
-//        return scheduleParticipants.stream()
-//                .map(ScheduleParticipant::getReviewerId)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
-//        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
-//        List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
-//        return profileService.findByUserIdIn(reviewerIds);
-//    }
-
+    //
+    //    public List<Long> getReviewerIds(List<ScheduleParticipant> scheduleParticipants) {
+    //        return scheduleParticipants.stream()
+    //                .map(ScheduleParticipant::getReviewerId)
+    //                .collect(Collectors.toList());
+    //    }
+    //
+    //    public List<UserProfileResponse> getReviewerProfilesByScheduleId(Long scheduleId) {
+    //        List<ScheduleParticipant> scheduleParticipants = scheduleParticipantRepository.findByScheduleId(scheduleId);
+    //        List<Long> reviewerIds = getReviewerIds(scheduleParticipants);
+    //        return profileService.findByUserIdIn(reviewerIds);
+    //    }
 }
 
