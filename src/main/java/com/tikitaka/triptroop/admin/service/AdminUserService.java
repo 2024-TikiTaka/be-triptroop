@@ -18,12 +18,14 @@ import com.tikitaka.triptroop.user.service.ProfileService;
 import com.tikitaka.triptroop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -42,10 +44,21 @@ public class AdminUserService {
     private final UserInterestRepository userInterestRepository;
     private final InterestRepository interestRepository;
 
+    private Pageable getPageable(final Integer page, final String sort) {
+        return PageRequest.of(page - 1, 5, Sort.by(sort != null ? sort : "id").descending());
+    }
+
+    private Pageable getPageable(final Integer page) {
+        return getPageable(page, null);
+    }
+
+
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @Transactional(readOnly = true)
-    public List<AdminUserResponse> findAdminUsers() {
-        return adminUserRepository.findAdminUsersAll();
+    public Page<AdminUserResponse> findAdminUsers(final Integer page) {
+        Pageable pageable = getPageable(page);
+
+        return adminUserRepository.findAdminUsersAll(pageable);
     }
 
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
@@ -57,7 +70,7 @@ public class AdminUserService {
 
     /* 3. 관리자 회원 관리 - 회원 등록 */
     @Transactional
-    public AdminUserSaveRequest registerAdminUser(final AdminUserSaveRequest adminUserSaveRequest, MultipartFile profileImage) {
+    public Long registerAdminUser(final AdminUserSaveRequest adminUserSaveRequest, MultipartFile profileImage) {
 
         checkForDuplicates(adminUserSaveRequest);
 
@@ -72,7 +85,11 @@ public class AdminUserService {
         Profile profile = adminUserSaveRequest.toProfile(user.getId(), imageUrl + profileImagePath);
         profile = profileRepository.save(profile);
 
-        return new AdminUserSaveRequest(user, profile);
+        AdminUserSaveRequest saveUser = new AdminUserSaveRequest(user, profile);
+
+        Long userId = user.getId();
+
+        return userId;
     }
 
 

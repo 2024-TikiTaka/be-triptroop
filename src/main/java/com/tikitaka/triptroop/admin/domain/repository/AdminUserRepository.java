@@ -3,11 +3,12 @@ package com.tikitaka.triptroop.admin.domain.repository;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.user.domain.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AdminUserRepository extends JpaRepository<User, Long> {
@@ -15,7 +16,7 @@ public interface AdminUserRepository extends JpaRepository<User, Long> {
     /* 1. 관리자 회원 목록 조회 */
     @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p)" +
             "FROM User u LEFT JOIN Profile p ON u.id = p.userId ")
-    List<AdminUserResponse> findAdminUsersAll();
+    Page<AdminUserResponse> findAdminUsersAll(Pageable pageable);
 
     /* 2. 관리자 회원 상세 조회 */
     @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse(" +
