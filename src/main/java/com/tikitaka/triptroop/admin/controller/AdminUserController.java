@@ -10,9 +10,7 @@ import com.tikitaka.triptroop.common.page.Pagination;
 import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,36 +40,12 @@ public class AdminUserController {
     }
 
     /* 3. 관리자 회원 관리 - 회원 등록 */
-//    @PostMapping("")
-//    public ResponseEntity<ApiResponse<Long>> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
-//                                                      @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
-//        final Long userId = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
-//        return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", userId));
-//    }
-
-    @PostMapping("/api/v1/admin/users")
-    public ResponseEntity<?> registerUser(@ModelAttribute AdminUserSaveRequest adminUserSaveRequest,
-                                          @RequestParam("file") MultipartFile file) {
-        // 파일과 기타 데이터 처리 로직
-        try {
-            // 파일 저장 로직
-            if (!file.isEmpty()) {
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                // 파일 저장 경로 설정 및 저장
-                System.out.println("fileName : " + fileName);
-            }
-
-            // 기타 데이터 처리 로직
-            // ...
-
-            return ResponseEntity.ok().body("Success");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to parse multipart servlet request");
-        }
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<Long>> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
+                                                      @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        final Long userId = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
+        return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", userId));
     }
-
-
-
 
 
     /* 4. 관리자 회원 관리 - 회원 수정 */
