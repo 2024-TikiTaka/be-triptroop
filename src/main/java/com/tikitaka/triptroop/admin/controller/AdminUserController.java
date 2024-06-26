@@ -24,9 +24,12 @@ public class AdminUserController {
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @GetMapping("")
     public ResponseEntity<ApiResponse<PageResponse>> getUserList(
-            @RequestParam(defaultValue = "1", name = "page") final Integer page
+            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+            @RequestParam(required = false, name = "type") final String type,
+            @RequestParam(required = false, name = "keyword") final String keyword,
+            @RequestParam(required = false, name = "sort") final String sort
     ) {
-        final Page<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers(page);
+        final Page<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers(page, type, keyword, sort);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(adminUserResponses);
         final PageResponse pagingResponse = PageResponse.of(adminUserResponses.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(ApiResponse.success("회원 목록 조회에 성공 하였습니다.", pagingResponse));

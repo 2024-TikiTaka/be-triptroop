@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,10 +58,40 @@ public class AdminUserService {
 
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @Transactional(readOnly = true)
-    public Page<AdminUserResponse> findAdminUsers(final Integer page) {
-        Pageable pageable = getPageable(page, 10);
+    public Page<AdminUserResponse> findAdminUsers(final Integer page, final String type, final String keyword, final String sort) {
+        Pageable pageable = getPageable(page, sort);
 
-        return adminUserRepository.findAdminUsersAll(pageable);
+//        Page<AdminUserResponse> adminUsers = null;
+//        switch (type) {
+//            case "All" : return adminUsers = adminUserRepository.findAdminUsersByKeyword(pageable,, keyword) ;
+//            case "email" : return adminUsers = adminUserRepository.findAdminUsersByKeyword()
+//            case "nickname" : return =
+//            case "role" : return =
+//            case "status" : return =
+//        }
+
+        //Page<AdminUserResponse> adminUsers = adminUserRepository.findAdminUsersByKeyword(pageable, type, keyword, sort);
+
+
+//        return adminUserRepository.findAdminUsersAll(pageable);
+        // return adminUsers;
+
+        Specification<User> spec = (root, query, cb) -> {
+            String columnName;
+            switch (type) {
+                case "email":
+                    columnName = "email";
+                    break;
+                case "nickname":
+                    columnName = "nickname";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid type: " + type);
+            }
+            return cb.like(root.get(columnName), "%" + keyword + "%");
+        };
+
+        return userRepository.findAll(spec, pageable).map(AdminUserResponse::new);
     }
 
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
