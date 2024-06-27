@@ -8,8 +8,6 @@ import com.tikitaka.triptroop.common.exception.BadRequestException;
 import com.tikitaka.triptroop.common.exception.NotFoundException;
 import com.tikitaka.triptroop.common.exception.type.ExceptionCode;
 import com.tikitaka.triptroop.image.util.FileUploadUtils;
-import com.tikitaka.triptroop.interest.domain.repository.InterestRepository;
-import com.tikitaka.triptroop.interest.domain.repository.UserInterestRepository;
 import com.tikitaka.triptroop.user.domain.entity.Profile;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import com.tikitaka.triptroop.user.domain.repository.ProfileRepository;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,225 +42,36 @@ public class AdminUserService {
     private final UserService userService;
     private final ProfileService profileService;
     private final PasswordEncoder passwordEncoder;
-    private final UserInterestRepository userInterestRepository;
-    private final InterestRepository interestRepository;
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-
-//    private Pageable getPageable(final Integer page, final String sort) {
-//        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
-//    }
-//
-//    //    private Pageable getPageable(final Integer page) {
-////        return getPageable(page, null);
-////    }
-//    private Pageable getPageable(final Integer page, final Integer pageSize) {
-//        return PageRequest.of(page - 1, pageSize);
-//    }
-
-//    private Pageable getPageable(final Integer page, final String sort) {
-//        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "userId").descending());
-//    }
-//
-//    private Pageable getPageable(final Integer page, final Integer pageSize) {
-//        return PageRequest.of(page - 1, pageSize);
-//    }
-
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
-//    @Transactional(readOnly = true)
-//    public Page<AdminUserResponse> findAdminUsers(final Integer page, final String type, final String keyword, final String sort) {
-//        // sort가 null인 경우 기본값 설정
-//        String sortBy = (sort == null || sort.isEmpty()) ? "userId" : sort;
-//        System.out.println("Sortby : " + sortBy);
-//        Pageable pageable = getPageable(page, sortBy);
-//
-////        Page<AdminUserResponse> adminUsers = null;
-////        switch (type) {
-////            case "All" : return adminUsers = adminUserRepository.findAdminUsersByKeyword(pageable,, keyword) ;
-////            case "email" : return adminUsers = adminUserRepository.findAdminUsersByKeyword()
-////            case "nickname" : return =
-////            case "role" : return =
-////            case "status" : return =
-////        }
-//
-//        //Page<AdminUserResponse> adminUsers = adminUserRepository.findAdminUsersByKeyword(pageable, type, keyword, sort);
-//
-//
-////        return adminUserRepository.findAdminUsersAll(pageable);
-//        // return adminUsers;
-////
-////        Specification<User> spec = (root, query, cb) -> {
-////            String columnName;
-////            switch (type) {
-////                case "email":
-////                    columnName = "email";
-////                    break;
-////                case "nickname":
-////                    columnName = "nickname";
-////                    break;
-////                default:
-////                    throw new IllegalArgumentException("Invalid type: " + type);
-////            }
-////            return cb.like(root.get(columnName), "%" + keyword + "%");
-////        };
-////
-////        return userRepository.findAll(spec, pageable).map(AdminUserResponse::new);
-//
-//        String columnName;
-//        switch (type) {
-//            case "email":
-//                columnName = "u.email";
-//                break;
-//            case "nickname":
-//                columnName = "p.nickname";
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Invalid type: " + type);
-//        }
-//        System.out.println("Column name: {} : " + columnName);
-//
-//        String jpql = "SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p) " +
-//                "FROM User u LEFT JOIN Profile p ON u.id = p.userId " +
-//                "WHERE " + columnName + " LIKE :keyword";
-//        jpql += " ORDER BY u." + sortBy;
-//        System.out.println("JPQL Query: {}" + jpql);
-//
-//
-//        Query query = entityManager.createQuery(jpql, AdminUserResponse.class);
-//        query.setParameter("keyword", "%" + keyword + "%");
-//
-//        // Apply pagination
-////        int totalRows = query.getResultList().size();
-////        query.setFirstResult((int) pageable.getOffset());
-////        query.setMaxResults(pageable.getPageSize());
-////
-////        List<AdminUserResponse> resultList = query.getResultList();
-////        return new PageImpl<>(resultList, pageable, totalRows);
-//// Apply pagination
-//        query.setFirstResult((int) pageable.getOffset());
-//        query.setMaxResults(pageable.getPageSize());
-//
-//        List<AdminUserResponse> resultList = query.getResultList();
-//        System.out.println("Result list size: {}" + resultList.size());
-//
-//        // Total count query
-//        String countJpql = "SELECT COUNT(u) " +
-//                "FROM User u LEFT JOIN Profile p ON u.id = p.userId " +
-//                "WHERE " + columnName + " LIKE :keyword";
-//        Query countQuery = entityManager.createQuery(countJpql);
-//        countQuery.setParameter("keyword", "%" + keyword + "%");
-//        long total = (long) countQuery.getSingleResult();
-//        System.out.println("TotalCount : " + total);
-//
-//        return new PageImpl<>(resultList, pageable, total);
-//    }
-    private Pageable getPageable(final Integer page, final String sort) {
-        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
-    }
-
-    private Pageable getPageable(final Integer page, final Integer pageSize) {
-        return PageRequest.of(page - 1, pageSize);
-    }
-
     @Transactional(readOnly = true)
     public Page<AdminUserResponse> findAdminUsers(final Integer page, final String type, final String keyword, final String sort) {
-        // sort가 null인 경우 기본값 설정
         String sortBy = (sort == null || sort.isEmpty()) ? "id" : sort;
-        System.out.println("Sortby: " + sortBy);
-
         Pageable pageable = getPageable(page, sortBy);
 
-        String jpql = "SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p) " +
-                "FROM User u LEFT JOIN Profile p ON u.id = p.userId ";
-
         boolean hasKeyword = keyword != null && !keyword.isEmpty();
-        boolean hasType = type != null && !type.isEmpty();
-
-        if (hasType) {
-            String columnName;
-            switch (type) {
-                case "email":
-                    columnName = "u.email";
-                    jpql += "WHERE " + columnName + " LIKE :keyword ";
-                    break;
-                case "nickname":
-                    columnName = "p.nickname";
-                    jpql += "WHERE " + columnName + " LIKE :keyword ";
-                    break;
-                case "role":
-                    columnName = "u.role";
-                    jpql += "WHERE str(" + columnName + ") LIKE :keyword ";
-                    break;
-                case "status":
-                    columnName = "u.status";
-                    jpql += "WHERE str(" + columnName + ") LIKE :keyword ";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid type: " + type);
-            }
-        } else if (hasKeyword) {
-            jpql += "WHERE u.email LIKE :keyword OR p.nickname LIKE :keyword OR str(u.role) LIKE :keyword OR str(u.status) LIKE :keyword ";
-        }
-
-        jpql += "ORDER BY u." + sortBy;
-        System.out.println("JPQL Query: " + jpql);
+        String jpql = buildJpqlQuery(type, hasKeyword, sortBy);
+        String countJpql = buildCountJpqlQuery(type, hasKeyword);
 
         Query query = entityManager.createQuery(jpql, AdminUserResponse.class);
+        Query countQuery = entityManager.createQuery(countJpql);
+
         if (hasKeyword) {
             query.setParameter("keyword", "%" + keyword + "%");
+            countQuery.setParameter("keyword", "%" + keyword + "%");
         }
 
-        // Apply pagination
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
         List<AdminUserResponse> resultList = query.getResultList();
-        System.out.println("Result list size: " + resultList.size());
-
-        // Total count query
-        String countJpql = "SELECT COUNT(u) " +
-                "FROM User u LEFT JOIN Profile p ON u.id = p.userId ";
-
-        if (hasType) {
-            String columnName;
-            switch (type) {
-                case "email":
-                    columnName = "u.email";
-                    countJpql += "WHERE " + columnName + " LIKE :keyword ";
-                    break;
-                case "nickname":
-                    columnName = "p.nickname";
-                    countJpql += "WHERE " + columnName + " LIKE :keyword ";
-                    break;
-                case "role":
-                    columnName = "u.role";
-                    countJpql += "WHERE str(" + columnName + ") LIKE :keyword ";
-                    break;
-                case "status":
-                    columnName = "u.status";
-                    countJpql += "WHERE str(" + columnName + ") LIKE :keyword ";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid type: " + type);
-            }
-        } else if (hasKeyword) {
-            countJpql += "WHERE u.email LIKE :keyword OR p.nickname LIKE :keyword OR str(u.role) LIKE :keyword OR str(u.status) LIKE :keyword ";
-        }
-
-        System.out.println("Count JPQL Query: " + countJpql);
-
-        Query countQuery = entityManager.createQuery(countJpql);
-        if (hasKeyword) {
-            countQuery.setParameter("keyword", "%" + keyword + "%");
-        }
         long total = (long) countQuery.getSingleResult();
-        System.out.println("Total count: " + total);
 
         return new PageImpl<>(resultList, pageable, total);
     }
-
 
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
     @Transactional(readOnly = true)
@@ -342,11 +152,6 @@ public class AdminUserService {
     }
 
 
-    private void checkForDuplicates(AdminUserSaveRequest adminUserSaveRequest) {
-        userService.checkEmailDuplicate(adminUserSaveRequest.getEmail());
-        profileService.checkNicknameDuplicate(adminUserSaveRequest.getNickname());
-    }
-
 //    private void updateInterests(Long userId, AdminUserUpdateRequest adminUserUpdateRequest) {
 //        userInterestRepository.deleteByUserId(userId);
 //
@@ -361,6 +166,72 @@ public class AdminUserService {
 //        userInterestRepository.saveAll(newUserInterests);
 //    }
 
+
+    //---- 메서드 분리 ----//
+    //---- 메서드 분리 ----//
+    // 페이징 관련 메서드 분리
+    private Pageable getPageable(final Integer page, final String sort) {
+        return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
+    }
+
+    // 목록 조회 필터링용 메서드 분리
+    private String buildJpqlQuery(String type, boolean hasKeyword, String sortBy) {
+        StringBuilder jpql = new StringBuilder("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p) ");
+        jpql.append("FROM User u LEFT JOIN Profile p ON u.id = p.userId ");
+
+        if (hasKeyword) {
+            appendWhereClause(jpql, type);
+        }
+
+        jpql.append(" ORDER BY u.").append(sortBy);
+        return jpql.toString();
+    }
+
+    private String buildCountJpqlQuery(String type, boolean hasKeyword) {
+        StringBuilder countJpql = new StringBuilder("SELECT COUNT(u) ");
+        countJpql.append("FROM User u LEFT JOIN Profile p ON u.id = p.userId ");
+
+        if (hasKeyword) {
+            appendWhereClause(countJpql, type);
+        }
+
+        return countJpql.toString();
+    }
+
+    private void appendWhereClause(StringBuilder jpql, String type) {
+        if (type != null && !type.isEmpty()) {
+            String columnName = getColumnName(type);
+            jpql.append("WHERE ").append(columnName).append(" LIKE :keyword ");
+        } else {
+            List<String> columns = new ArrayList<>();
+            columns.add("u.email LIKE :keyword");
+            columns.add("p.nickname LIKE :keyword");
+            columns.add("str(u.role) LIKE :keyword");
+            columns.add("str(u.status) LIKE :keyword");
+            jpql.append("WHERE ").append(String.join(" OR ", columns)).append(" ");
+        }
+    }
+
+    private String getColumnName(String type) {
+        switch (type) {
+            case "email":
+                return "u.email";
+            case "nickname":
+                return "p.nickname";
+            case "role":
+                return "str(u.role)";
+            case "status":
+                return "str(u.status)";
+            default:
+                throw new IllegalArgumentException("Invalid type: " + type);
+        }
+    }
+
+    // 회원 등록 메서드 분리
+    private void checkForDuplicates(AdminUserSaveRequest adminUserSaveRequest) {
+        userService.checkEmailDuplicate(adminUserSaveRequest.getEmail());
+        profileService.checkNicknameDuplicate(adminUserSaveRequest.getNickname());
+    }
 }
 
 
