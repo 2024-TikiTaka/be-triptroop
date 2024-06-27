@@ -25,9 +25,9 @@ public class AdminUserController {
     @GetMapping("")
     public ResponseEntity<ApiResponse<PageResponse>> getUserList(
             @RequestParam(defaultValue = "1", name = "page") final Integer page,
-            @RequestParam(required = false, name = "type") final String type,
-            @RequestParam(required = false, name = "keyword") final String keyword,
-            @RequestParam(required = false, name = "sort") final String sort
+            @RequestParam(defaultValue = "", name = "type") final String type,
+            @RequestParam(defaultValue = "", name = "keyword") final String keyword,
+            @RequestParam(defaultValue = "id", name = "sort") final String sort
     ) {
         final Page<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers(page, type, keyword, sort);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(adminUserResponses);
