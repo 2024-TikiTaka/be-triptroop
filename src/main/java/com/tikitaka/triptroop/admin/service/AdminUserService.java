@@ -168,7 +168,6 @@ public class AdminUserService {
 
 
     //---- 메서드 분리 ----//
-    //---- 메서드 분리 ----//
     // 페이징 관련 메서드 분리
     private Pageable getPageable(final Integer page, final String sort) {
         return PageRequest.of(page - 1, 10, Sort.by(sort != null ? sort : "id").descending());
@@ -206,6 +205,7 @@ public class AdminUserService {
             List<String> columns = new ArrayList<>();
             columns.add("u.email LIKE :keyword");
             columns.add("p.nickname LIKE :keyword");
+            columns.add("str(u.gender) LIKE :keyword");
             columns.add("str(u.role) LIKE :keyword");
             columns.add("str(u.status) LIKE :keyword");
             jpql.append("WHERE ").append(String.join(" OR ", columns)).append(" ");
@@ -218,6 +218,8 @@ public class AdminUserService {
                 return "u.email";
             case "nickname":
                 return "p.nickname";
+            case "gender":
+                return "str(u.gender)";
             case "role":
                 return "str(u.role)";
             case "status":
