@@ -41,14 +41,21 @@ public class TokenUtils {
         TokenUtils.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public static boolean isValidToken(String token) {
+    public static boolean validateToken(String token) {
+
         try {
             Jwts.parserBuilder().setSigningKey(createSignature()).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-            log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
-            return false;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("Invalid JWT Token", e);
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT Token", e);
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT Token", e);
+        } catch (IllegalArgumentException e) {
+            log.info("JWT claims string is empty.", e);
         }
+        return false;
     }
 
     public static String getToken(String token) {

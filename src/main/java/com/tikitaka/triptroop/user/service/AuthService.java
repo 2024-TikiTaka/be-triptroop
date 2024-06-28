@@ -66,7 +66,7 @@ public class AuthService implements UserDetailsService {
         final User user = findByRefreshToken(refreshToken);
         final LoginDto loginDto = LoginDto.from(user);
 
-        if (!TokenUtils.isValidToken(refreshToken)) {
+        if (!TokenUtils.validateToken(refreshToken)) {
             throw new AuthException(INVALID_REFRESH_TOKEN);
         }
 
