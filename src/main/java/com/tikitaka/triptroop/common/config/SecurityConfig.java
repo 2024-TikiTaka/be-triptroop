@@ -33,6 +33,8 @@ public class SecurityConfig {
 
     private final AuthService authService;
 
+    private final OAuth2Service oAuth2Service;
+
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -42,7 +44,6 @@ public class SecurityConfig {
                 csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManage -> sessionManage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(auth -> {
                     /* ALL */
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
@@ -60,6 +61,16 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
                     auth.anyRequest().authenticated();
                 })
+                // .oauth2Login(oauth2Login -> oauth2Login.userInfoEndpoint())
+                // .oauth2Login(oauth2Login ->
+                //                      oauth2Login
+                //                              .authorizationEndpoint(auth -> auth.baseUri("/api/v1/login/oauth2/**"))
+                //                              .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                //                              // .redirectionEndpoint(redirect -> redirect.baseUri("/oauth2/authorization/**"))
+                //                              .successHandler(oAuth2LoginSuccessHandler())
+                //                              .failureHandler(oAuth2LoginFailureHandler())
+                // )
+                // .addFilterBefore(customAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class)
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> {
@@ -124,6 +135,16 @@ public class SecurityConfig {
         customAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
 
         return customAuthenticationFilter;
+    }
+
+    @Bean
+    OAuth2LoginFailureHandler oAuth2LoginFailureHandler() {
+        return new OAuth2LoginFailureHandler();
+    }
+
+    @Bean
+    OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler() {
+        return new OAuth2LoginSuccessHandler(oAuth2Service);
     }
 
     @Bean
