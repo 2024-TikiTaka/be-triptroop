@@ -23,6 +23,11 @@ public enum ExceptionCode {
     INVALID_REFRESH_TOKEN(401, "리프레시 토큰이 유효하지 않습니다."),
     INVALID_EMAIL(401, "이메일 형식이 올바르지 않습니다."),
 
+    OAUTH2_LOGIN_FAILED(401, "소셜 로그인에 실패했습니다."),
+    OAUTH2_PROVIDER_NOT_SUPPORTED(401, "지원되지 않는 소셜 로그인 제공업체입니다."),
+    OAUTH2_USER_INFO_FETCH_FAILED(401, "소셜 로그인 사용자 정보 가져오기에 실패했습니다."),
+    OAUTH2_USER_REGISTRATION_FAILED(401, "소셜 로그인 사용자 등록에 실패했습니다."),
+
     ACCESS_DENIED(403, "허가 되지 않은 요청입니다."),
     ACCESS_DENIED_POST(403, "내가 쓴 게시글이 아닙니다."),
     ACCESS_DENIED_VISIBILITY(403, "공개상태입니다."),
