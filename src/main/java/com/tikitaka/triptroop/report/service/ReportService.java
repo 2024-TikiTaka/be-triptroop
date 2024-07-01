@@ -52,7 +52,7 @@ public class ReportService {
 
     /* 1. 신고 목록 조회 Test */
     @Transactional(readOnly = true)
-    public List<ReportTableResponse> getReport(final String nickname, String kind) {
+    public List<ReportTableResponse> getReport(final String nickname, final String kind) {
         Profile profile = profileRepository.findByNickname(nickname)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_USER));
 

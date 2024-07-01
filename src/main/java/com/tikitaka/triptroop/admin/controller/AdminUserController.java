@@ -5,12 +5,14 @@ import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.admin.service.AdminUserService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import com.tikitaka.triptroop.common.page.PageResponse;
+import com.tikitaka.triptroop.common.page.Pagination;
+import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +23,16 @@ public class AdminUserController {
 
     /* 1. 관리자 회원 관리 - 회원 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getUserList() {
-        final List<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers();
-        return ResponseEntity.ok(ApiResponse.success("회원 목록 조회에 성공 하였습니다.", adminUserResponses));
+    public ResponseEntity<ApiResponse<PageResponse>> getUserList(
+            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+            @RequestParam(defaultValue = "email", name = "type") final String type,
+            @RequestParam(defaultValue = "", name = "keyword") final String keyword,
+            @RequestParam(defaultValue = "id", name = "sort") final String sort
+    ) {
+        final Page<AdminUserResponse> adminUserResponses = adminUserService.findAdminUsers(page, type, keyword, sort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(adminUserResponses);
+        final PageResponse pagingResponse = PageResponse.of(adminUserResponses.getContent(), pagingButtonInfo);
+        return ResponseEntity.ok(ApiResponse.success("회원 목록 조회에 성공 하였습니다.", pagingResponse));
     }
 
     /* 2. 관리자 회원 관리 - 회원 상세 조회 */
@@ -35,11 +44,12 @@ public class AdminUserController {
 
     /* 3. 관리자 회원 관리 - 회원 등록 */
     @PostMapping("")
-    public ResponseEntity<ApiResponse> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
-                                                @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
-        final AdminUserSaveRequest registeredAdminUser = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
-        return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", registeredAdminUser));
+    public ResponseEntity<ApiResponse<Long>> saveUser(@RequestPart("adminUserSaveRequest") final AdminUserSaveRequest adminUserSaveRequest,
+                                                      @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        final Long userId = adminUserService.registerAdminUser(adminUserSaveRequest, profileImage);
+        return ResponseEntity.ok(ApiResponse.success("회원 등록에 성공 하였습니다.", userId));
     }
+
 
     /* 4. 관리자 회원 관리 - 회원 수정 */
 //    @PutMapping("/{userId}")

@@ -1,21 +1,23 @@
 package com.tikitaka.triptroop.admin.domain.repository;
 
 import com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse;
-import com.tikitaka.triptroop.admin.dto.response.AdminUserResponse;
 import com.tikitaka.triptroop.user.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AdminUserRepository extends JpaRepository<User, Long> {
 
     /* 1. 관리자 회원 목록 조회 */
-    @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p)" +
-            "FROM User u LEFT JOIN Profile p ON u.id = p.userId ")
-    List<AdminUserResponse> findAdminUsersAll();
+//    @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p)" +
+//            "FROM User u LEFT JOIN Profile p ON u.id = p.userId ")
+//    Page<AdminUserResponse> findAdminUsersAll(Pageable pageable);
+//    @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserResponse(u, p)" +
+//            "FROM User u LEFT JOIN Profile p ON u.id = p.userId " +
+//            "WHERE")
+//    Page<AdminUserResponse> findAdminUsersByKeyword(Pageable pageable, String type, String keyword, String sort);
 
     /* 2. 관리자 회원 상세 조회 */
     @Query("SELECT new com.tikitaka.triptroop.admin.dto.response.AdminUserDetailResponse(" +
@@ -39,4 +41,5 @@ public interface AdminUserRepository extends JpaRepository<User, Long> {
             "WHERE u.id = :userId " +
             "GROUP BY u.id, p.nickname, su.provider, p.introduction, p.mbti")
     Optional<AdminUserDetailResponse> findAdminUserDetailByUserId(@Param("userId") Long userId);
+
 }
