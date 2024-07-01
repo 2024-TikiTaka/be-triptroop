@@ -152,21 +152,6 @@ public class AdminUserService {
     }
 
 
-//    private void updateInterests(Long userId, AdminUserUpdateRequest adminUserUpdateRequest) {
-//        userInterestRepository.deleteByUserId(userId);
-//
-//        List<UserInterest> newUserInterests = adminUserUpdateRequest.getInterestNames().stream()
-//                .map(interestName -> {
-//                    Interest interest = interestRepository.findByName(interestName)
-//                            .orElseGet(() -> interestRepository.save(Interest.of(interestName)));
-//                    return UserInterest.of(userId, interest.getId());
-//                })
-//                .collect(Collectors.toList());
-//
-//        userInterestRepository.saveAll(newUserInterests);
-//    }
-
-
     //---- 메서드 분리 ----//
     // 페이징 관련 메서드 분리
     private Pageable getPageable(final Integer page, final String sort) {
