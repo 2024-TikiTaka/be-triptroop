@@ -25,7 +25,7 @@ public class AdminUserController {
     @GetMapping("")
     public ResponseEntity<ApiResponse<PageResponse>> getUserList(
             @RequestParam(defaultValue = "1", name = "page") final Integer page,
-            @RequestParam(defaultValue = "email", name = "type") final String type,
+            @RequestParam(defaultValue = "", name = "type") final String type,
             @RequestParam(defaultValue = "", name = "keyword") final String keyword,
             @RequestParam(defaultValue = "id", name = "sort") final String sort
     ) {
