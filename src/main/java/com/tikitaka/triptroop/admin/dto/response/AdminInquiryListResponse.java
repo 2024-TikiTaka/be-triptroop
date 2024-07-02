@@ -24,7 +24,7 @@ public class AdminInquiryListResponse {
     private final LocalDateTime createdAt;
     private final String status;
 
-    public AdminInquiryListResponse(final Inquiry inquiry, User user, Profile profile) {
+    public AdminInquiryListResponse(Inquiry inquiry, User user, Profile profile) {
         this.inquiryId = inquiry.getId();
         this.email = user.getEmail();
         this.nickname = profile.getNickname();

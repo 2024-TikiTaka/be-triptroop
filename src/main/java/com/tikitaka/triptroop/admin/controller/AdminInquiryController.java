@@ -6,8 +6,12 @@ import com.tikitaka.triptroop.admin.dto.response.AdminInquiryDetailResponse;
 import com.tikitaka.triptroop.admin.dto.response.AdminInquiryListResponse;
 import com.tikitaka.triptroop.admin.service.AdminInquiryService;
 import com.tikitaka.triptroop.common.dto.response.ApiResponse;
+import com.tikitaka.triptroop.common.page.PageResponse;
+import com.tikitaka.triptroop.common.page.Pagination;
+import com.tikitaka.triptroop.common.page.PagingButtonInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,9 +27,17 @@ public class AdminInquiryController {
 
     /* 1. 문의 관리 > 문의 목록 조회 */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getInquiryList() {
-        final List<AdminInquiryListResponse> inquryList = AdminInquiryService.getInquriryList();
-        return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", inquryList));
+    public ResponseEntity<ApiResponse<PageResponse>> getInquiryList(
+            @RequestParam(defaultValue = "1", name = "page") final Integer page,
+            @RequestParam(defaultValue = "", name = "type") final String type,
+            @RequestParam(defaultValue = "", name = "keyword") final String keyword,
+            @RequestParam(defaultValue = "id", name = "sort") final String sort
+    ) {
+        final Page<AdminInquiryListResponse> inquryList = AdminInquiryService.getInquiryList(page, type, keyword, sort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(inquryList);
+        final PageResponse pagingResponse = PageResponse.of(inquryList.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(ApiResponse.success("문의 목록 조회에 성공하였습니다.", pagingResponse));
     }
 
     /* 2. 문의 관리 > 문의 상세 조회 */
