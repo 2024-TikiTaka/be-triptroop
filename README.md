@@ -25,11 +25,6 @@
 
 <br/>
 
-![WebSocket](https://img.shields.io/badge/WebSocket-000000?style=plastic&logo=websocket&logoColor=white)
-![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=plastic&logo=hibernate&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=plastic&logo=mysql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-000000?style=plastic&logo=mongodb&logoColor=white)
-
 ## 개발 환경
 
 <table>
@@ -45,25 +40,26 @@
       <td>
         <img alt="Spring Boot" src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white" />
         <img alt="Spring Security" src="https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=spring-security&logoColor=white" />
-        <img alt="WebSocket" src="https://img.shields.io/badge/WebSocket-black?style=flat-square&logo=websocket&logoColor=white" />
         <img alt="Hibernate" src="https://img.shields.io/badge/Hibernate-59666C?style=flat-square&logo=Hibernate&logoColor=white" />
         <img alt="JWT" src="https://img.shields.io/badge/JWT-black?style=flat-square&logo=JSON%20web%20tokens" />
+        <img alt="WebSocket" src="https://img.shields.io/badge/WebSocket-black?style=flat-square&logo=websocket&logoColor=white" />
       </td>
     </tr>
    <tr>
       <th align="left">Databases</th>
       <td>
-        <img alt="MySQL" src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" />
-        <img alt="AWS-RDS" src="https://img.shields.io/badge/AWS_RDS-%230db7ed?style=flat-square&logo=docker&logoColor=white&" />
+        <img alt="Local_MySQL" src="https://img.shields.io/badge/Local-232F3E?style=flat-square&logo=mysql&logoColor=white&label=MySQL&labelColor=4479A1" />
+        <img alt="Prod_RDS" src="https://img.shields.io/badge/Prod-232F3E?style=flat-square&logo=Amazon%20RDS&logoColor=white&label=Amazon%20RDS&labelColor=527FFF" />
         <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-3d5058?style=flat-square&logo=mongodb&logoColor=00ed64" />
       </td>
     </tr>
     <tr>
       <th align="left">Infrastructure</th>
       <td>
-        <img alt="AWS" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=flat-square&logo=amazon-aws&logoColor=white" />
-        <img alt="Docker" src="https://img.shields.io/badge/Docker-%230db7ed?style=flat-square&logo=docker&logoColor=white" />
-        <img alt="Github Actions" src="https://img.shields.io/badge/Github%20Actions-%232671E5.svg?style=flat-square&logo=githubactions&logoColor=white" />
+        <img alt="Amazon-EC2" src="https://img.shields.io/badge/Amazon_EC2-232F3E?style=flat-square&logo=Amazon%20EC2&logoColor=FF9900" />
+        <img alt="Amazon-S3" src="https://img.shields.io/badge/Amazon_S3-232F3E?style=flat-square&logo=Amazon%20S3&logoColor=569A31" />
+        <img alt="Docker" src="https://img.shields.io/badge/Docker-1d63ed?style=flat-square&logo=docker&logoColor=white" />
+        <img alt="Github Actions" src="https://img.shields.io/badge/Github%20Actions-%232671E5?style=flat-square&logo=githubactions&logoColor=white" />
       </td>
     </tr>
     <tr>
