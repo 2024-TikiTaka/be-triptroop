@@ -1,38 +1,91 @@
-# 트립트룹(TRIPTROOP)
+# 트립트룹(TRIPTROOP) ─ BE  
+> 백엔드(Backend)
 
-<img src="https://avatars.githubusercontent.com/u/168394855?s=200&v=4" width="150" alt="favicon">
+<br/>
+
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <img src="https://avatars.githubusercontent.com/u/168394855?s=200&v=4" height="150" alt="favicon">
+      </td>
+      <td>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://github.com/2024-TikiTaka/.github/blob/main/Logo/logo_triptroop_horizontal_darkmode.png?raw=true">
+          <img src="https://github.com/2024-TikiTaka/.github/blob/main/Logo/logo_triptroop_horizontal_lightmode.png?raw=true" height="30">
+        </picture>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+- 트립트룹(TRIPTROOP)은 “여행 그룹” 을 의미하며 여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다.
+- 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
 
 
-## 프로젝트 소개
+<br/>
 
-- 트립 트룹(TripTroop)은 “여행 그룹” 을 의미하며
-  여행을 함께할 사람을 모으고 여행 정보를 공유하는 서비스 입니다. 
-  상품 판매가 아닌 순수한 정보 공유와 커뮤니티 활성화에 중점을 두어 여행자들이 보다 풍부하고 진정한 여행 경험을 할 수 있도록 돕습니다.
-
-<br>
-  
-## 규칙
-
-- [Git, Github 커밋 가이드](https://github.com/2024-TikiTaka/be-triptroop/wiki/%EC%BB%A4%EB%B0%8B-%EA%B0%80%EC%9D%B4%EB%93%9C)
-
-<br>
-
-## 개발 환경
-
-![Git](https://img.shields.io/badge/Git-F05032?style=plastic&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=plastic&logo=github&logoColor=white)
-![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=plastic&logo=intellij-idea&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?style=plastic&logo=notion&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?style=plastic&logo=discord&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=plastic&logo=figma&logoColor=white)
-
-![Java](https://img.shields.io/badge/Java-007396?style=plastic&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=plastic&logo=spring-boot&logoColor=white)
-![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=plastic&logo=spring-security&logoColor=white)
 ![WebSocket](https://img.shields.io/badge/WebSocket-000000?style=plastic&logo=websocket&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=plastic&logo=hibernate&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=plastic&logo=mysql&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-000000?style=plastic&logo=mongodb&logoColor=white)
+
+## 개발 환경
+
+<table>
+ <tbody>
+    <tr>
+      <th align="left">Languages</th>
+      <td>
+        <img alt="Java" src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=openjdk&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <th align="left">Frameworks & Libs</th>
+      <td>
+        <img alt="Spring Boot" src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white" />
+        <img alt="Spring Security" src="https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=spring-security&logoColor=white" />
+        <img alt="WebSocket" src="https://img.shields.io/badge/WebSocket-black?style=flat-square&logo=websocket&logoColor=white" />
+        <img alt="Hibernate" src="https://img.shields.io/badge/Hibernate-59666C?style=flat-square&logo=Hibernate&logoColor=white" />
+        <img alt="JWT" src="https://img.shields.io/badge/JWT-black?style=flat-square&logo=JSON%20web%20tokens" />
+      </td>
+    </tr>
+   <tr>
+      <th align="left">Databases</th>
+      <td>
+        <img alt="MySQL" src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" />
+        <img alt="AWS-RDS" src="https://img.shields.io/badge/AWS_RDS-%230db7ed?style=flat-square&logo=docker&logoColor=white&" />
+        <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-3d5058?style=flat-square&logo=mongodb&logoColor=00ed64" />
+      </td>
+    </tr>
+    <tr>
+      <th align="left">Infrastructure</th>
+      <td>
+        <img alt="AWS" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=flat-square&logo=amazon-aws&logoColor=white" />
+        <img alt="Docker" src="https://img.shields.io/badge/Docker-%230db7ed?style=flat-square&logo=docker&logoColor=white" />
+        <img alt="Github Actions" src="https://img.shields.io/badge/Github%20Actions-%232671E5.svg?style=flat-square&logo=githubactions&logoColor=white" />
+      </td>
+    </tr>
+    <tr>
+      <th align="left">Version Control & IDEs</th>
+      <td>
+        <img alt="Git" src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
+        <img alt="GitHub" src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" />
+        <img alt="IntelliJ IDEA" src="https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat-square&logo=intellij-idea&logoColor=white" />
+      </td>
+    </tr>
+     <tr>
+      <th align="left">Collaboration Platforms</th>
+      <td>
+        <img alt="Discord" src="https://img.shields.io/badge/Discord-%235865F2.svg?style=flat-square&logo=discord&logoColor=white" />
+        <img alt="Notion" src="https://img.shields.io/badge/Notion-%23000000?style=flat-square&logo=notion&logoColor=white" />
+        <img alt="Figma" src="https://img.shields.io/badge/Figma-%23F24E1E?style=flat-square&logo=figma&logoColor=white" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
 
 <br>
 
