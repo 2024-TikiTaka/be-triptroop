@@ -73,6 +73,7 @@
      <tr>
       <th align="left">Collaboration Platforms</th>
       <td>
+        <img alt="Postman" src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
         <img alt="Discord" src="https://img.shields.io/badge/Discord-%235865F2.svg?style=flat-square&logo=discord&logoColor=white" />
         <img alt="Notion" src="https://img.shields.io/badge/Notion-%23000000?style=flat-square&logo=notion&logoColor=white" />
         <img alt="Figma" src="https://img.shields.io/badge/Figma-%23F24E1E?style=flat-square&logo=figma&logoColor=white" />
