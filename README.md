@@ -121,7 +121,6 @@
 <br />
 
 ## 팀원 소개 & 프로젝트 후기
-
 <table>
   <thead>
     <tr>
@@ -133,7 +132,7 @@
     <tr>
       <!-- 김다솔 -->
       <td align="center">
-        <a href="https://github.com/ddalla0425"><img alt="김다솔" src="https://avatars.githubusercontent.com/u/154950177?v=4" width="75" height="75" /></a>
+        <a href="https://github.com/ddalla0425"><img alt="김다솔" src="https://avatars.githubusercontent.com/u/154950177" width="75" height="75" /></a>
         <br />김다솔 
         <br />(<a href="https://github.com/ddalla0425">@ddalla0425</a>)
         <br />
@@ -146,7 +145,7 @@
     <tr>
       <!-- 김아현 -->
       <td align="center">
-        <a href="https://github.com/may54ther"><img src="https://avatars.githubusercontent.com/u/42160693?s=96&v=4" width="75" height="75" /></a>
+        <a href="https://github.com/may54ther"><img src="https://avatars.githubusercontent.com/u/42160693" width="75" height="75" /></a>
         <br />김아현 
         <br />(<a href="https://github.com/may54ther">@may54ther</a>)
         <br />
@@ -159,7 +158,7 @@
     <tr>
     <!-- 박병언 -->
       <td align="center">
-        <a href="https://github.com/qkrquddjs1"><img src="https://avatars.githubusercontent.com/u/154950075?s=60&v=4" width="75" height="75" /></a>
+        <a href="https://github.com/qkrquddjs1"><img src="https://avatars.githubusercontent.com/u/151039466" width="75" height="75" /></a>
         <br />박병언 
         <br />(<a href="https://github.com/qkrquddjs1">@qkrquddjs1</a>)
         <br />
@@ -173,7 +172,7 @@
     <tr>
     <!-- 이은재 -->
       <td align="center">
-        <a href="https://github.com/EUNJAE97"><img src="https://avatars.githubusercontent.com/u/154950170?s=96&v=4" width="75" height="75" /></a>
+        <a href="https://github.com/EUNJAE97"><img src="https://avatars.githubusercontent.com/u/154950170" width="75" height="75" /></a>
         <br />이은재 
         <br />(<a href="https://github.com/EUNJAE97">@EUNJAE97</a>)
         <br />
@@ -188,7 +187,7 @@
     <tr>
     <!-- 조형기 -->
       <td align="center">
-        <a href="https://github.com/chk2023"><img src="https://avatars.githubusercontent.com/u/120306336?s=96&v=4" width="75" height="75" /></a>
+        <a href="https://github.com/chk2023"><img src="https://avatars.githubusercontent.com/u/120306336" width="75" height="75" /></a>
         <br />조형기 
         <br />(<a href="https://github.com/chk2023">@chk2023</a>)
         <br />
